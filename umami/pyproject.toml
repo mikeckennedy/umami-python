@@ -1,0 +1,64 @@
+[project]
+name = "umami-analytics"
+description = "Umami Analytics Client for Python"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+keywords = [
+    "analtyics",
+    "website",
+    "umami",
+]
+authors = [
+    { name = "Michael Kennedy", email = "michael@talkpython.fm" },
+]
+classifiers = [
+    'Development Status :: 2 - Pre-Alpha',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+]
+dependencies = [
+    "httpx",
+    "pydantic",
+]
+version = "0.1.0"
+
+
+[project.urls]
+Homepage = "https://github.com/mikeckennedy/umami-python"
+Tracker = "https://github.com/mikeckennedy/umami-python/issues"
+Source = "https://github.com/mikeckennedy/umami-python"
+
+[build-system]
+requires = ["hatchling>=1.21.0", "hatch-vcs>=0.3.0"]
+build-backend = "hatchling.build"
+
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.github",
+    "/tests",
+    "/example_client",
+    "setup.py",
+    "settings.json",
+    "tox.ini",
+    "/example_client",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["umami"]
+exclude = [
+    "/.github",
+    "/tests",
+    "/example_client",
+    "setup.py",
+    "settings.json",
+    "tox.ini",
+    "/example_client",
+]
