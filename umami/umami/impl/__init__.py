@@ -5,7 +5,7 @@ import httpx
 
 from umami import models, urls  # noqa: F401
 
-__version__ = '0.1.6'
+__version__ = '0.1.7'
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
@@ -40,7 +40,7 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
         "password": password,
     }
     async with httpx.AsyncClient() as client:
-        resp = await client.post(url, data=api_data, headers=headers)
+        resp = await client.post(url, data=api_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
     model = models.LoginResponse(**resp.json())
@@ -60,7 +60,7 @@ def login(username: str, password: str) -> models.LoginResponse:
         "username": username,
         "password": password,
     }
-    resp = httpx.post(url, data=api_data, headers=headers)
+    resp = httpx.post(url, data=api_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
     model = models.LoginResponse(**resp.json())
@@ -78,7 +78,7 @@ async def websites_async() -> list[models.Website]:
         'Authorization': f'Bearer {auth_token}',
     }
     async with httpx.AsyncClient() as client:
-        resp = await client.get(url, headers=headers)
+        resp = await client.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
     model = models.WebsitesResponse(**resp.json())
@@ -94,7 +94,7 @@ def websites() -> list[models.Website]:
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
     }
-    resp = httpx.get(url, headers=headers)
+    resp = httpx.get(url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
     data = resp.json()
@@ -134,7 +134,7 @@ async def new_event_async(event_name: str, hostname: str, url: str = '/',
     }
 
     async with httpx.AsyncClient() as client:
-        resp = await client.post(api_url, json=event_data, headers=headers)
+        resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
     return resp.text
@@ -171,7 +171,7 @@ def new_event(event_name: str, hostname: str, url: str = '/',
         'type': 'event'
     }
 
-    resp = httpx.post(api_url, json=event_data, headers=headers)
+    resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
     return resp.text
@@ -189,7 +189,7 @@ async def verify_token_async() -> bool:
             'Authorization': f'Bearer {auth_token}',
         }
         async with httpx.AsyncClient() as client:
-            resp = await client.post(url, headers=headers)
+            resp = await client.post(url, headers=headers, follow_redirects=True)
             resp.raise_for_status()
 
         return 'username' in resp.json()
@@ -208,7 +208,7 @@ def verify_token() -> bool:
             'User-Agent': event_user_agent,
             'Authorization': f'Bearer {auth_token}',
         }
-        resp = httpx.post(url, headers=headers)
+        resp = httpx.post(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
         return 'username' in resp.json()
