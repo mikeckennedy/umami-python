@@ -5,7 +5,7 @@ import httpx
 
 from umami import models, urls  # noqa: F401
 
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None

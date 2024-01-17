@@ -24,7 +24,7 @@ Just `pip install umami-analytics`
 
 import umami
 
-umami.set_url_base(url)
+umami.set_url_base(analytics_server_url)
 login = umami.login(user, password)
 
 websites = umami.websites()
