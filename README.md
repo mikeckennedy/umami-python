@@ -24,22 +24,26 @@ Just `pip install umami-analytics`
 
 import umami
 
-umami.set_url_base(analytics_server_url)
-login = umami.login(user, password)
+umami.set_url_base("https://umami.hostedbyyouorthem.com")
+login = umami.login(username, password)
 
-# Skip the need to pass the target website in subseqent calls.
+# Skip the need to pass the target website in subsequent calls.
 umami.set_website_id('cc726914-8e68-4d1a-4be0-af4ca8933456')
+umami.set_hostname('somedomain.com')
 
 # List your websites
 websites = umami.websites()
 
 # Create a new event in the events section of the dashboards.
 event_resp = umami.new_event(
-    website_id=site.id,
+    website_id=sit'a7cd-5d1a-2b33', # Only send if overriding default above
     event_name='Umami-Test',
-    title='Umami-Test',
-    hostname='somedomain.com',
+    title='Umami-Test', # Defaults to event_name if omitted.
+    hostname='somedomain.com', # Only send if overriding default above.
     url='/users/actions',
     custom_data={'client': 'umami-tester-v1'},
     referrer='https://some_url')
+
+# Call after logging in to make sure the auth token is still valid.
+umami.verify_token()
 ```
