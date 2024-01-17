@@ -13,3 +13,30 @@ Implemented endpoints:
 * `POST /api/send` as `new_event_async` and `new_event`
 
 See the [API documentation](https://umami.is/docs/api) for the remaining endpoints to be added (PRs welcome).
+
+## Installation
+
+Just `pip install umami-analytics`
+
+## Usage
+
+```python
+
+import umami
+
+umami.set_url_base(url)
+login = umami.login(user, password)
+
+websites = umami.websites()
+
+site = [w for w in websites if w.domain == site_domain][0]
+
+event_resp = umami.new_event(
+    website_id=site.id,
+    event_name='Umami-Test',
+    title='Umami-Test',
+    hostname=site.domain,
+    url='/users/actions',
+    custom_data={'client': 'umami-tester-v1'},
+    referrer='https://some_url')
+```
