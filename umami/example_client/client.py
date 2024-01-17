@@ -20,6 +20,10 @@ login = umami.login(user, password)
 print(f"Logged in successfully as {login.user.username} : admin? {login.user.isAdmin}")
 print()
 
+print("Verify token:")
+print(umami.verify_token())
+print()
+
 websites = umami.websites()
 print(f"Found {len(websites):,} websites.")
 print("First website in list:")
