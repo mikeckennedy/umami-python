@@ -5,10 +5,11 @@ import httpx
 
 from umami import models, urls  # noqa: F401
 
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
+default_website_id: Optional[str] = None
 event_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0'
 user_agent = (f'Umami-Client v{__version__} / '
               f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
@@ -20,6 +21,11 @@ def set_url_base(url: str):
 
     global url_base
     url_base = url.strip()
+
+
+def set_website_id(website: str):
+    global default_website_id
+    default_website_id = website
 
 
 async def login_async(username: str, password: str) -> models.LoginResponse:
@@ -96,12 +102,15 @@ def websites() -> list[models.Website]:
     return model.websites
 
 
-async def new_event_async(website_id: str, event_name: str, title: str, hostname: str, url: str = '/',
+async def new_event_async(event_name: str, hostname: str, url: str = '/',
+                          website_id: Optional[str] = None, title: Optional[str] = None,
                           custom_data=None, referrer: Optional[str] = None, language: str = 'en-US',
                           screen: str = "1920x1080") -> str:
+    website_id = website_id or default_website_id
+    title = title or event_name
     custom_data = custom_data or {}
 
-    url = f'{url_base}{urls.events}'
+    api_url = f'{url_base}{urls.events}'
     headers = {
         'User-Agent': event_user_agent,
         'Authorization': f'Bearer {auth_token}',
@@ -125,18 +134,21 @@ async def new_event_async(website_id: str, event_name: str, title: str, hostname
     }
 
     async with httpx.AsyncClient() as client:
-        resp = await client.post(url, json=event_data, headers=headers)
+        resp = await client.post(api_url, json=event_data, headers=headers)
         resp.raise_for_status()
 
     return resp.text
 
 
-def new_event(website_id: str, event_name: str, title: str, hostname: str, url: str = '/',
+def new_event(event_name: str, hostname: str, url: str = '/',
+              website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: Optional[str] = None, language: str = 'en-US',
               screen: str = "1920x1080") -> str:
+    website_id = website_id or default_website_id
+    title = title or event_name
     custom_data = custom_data or {}
 
-    url = f'{url_base}{urls.events}'
+    api_url = f'{url_base}{urls.events}'
     headers = {
         'User-Agent': event_user_agent,
         'Authorization': f'Bearer {auth_token}',
@@ -159,7 +171,7 @@ def new_event(website_id: str, event_name: str, title: str, hostname: str, url: 
         'type': 'event'
     }
 
-    resp = httpx.post(url, json=event_data, headers=headers)
+    resp = httpx.post(api_url, json=event_data, headers=headers)
     resp.raise_for_status()
 
     return resp.text

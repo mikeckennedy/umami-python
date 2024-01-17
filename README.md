@@ -27,15 +27,18 @@ import umami
 umami.set_url_base(analytics_server_url)
 login = umami.login(user, password)
 
+# Skip the need to pass the target website in subseqent calls.
+umami.set_website_id('cc726914-8e68-4d1a-4be0-af4ca8933456')
+
+# List your websites
 websites = umami.websites()
 
-site = [w for w in websites if w.domain == site_domain][0]
-
+# Create a new event in the events section of the dashboards.
 event_resp = umami.new_event(
     website_id=site.id,
     event_name='Umami-Test',
     title='Umami-Test',
-    hostname=site.domain,
+    hostname='somedomain.com',
     url='/users/actions',
     custom_data={'client': 'umami-tester-v1'},
     referrer='https://some_url')
