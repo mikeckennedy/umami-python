@@ -10,6 +10,7 @@ __version__ = '0.1.7'
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
 default_website_id: Optional[str] = None
+default_hostname: Optional[str] = None
 event_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0'
 user_agent = (f'Umami-Client v{__version__} / '
               f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
@@ -26,6 +27,11 @@ def set_url_base(url: str):
 def set_website_id(website: str):
     global default_website_id
     default_website_id = website
+
+
+def set_hostname(hostname: str):
+    global default_hostname
+    default_hostname = hostname
 
 
 async def login_async(username: str, password: str) -> models.LoginResponse:
@@ -102,11 +108,12 @@ def websites() -> list[models.Website]:
     return model.websites
 
 
-async def new_event_async(event_name: str, hostname: str, url: str = '/',
+async def new_event_async(event_name: str, hostname: Optional[str] = None, url: str = '/',
                           website_id: Optional[str] = None, title: Optional[str] = None,
                           custom_data=None, referrer: Optional[str] = None, language: str = 'en-US',
                           screen: str = "1920x1080") -> str:
     website_id = website_id or default_website_id
+    hostname = hostname or default_hostname
     title = title or event_name
     custom_data = custom_data or {}
 
@@ -140,11 +147,12 @@ async def new_event_async(event_name: str, hostname: str, url: str = '/',
     return resp.text
 
 
-def new_event(event_name: str, hostname: str, url: str = '/',
+def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/',
               website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: Optional[str] = None, language: str = 'en-US',
               screen: str = "1920x1080") -> str:
     website_id = website_id or default_website_id
+    hostname = hostname or default_hostname
     title = title or event_name
     custom_data = custom_data or {}
 
