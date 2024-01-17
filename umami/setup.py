@@ -23,9 +23,9 @@ setup(
     author_email="michael@talkpython.fm",
 
     description="Umami Analytics Client for Python",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
 
-    packages=find_packages(exclude=('tests',)),
+    packages=find_packages(exclude=('tests','example_client',)),
 
     install_requires=[],
 

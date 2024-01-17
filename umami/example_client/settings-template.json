@@ -1,0 +1,8 @@
+{
+  "base_url": "Where your instance hosted? e.g. https://analytics.yoursite.com",
+  "username": "user_at_umami_instance",
+  "password": "password_at_umami_instance",
+  "test_domain": "domain name of the site you created for testing (will create events here)",
+
+  "ACTION": "COPY TO settings.json (excluded from git) and enter your info THERE (NOT HERE)"
+}
