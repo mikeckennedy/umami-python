@@ -6,7 +6,7 @@ import httpx
 
 from umami import models, urls  # noqa: F401
 
-__version__ = '0.1.8'
+__version__ = '0.1.9'
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
@@ -159,7 +159,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     return resp.text
 
 
-def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/',
+def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
               website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: str = '', language: str = 'en-US',
               screen: str = "1920x1080") -> str:
