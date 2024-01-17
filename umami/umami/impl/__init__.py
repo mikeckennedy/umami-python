@@ -1,4 +1,5 @@
 import sys
+from pprint import pprint
 from typing import Optional
 
 import httpx
@@ -110,7 +111,7 @@ def websites() -> list[models.Website]:
 
 async def new_event_async(event_name: str, hostname: Optional[str] = None, url: str = '/',
                           website_id: Optional[str] = None, title: Optional[str] = None,
-                          custom_data=None, referrer: Optional[str] = None, language: str = 'en-US',
+                          custom_data=None, referrer: str = '', language: str = 'en-US',
                           screen: str = "1920x1080") -> str:
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
@@ -140,6 +141,17 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         'type': 'event'
     }
 
+    print("POSTING NEW EVENT")
+    print()
+    print("URL:")
+    pprint(api_url)
+    print()
+    print("Headers:")
+    pprint(headers)
+    print()
+    print("event_data:")
+    pprint(event_data)
+
     async with httpx.AsyncClient() as client:
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
@@ -149,7 +161,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
 
 def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/',
               website_id: Optional[str] = None, title: Optional[str] = None,
-              custom_data=None, referrer: Optional[str] = None, language: str = 'en-US',
+              custom_data=None, referrer: str = '', language: str = 'en-US',
               screen: str = "1920x1080") -> str:
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
