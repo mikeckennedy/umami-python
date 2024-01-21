@@ -1,9 +1,9 @@
 # Umami Analytics Client for Python
 
-Analytics client for privacy-preserving, open source [Umami platform](https://umami.is) based on 
+Client for privacy-preserving, open source [Umami analytics platform](https://umami.is) based on 
 `httpx` and `pydantic`. 
 
-`umami-analytics` is intended for added custom data to your Umami instance (self-hosted or SaaS). Many umami events can supplied directly from HTML via their `data-*` attributes. However, some cannot. For example, if you have an event that is triggered in your app but doesn't have a clear HTML action you can add custom events. These will appear at the bottom of your Umami analtytics page for a website.
+`umami-analytics` is intended for adding custom data to your Umami instance (self-hosted or SaaS). Many umami events can supplied directly from HTML via their `data-*` attributes. However, some cannot. For example, if you have an event that is triggered in your app but doesn't have a clear HTML action you can add custom events. These will appear at the bottom of your Umami analtytics page for a website.
 
 One example is a **purchase-course** event that happens deep inside the Python code rather than in HTML at [Talk Python Training](https://training.talkpython.fm). This is what our events section looks like for a typical weekend day (US Pacific Time):
 
@@ -12,8 +12,6 @@ One example is a **purchase-course** event that happens deep inside the Python c
 ## Focused on what you need, not what is offered
 
 The [Umami API is extensive](https://umami.is/docs/api) and much of that is intended for their frontend code to be able to function. You probably don't want or need that. `umami-analytics` only covers the subset that most developers will need for common SaaS actions such as adding [custom events](https://umami.is/docs/event-data). That said, PRs are weclome.
-
-🔀 **Async is supported but not required** for your Python code. For functions that access the network, there is a `func()` and `func_async()` variant that works with Python's `async` and `await`.
 
 
 ## Core Features
@@ -26,6 +24,10 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 * 🥇Set a **default website** for a **simplified API** going forward.
 
 See the usage example below for the Python API around these features.
+
+## Async or sync API? You choose
+
+🔀 **Async is supported but not required** for your Python code. For functions that access the network, there is a `func()` and `func_async()` variant that works with Python's `async` and `await`.
 
 ## Installation
 
@@ -61,7 +63,7 @@ event_resp = umami.new_event(
 umami.verify_token()
 ```
 
-
+This code listing is very-very high fidelity psuedo code. If you want an actually executable example, see the [example client](./umami/example_client) in the repo.
 
 ## Want to contribute?
 
