@@ -1,12 +1,13 @@
 import sys
-from pprint import pprint
 from typing import Optional
 
 import httpx
 
-from umami import models, urls  # noqa: F401
+from umami import models, urls
 
-__version__ = '0.1.9'
+__version__ = '0.1.10'
+
+from umami.errors import ValidationError, OperationNotAllowedError
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
@@ -14,28 +15,63 @@ default_website_id: Optional[str] = None
 default_hostname: Optional[str] = None
 event_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0'
 user_agent = (f'Umami-Client v{__version__} / '
-              f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')
+              f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / '
+              f'{sys.platform.capitalize()}')
 
 
-def set_url_base(url: str):
+def set_url_base(url: str) -> None:
+    """
+    Each Umami instance lives somewhere. This is where yours lives.
+    For example, https://somedomain.tech/umami.
+    Args:
+        url: The base URL of your instance without /api.
+    """
     if not url or not url.strip():
-        raise Exception("URL must not be empty")
+        raise ValidationError("URL must not be empty.")
+
+    # noinspection HttpUrlsUsage
+    if not url.startswith('http://') and not url.startswith('https://'):
+        # noinspection HttpUrlsUsage
+        raise ValidationError("The url must start with the HTTP scheme (http:// or https://).")
+
+    if url.endswith('/'):
+        url = url.rstrip('/')
 
     global url_base
     url_base = url.strip()
 
 
-def set_website_id(website: str):
+def set_website_id(website_id: str) -> None:
+    """
+    Your Umami instance might have many websites registered for various domains you use.
+    Call this function to set which website you're working with.
+    Args:
+        website_id: The ID from Umami for your registered site (e.g. 978435e2-7ba1-4337-9860-ec31ece2db60)
+    """
     global default_website_id
-    default_website_id = website
+    default_website_id = website_id
 
 
-def set_hostname(hostname: str):
+def set_hostname(hostname: str) -> None:
+    """
+    The default hostname for sending events (can be overriden in the new_event() function).
+    Args:
+        hostname: Hostname to use when one is not specified, e.g. 'talkpython.fm'
+    """
     global default_hostname
     default_hostname = hostname
 
 
 async def login_async(username: str, password: str) -> models.LoginResponse:
+    """
+        Logs into Umami and retrieves a temporary auth token. If the token is expired,
+        you'll need to log in again. This can be checked with verify_token().
+        Args:
+            username: Your Umami username
+            password: Your Umami password
+
+        Returns: LoginResponse object which your token and user details (no need to save this).
+        """
     global auth_token
     validate_state(url=True)
     validate_login(username, password)
@@ -56,6 +92,15 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
 
 
 def login(username: str, password: str) -> models.LoginResponse:
+    """
+    Logs into Umami and retrieves a temporary auth token. If the token is expired,
+    you'll need to log in again. This can be checked with verify_token().
+    Args:
+        username: Your Umami username
+        password: Your Umami password
+
+    Returns: LoginResponse object which your token and user details (no need to save this).
+    """
     global auth_token
 
     validate_state(url=True)
@@ -76,6 +121,10 @@ def login(username: str, password: str) -> models.LoginResponse:
 
 
 async def websites_async() -> list[models.Website]:
+    """
+        All the websites that are registered in your Umami instance.
+        Returns: A list of Website Pydantic models.
+    """
     global auth_token
     validate_state(url=True, user=True)
 
@@ -93,6 +142,10 @@ async def websites_async() -> list[models.Website]:
 
 
 def websites() -> list[models.Website]:
+    """
+        All the websites that are registered in your Umami instance.
+        Returns: A list of Website Pydantic models.
+    """
     global auth_token
     validate_state(url=True, user=True)
 
@@ -113,10 +166,32 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
                           website_id: Optional[str] = None, title: Optional[str] = None,
                           custom_data=None, referrer: str = '', language: str = 'en-US',
                           screen: str = "1920x1080") -> str:
+    """
+    Creates a new custom event in Umami for the given website_id and hostname (both use the default
+    if you have set them with the other functions such as set_hostname()). These events will both
+    appear in the traffic related to the specified url and in the events section at the bottom
+    of your Umami website page.
+
+    Args:
+        event_name: The name of your custom event (e.g. Purchase-Course)
+        hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+        url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+        website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+        title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+        custom_data: Any additional data to send along with the event. Not visible in the UI but is in the API.
+        referrer: The referrer of the client if there is any (what location lead them to this event)
+        language: The language of the event / client.
+        screen: The screen resolution of the client.
+
+    Returns: The text returned from the Umami API.
+    """
+    validate_state(url=True, user=True)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
     title = title or event_name
     custom_data = custom_data or {}
+
+    validate_event_data(event_name, hostname, website_id)
 
     api_url = f'{url_base}{urls.events}'
     headers = {
@@ -141,17 +216,6 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         'type': 'event'
     }
 
-    print("POSTING NEW EVENT")
-    print()
-    print("URL:")
-    pprint(api_url)
-    print()
-    print("Headers:")
-    pprint(headers)
-    print()
-    print("event_data:")
-    pprint(event_data)
-
     async with httpx.AsyncClient() as client:
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
@@ -159,14 +223,45 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     return resp.text
 
 
+def validate_event_data(event_name, hostname, website_id):
+    if not hostname:
+        raise Exception("The hostname must be set, either as a parameter here or via set_hostname().")
+    if not website_id:
+        raise Exception("The website_id must be set, either as a parameter here or via set_website_id().")
+    if not event_name and not event_name.strip():
+        raise Exception("The event_name is required.")
+
+
 def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
               website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: str = '', language: str = 'en-US',
               screen: str = "1920x1080") -> str:
+    """
+    Creates a new custom event in Umami for the given website_id and hostname (both use the default
+    if you have set them with the other functions such as set_hostname()). These events will both
+    appear in the traffic related to the specified url and in the events section at the bottom
+    of your Umami website page.
+
+    Args:
+        event_name: The name of your custom event (e.g. Purchase-Course)
+        hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+        url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+        website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+        title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+        custom_data: Any additional data to send along with the event. Not visible in the UI but is in the API.
+        referrer: The referrer of the client if there is any (what location lead them to this event)
+        language: The language of the event / client.
+        screen: The screen resolution of the client.
+
+    Returns: The text returned from the Umami API.
+    """
+    validate_state(url=True, user=True)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
     title = title or event_name
     custom_data = custom_data or {}
+
+    validate_event_data(event_name, hostname, website_id)
 
     api_url = f'{url_base}{urls.events}'
     headers = {
@@ -198,6 +293,11 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
 
 
 async def verify_token_async() -> bool:
+    """
+    Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+    but I'm not sure if that's minutes, hours, or years. 
+    Returns: True if the token is still valid, False otherwise.
+    """
     # noinspection PyBroadException
     try:
         global auth_token
@@ -218,6 +318,11 @@ async def verify_token_async() -> bool:
 
 
 def verify_token() -> bool:
+    """
+   Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+   but I'm not sure if that's minutes, hours, or years. 
+   Returns: True if the token is still valid, False otherwise.
+   """
     # noinspection PyBroadException
     try:
         global auth_token
@@ -236,16 +341,22 @@ def verify_token() -> bool:
         return False
 
 
-def validate_login(email, password):
+def validate_login(email: str, password: str) -> None:
+    """
+    Internal helper function, not need to use this.
+    """
     if not email:
-        raise Exception("Email cannot be empty")
+        raise ValidationError("Email cannot be empty")
     if not password:
-        raise Exception("Password cannot be empty")
+        raise ValidationError("Password cannot be empty")
 
 
-def validate_state(url=False, user=False):
+def validate_state(url: bool = False, user: bool = False):
+    """
+    Internal helper function, not need to use this.
+    """
     if url and not url_base:
-        raise Exception("URL Base must be set to proceed.")
+        raise OperationNotAllowedError("URL Base must be set to proceed.")
 
     if user and not auth_token:
-        raise Exception("You must login before proceeding.")
+        raise OperationNotAllowedError("You must login before proceeding.")

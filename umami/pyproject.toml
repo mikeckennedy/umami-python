@@ -27,7 +27,7 @@ dependencies = [
     "httpx",
     "pydantic",
 ]
-version = "0.1.9"
+version = "0.1.10"
 
 
 [project.urls]
