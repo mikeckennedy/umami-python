@@ -7,12 +7,11 @@ Client for privacy-preserving, open source [Umami analytics platform](https://um
 
 One example is a **purchase-course** event that happens deep inside the Python code rather than in HTML at [Talk Python Training](https://training.talkpython.fm). This is what our events section looks like for a typical weekend day (US Pacific Time):
 
-![](./readme_resources/events-example.jpg)
+![](https://raw.githubusercontent.com/mikeckennedy/umami-python/main/readme_resources/events-example.jpg)
 
 ## Focused on what you need, not what is offered
 
 The [Umami API is extensive](https://umami.is/docs/api) and much of that is intended for their frontend code to be able to function. You probably don't want or need that. `umami-analytics` only covers the subset that most developers will need for common SaaS actions such as adding [custom events](https://umami.is/docs/event-data). That said, PRs are weclome.
-
 
 ## Core Features
 
