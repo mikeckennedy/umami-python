@@ -15,7 +15,7 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 
 ## Core Features
 
-* ➕ **Add a custom event** to your Umami analtyics dashboard.
+* ➕ **Add a custom event** to your Umami analytics dashboard.
 * 🌐 List all websites with details that you have registered at Umami.
 * 🔀 Both **sync** and **async** programming models.
 * ⚒️ **Structured data with Pydantic** models for API responses.
