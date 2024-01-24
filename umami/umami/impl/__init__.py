@@ -296,9 +296,9 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
         hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
-        referrer: The referrer of the client if there is any (what location lead them to this event)
-        language: The language of the event / client.
-        screen: The screen resolution of the client.
+        referrer: OPTIONAL: The referrer of the client if there is any (what location lead them to this event)
+        language: OPTIONAL: The language of the event / client.
+        screen: OPTIONAL: The screen resolution of the client.
 
     Returns: The text returned from the Umami API.
     """
@@ -349,9 +349,9 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
         url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
         hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
-        referrer: The referrer of the client if there is any (what location lead them to this event)
-        language: The language of the event / client.
-        screen: The screen resolution of the client.
+        referrer: OPTIONAL: The referrer of the client if there is any (what location lead them to this event)
+        language: OPTIONAL: The language of the event / client.
+        screen: OPTIONAL: The screen resolution of the client.
 
     Returns: The text returned from the Umami API.
     """
