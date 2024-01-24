@@ -5,7 +5,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.1.10'
+__version__ = '0.1.11'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -170,7 +170,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
     appear in the traffic related to the specified url and in the events section at the bottom
-    of your Umami website page.
+    of your Umami website page.  Login is not required for this method.
 
     Args:
         event_name: The name of your custom event (e.g. Purchase-Course)
@@ -185,7 +185,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
 
     Returns: The text returned from the Umami API.
     """
-    validate_state(url=True, user=True)
+    validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
     title = title or event_name
@@ -240,7 +240,7 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
     appear in the traffic related to the specified url and in the events section at the bottom
-    of your Umami website page.
+    of your Umami website page. Login is not required for this method.
 
     Args:
         event_name: The name of your custom event (e.g. Purchase-Course)
@@ -255,7 +255,7 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
 
     Returns: The text returned from the Umami API.
     """
-    validate_state(url=True, user=True)
+    validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
     title = title or event_name
