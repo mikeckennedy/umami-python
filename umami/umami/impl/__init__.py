@@ -170,7 +170,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
     appear in the traffic related to the specified url and in the events section at the bottom
-    of your Umami website page.  Login is not required for this method.
+    of your Umami website page. Login is not required for this method.
 
     Args:
         event_name: The name of your custom event (e.g. Purchase-Course)
