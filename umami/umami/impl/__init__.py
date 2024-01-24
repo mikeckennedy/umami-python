@@ -223,15 +223,6 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     return resp.text
 
 
-def validate_event_data(event_name, hostname, website_id):
-    if not hostname:
-        raise Exception("The hostname must be set, either as a parameter here or via set_hostname().")
-    if not website_id:
-        raise Exception("The website_id must be set, either as a parameter here or via set_website_id().")
-    if not event_name and not event_name.strip():
-        raise Exception("The event_name is required.")
-
-
 def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
               website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: str = '', language: str = 'en-US',
@@ -292,16 +283,141 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
     return resp.text
 
 
-async def verify_token_async() -> bool:
+async def new_page_view_async(page_title: str, url: str, hostname: Optional[str] = None,
+                              website_id: Optional[str] = None, referrer: str = '',
+                              language: str = 'en-US', screen: str = "1920x1080") -> str:
+    """
+    Creates a new page view event in Umami for the given website_id and hostname (both use the default
+    if you have set them with the other functions such as set_hostname()). This is equivalent to what
+    happens when a visit views a page and the JS library records it.
+
+    Args:
+        page_title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+        url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+        hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+        website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+        referrer: The referrer of the client if there is any (what location lead them to this event)
+        language: The language of the event / client.
+        screen: The screen resolution of the client.
+
+    Returns: The text returned from the Umami API.
+    """
+    validate_state(url=True, user=False)
+    website_id = website_id or default_website_id
+    hostname = hostname or default_hostname
+
+    validate_event_data(event_name="NOT NEEDED", hostname=hostname, website_id=website_id)
+
+    api_url = f'{url_base}{urls.events}'
+    headers = {
+        'User-Agent': event_user_agent,
+        'Authorization': f'Bearer {auth_token}',
+    }
+
+    payload = {
+        "hostname": hostname,
+        "language": language,
+        "referrer": referrer,
+        "screen": screen,
+        "title": page_title,
+        "url": url,
+        "website": website_id,
+    }
+
+    event_data = {
+        'payload': payload,
+        'type': 'event'
+    }
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
+        resp.raise_for_status()
+
+    return resp.text
+
+
+def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
+                  website_id: Optional[str] = None, referrer: str = '',
+                  language: str = 'en-US', screen: str = "1920x1080") -> str:
+    """
+    Creates a new page view event in Umami for the given website_id and hostname (both use the default
+    if you have set them with the other functions such as set_hostname()). This is equivalent to what
+    happens when a visit views a page and the JS library records it.
+
+    Args:
+        page_title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+        url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+        hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+        website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+        referrer: The referrer of the client if there is any (what location lead them to this event)
+        language: The language of the event / client.
+        screen: The screen resolution of the client.
+
+    Returns: The text returned from the Umami API.
+    """
+    validate_state(url=True, user=False)
+    website_id = website_id or default_website_id
+    hostname = hostname or default_hostname
+
+    validate_event_data(event_name="NOT NEEDED", hostname=hostname, website_id=website_id)
+
+    api_url = f'{url_base}{urls.events}'
+    headers = {
+        'User-Agent': event_user_agent,
+        'Authorization': f'Bearer {auth_token}',
+    }
+
+    payload = {
+        "hostname": hostname,
+        "language": language,
+        "referrer": referrer,
+        "screen": screen,
+        "title": page_title,
+        "url": url,
+        "website": website_id,
+    }
+
+    event_data = {
+        'payload': payload,
+        'type': 'event'
+    }
+
+    resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
+    resp.raise_for_status()
+
+    return resp.text
+
+
+def validate_event_data(event_name, hostname, website_id):
+    """
+    Internal use only.
+    """
+    if not hostname:
+        raise Exception("The hostname must be set, either as a parameter here or via set_hostname().")
+    if not website_id:
+        raise Exception("The website_id must be set, either as a parameter here or via set_website_id().")
+    if not event_name and not event_name.strip():
+        raise Exception("The event_name is required.")
+
+
+async def verify_token_async(check_server: bool = True) -> bool:
     """
     Verifies that the token set when you called login() is still valid. Umami says this token will expire,
     but I'm not sure if that's minutes, hours, or years. 
+
+    Args:
+        check_server: If true, we will contact the server and verify that the token is valid.
+                      If false, this only checks that an auth token has been stored from a previous successful login.
+
     Returns: True if the token is still valid, False otherwise.
     """
     # noinspection PyBroadException
     try:
         global auth_token
         validate_state(url=True, user=True)
+
+        if not check_server:
+            return True
 
         url = f'{url_base}{urls.verify}'
         headers = {
@@ -317,16 +433,24 @@ async def verify_token_async() -> bool:
         return False
 
 
-def verify_token() -> bool:
+def verify_token(check_server: bool = True) -> bool:
     """
-   Verifies that the token set when you called login() is still valid. Umami says this token will expire,
-   but I'm not sure if that's minutes, hours, or years. 
-   Returns: True if the token is still valid, False otherwise.
-   """
+    Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+    but I'm not sure if that's minutes, hours, or years.
+
+    Args:
+        check_server: If true, we will contact the server and verify that the token is valid.
+                      If false, this only checks that an auth token has been stored from a previous successful login.
+
+    Returns: True if the token is still valid, False otherwise.
+    """
     # noinspection PyBroadException
     try:
         global auth_token
         validate_state(url=True, user=True)
+
+        if not check_server:
+            return True
 
         url = f'{url_base}{urls.verify}'
         headers = {
