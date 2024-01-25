@@ -40,8 +40,7 @@ import umami
 
 umami.set_url_base("https://umami.hostedbyyouorthem.com")
 
-# Auth is NOT required to send events, but is for other features
-# including the health checks.
+# Auth is NOT required to send events, but is for other features.
 login = umami.login(username, password)
 
 # Skip the need to pass the target website in subsequent calls.
