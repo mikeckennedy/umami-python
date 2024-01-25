@@ -50,7 +50,7 @@ websites = umami.websites()
 
 # Create a new event in the events section of the dashboards.
 event_resp = umami.new_event(
-    website_id=sit'a7cd-5d1a-2b33', # Only send if overriding default above
+    website_id='a7cd-5d1a-2b33', # Only send if overriding default above
     event_name='Umami-Test',
     title='Umami-Test', # Defaults to event_name if omitted.
     hostname='somedomain.com', # Only send if overriding default above.
