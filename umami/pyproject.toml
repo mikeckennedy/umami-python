@@ -4,14 +4,8 @@ description = "Umami Analytics Client for Python"
 readme = "../README.md"
 license = "MIT"
 requires-python = ">=3.8"
-keywords = [
-    "analytics",
-    "website",
-    "umami",
-]
-authors = [
-    { name = "Michael Kennedy", email = "michael@talkpython.fm" },
-]
+keywords = ["analytics", "website", "umami"]
+authors = [{ name = "Michael Kennedy", email = "michael@talkpython.fm" }]
 classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'License :: OSI Approved :: MIT License',
@@ -23,10 +17,7 @@ classifiers = [
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
 ]
-dependencies = [
-    "httpx",
-    "pydantic",
-]
+dependencies = ["httpx", "pydantic"]
 version = "0.1.11"
 
 
@@ -62,3 +53,33 @@ exclude = [
     "tox.ini",
     "/example_client",
 ]
+
+[tool.isort]
+profile = 'black'
+
+[tool.ruff]
+target-version = 'py39'
+
+select = [
+    "B",  # bug bear 
+    "E",  # pycodestyle: error checking 
+    "F",  # pyflakes: PEP8
+    "W",  # pycodestyle
+    "I",  # import sort 
+    "N",  # PEP naming conventions
+    "UP", # Upgrade warnings
+]
+
+ignore = [
+    "E501", # line length
+]
+
+fixable = ["ALL"]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
