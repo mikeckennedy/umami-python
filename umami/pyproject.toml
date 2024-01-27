@@ -65,7 +65,7 @@ exclude = [
 
 
 [tool.ruff]
-target-version = 'py39'
+target-version = 'py38'
 
 select = [
     "B",  # bug bear 
