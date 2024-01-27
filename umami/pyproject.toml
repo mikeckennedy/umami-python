@@ -4,8 +4,14 @@ description = "Umami Analytics Client for Python"
 readme = "../README.md"
 license = "MIT"
 requires-python = ">=3.8"
-keywords = ["analytics", "website", "umami"]
-authors = [{ name = "Michael Kennedy", email = "michael@talkpython.fm" }]
+keywords = [
+    "analytics",
+    "website",
+    "umami",
+]
+authors = [
+    { name = "Michael Kennedy", email = "michael@talkpython.fm" },
+]
 classifiers = [
     'Development Status :: 2 - Pre-Alpha',
     'License :: OSI Approved :: MIT License',
@@ -17,7 +23,10 @@ classifiers = [
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
 ]
-dependencies = ["httpx", "pydantic"]
+dependencies = [
+    "httpx",
+    "pydantic",
+]
 version = "0.1.11"
 
 
@@ -54,8 +63,6 @@ exclude = [
     "/example_client",
 ]
 
-[tool.isort]
-profile = 'black'
 
 [tool.ruff]
 target-version = 'py39'
