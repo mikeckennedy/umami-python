@@ -1,0 +1,46 @@
+[project]
+authors = [{ name = "Michael Kennedy" }]
+name = "umami"
+description = "Umami Analytics Client for Python"
+version = "0.1.11"
+dependencies = [
+    "httpx",
+    "pydantic"
+]
+
+[project.optional-dependencies]
+dev = ["pre-commit"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+
+
+[tool.isort]
+profile = 'black'
+
+[tool.ruff]
+target-version = 'py312'
+
+select = [
+    "B", # bug bear 
+    "E", # pycodestyle: error checking 
+    "F", # pyflakes: PEP8
+    "W", # pycodestyle
+    "I", # import sort 
+    "N", # PEP naming conventions
+    "UP", # Upgrade warnings
+]
+
+ignore = [
+    "E501",   # line length
+]
+
+fixable = ["ALL"]
+
+# Avoid trying to fix flake8-bugbear (`B`) violations.
+unfixable = ["B"]
+
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

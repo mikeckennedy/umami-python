@@ -1,12 +1,24 @@
 from umami import impl
-from . import errors  # noqa: F401, E402
-from . import models  # noqa: F401, E402
-from .impl import login_async, login  # noqa: F401, E402
-from .impl import new_event_async, new_event  # noqa: F401, E402
-from .impl import new_page_view, new_page_view_async  # noqa: F401, E402
-from .impl import set_url_base, set_website_id, set_hostname  # noqa: F401, E402
-from .impl import verify_token_async, verify_token  # noqa: F401, E402
-from .impl import websites_async, websites  # noqa: F401, E402
+
+from . import (
+    errors,  # noqa: F401, E402
+    models,  # noqa: F401, E402
+)
+from .impl import (  # noqa: F401, E402  # noqa: F401, E402  # noqa: F401, E402  # noqa: F401, E402  # noqa: F401, E402  # noqa: F401, E402
+    login,
+    login_async,
+    new_event,
+    new_event_async,
+    new_page_view,
+    new_page_view_async,
+    set_hostname,
+    set_url_base,
+    set_website_id,
+    verify_token,
+    verify_token_async,
+    websites,
+    websites_async,
+)
 
 __author__ = 'Michael Kennedy <michael@talkpython.fm>'
 __version__ = impl.__version__
