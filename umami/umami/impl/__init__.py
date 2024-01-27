@@ -7,7 +7,7 @@ from umami import models, urls
 
 __version__ = '0.1.11'
 
-from umami.errors import OperationNotAllowedError, ValidationError
+from umami.errors import ValidationError, OperationNotAllowedError
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
@@ -403,7 +403,7 @@ def validate_event_data(event_name, hostname, website_id):
 async def verify_token_async(check_server: bool = True) -> bool:
     """
     Verifies that the token set when you called login() is still valid. Umami says this token will expire,
-    but I'm not sure if that's minutes, hours, or years.
+    but I'm not sure if that's minutes, hours, or years. 
 
     Args:
         check_server: If true, we will contact the server and verify that the token is valid.
