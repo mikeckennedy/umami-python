@@ -4,7 +4,9 @@ format.quote-style = "single"
 
 # Enable Pyflakes `E` and `F` codes by default.
 select = ["E", "F"]
-ignore = []
+ignore = [
+    "E501" # Line length
+]
 
 # Exclude a variety of commonly ignored directories.
 exclude = [

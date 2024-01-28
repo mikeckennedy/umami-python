@@ -56,7 +56,7 @@ class Website(pydantic.BaseModel):
 
 
 class WebsitesResponse(pydantic.BaseModel):
-    websites: list[Website] = pydantic.Field(alias="data")
+    websites: list[Website] = pydantic.Field(alias='data')
     count: int
     page: int
     pageSize: int
