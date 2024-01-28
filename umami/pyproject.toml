@@ -63,30 +63,3 @@ exclude = [
     "/example_client",
 ]
 
-
-[tool.ruff]
-target-version = 'py38'
-
-select = [
-    "B",  # bug bear 
-    "E",  # pycodestyle: error checking 
-    "F",  # pyflakes: PEP8
-    "W",  # pycodestyle
-    "I",  # import sort 
-    "N",  # PEP naming conventions
-    "UP", # Upgrade warnings
-]
-
-ignore = [
-    "E501", # line length
-]
-
-fixable = ["ALL"]
-
-# Avoid trying to fix flake8-bugbear (`B`) violations.
-unfixable = ["B"]
-
-[tool.mypy]
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
