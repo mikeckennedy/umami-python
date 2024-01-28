@@ -62,4 +62,3 @@ exclude = [
     "tox.ini",
     "/example_client",
 ]
-
