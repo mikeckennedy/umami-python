@@ -5,7 +5,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.1.12'
+__version__ = '0.1.13'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -168,7 +168,7 @@ def websites() -> list[models.Website]:
 async def new_event_async(event_name: str, hostname: Optional[str] = None, url: str = '/',
                           website_id: Optional[str] = None, title: Optional[str] = None,
                           custom_data=None, referrer: str = '', language: str = 'en-US',
-                          screen: str = "1920x1080") -> str:
+                          screen: str = "1920x1080", ip_address: Optional[str] = None) -> str:
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
@@ -185,6 +185,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         referrer: The referrer of the client if there is any (what location lead them to this event)
         language: The language of the event / client.
         screen: The screen resolution of the client.
+        ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
     Returns: The text returned from the Umami API.
     """
@@ -213,6 +214,9 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         "name": event_name,
         "data": custom_data
     }
+
+    if ip_address and ip_address.strip():
+        payload['ip'] = ip_address
 
     event_data = {
         'payload': payload,
@@ -229,7 +233,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
 def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
               website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: str = '', language: str = 'en-US',
-              screen: str = "1920x1080") -> str:
+              screen: str = "1920x1080", ip_address: Optional[str] = None) -> str:
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
@@ -246,6 +250,7 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
         referrer: The referrer of the client if there is any (what location lead them to this event)
         language: The language of the event / client.
         screen: The screen resolution of the client.
+        ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
     Returns: The text returned from the Umami API.
     """
@@ -275,6 +280,9 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
         "data": custom_data
     }
 
+    if ip_address and ip_address.strip():
+        payload['ip'] = ip_address
+
     event_data = {
         'payload': payload,
         'type': 'event'
@@ -288,7 +296,8 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
 
 async def new_page_view_async(page_title: str, url: str, hostname: Optional[str] = None,
                               website_id: Optional[str] = None, referrer: str = '',
-                              language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent) -> str:
+                              language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent,
+                              ip_address: Optional[str] = None) -> str:
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). This is equivalent to what
@@ -303,6 +312,7 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         language: OPTIONAL: The language of the event / client.
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
+        ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
     Returns: The text returned from the Umami API.
     """
@@ -327,6 +337,9 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         "url": url,
         "website": website_id,
     }
+
+    if ip_address and ip_address.strip():
+        payload['ip'] = ip_address
 
     event_data = {
         'payload': payload,
@@ -342,7 +355,8 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
 
 def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
                   website_id: Optional[str] = None, referrer: str = '',
-                  language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent) -> str:
+                  language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent,
+                  ip_address: Optional[str] = None) -> str:
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). This is equivalent to what
@@ -357,6 +371,7 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
         language: OPTIONAL: The language of the event / client.
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
+        ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
     Returns: The text returned from the Umami API.
     """
@@ -381,6 +396,9 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
         "url": url,
         "website": website_id,
     }
+
+    if ip_address and ip_address.strip():
+        payload['ip'] = ip_address
 
     event_data = {
         'payload': payload,
