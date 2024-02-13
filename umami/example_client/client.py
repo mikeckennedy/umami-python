@@ -51,7 +51,7 @@ if test_domain := settings.get('test_domain'):
     print(f"Created new event: {event_resp}")
 
     print('Sending event as if we are a browser user:', end=' ')
-    page_resp = umami.new_page_view("Account Details - Your App", "/account/details")
+    page_resp = umami.new_page_view("Account Details - Your App", "/account/details", ip_address="127.100.200.1")
     print(page_resp)
 else:
     print("No test domain, skipping event creation.")
