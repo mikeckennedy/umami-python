@@ -16,29 +16,9 @@ class LoginResponse(pydantic.BaseModel):
     user: User
 
 
-class TokenVerification(pydantic.BaseModel):
-    id: str
-    username: str
-    role: str
-    createdAt: str
-    isAdmin: bool
-
-
-class WebsiteTeam(pydantic.BaseModel):
-    name: str
-
-
 class WebsiteUser(pydantic.BaseModel):
     username: str
     id: str
-
-
-class TeamSiteDetails(pydantic.BaseModel):
-    id: str
-    teamId: str
-    websiteId: str
-    createdAt: str
-    team: WebsiteTeam
 
 
 class Website(pydantic.BaseModel):
@@ -47,11 +27,11 @@ class Website(pydantic.BaseModel):
     domain: str
     shareId: typing.Any
     resetAt: typing.Any
-    userId: str
+    userId: typing.Optional[str] = None
     createdAt: str
     updatedAt: str
     deletedAt: typing.Any
-    teamWebsite: list[TeamSiteDetails]
+    teamId: typing.Optional[str] = None
     user: WebsiteUser
 
 

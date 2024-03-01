@@ -45,17 +45,16 @@ if test_domain := settings.get('test_domain'):
     umami.set_hostname(test_site.domain)
     umami.set_website_id(test_site.id)
 
-    event_resp = umami.new_event(
+    umami.new_event(
         event_name='Umami-Test-Event3',
         title='Umami-Test-Event3',
         url='/users/actions',
         custom_data={'client': 'umami-tester-v1'},
         referrer='https://talkpython.fm')
 
-    print(f"Created new event: {event_resp}")
+    print("Created new event")
 
-    print('Sending event as if we are a browser user:', end=' ')
-    page_resp = umami.new_page_view("Account Details - Your App", "/account/details", ip_address="127.100.200.1")
-    print(page_resp)
+    print('Sending event as if we are a browser user')
+    umami.new_page_view("Account Details - Your App", "/account/details", ip_address="127.100.200.1")
 else:
     print("No test domain, skipping event creation.")

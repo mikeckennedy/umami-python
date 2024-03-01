@@ -1,3 +1,4 @@
+import base64
 import json
 import sys
 from typing import Optional
@@ -6,7 +7,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.1.14'
+__version__ = '0.2.15'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -188,7 +189,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
-    Returns: The text returned from the Umami API.
+    Returns: The data returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -228,13 +229,14 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-    return resp.text
+    data_str = base64.b64decode(resp.text)
+    return json.loads(data_str)
 
 
 def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
               website_id: Optional[str] = None, title: Optional[str] = None,
               custom_data=None, referrer: str = '', language: str = 'en-US',
-              screen: str = "1920x1080", ip_address: Optional[str] = None) -> str:
+              screen: str = "1920x1080", ip_address: Optional[str] = None):
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
@@ -252,8 +254,6 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-
-    Returns: The text returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -292,13 +292,11 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
-    return resp.text
-
 
 async def new_page_view_async(page_title: str, url: str, hostname: Optional[str] = None,
                               website_id: Optional[str] = None, referrer: str = '',
                               language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent,
-                              ip_address: Optional[str] = None) -> str:
+                              ip_address: Optional[str] = None):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). This is equivalent to what
@@ -314,8 +312,6 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-
-    Returns: The text returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -351,13 +347,11 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-    return resp.text
-
 
 def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
                   website_id: Optional[str] = None, referrer: str = '',
                   language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent,
-                  ip_address: Optional[str] = None) -> str:
+                  ip_address: Optional[str] = None):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). This is equivalent to what
@@ -373,8 +367,6 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-
-    Returns: The text returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -408,8 +400,6 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
 
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
-
-    return resp.text
 
 
 def validate_event_data(event_name, hostname, website_id):
