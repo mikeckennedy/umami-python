@@ -26,6 +26,10 @@ print(umami.verify_token(check_server=False))
 print(umami.verify_token())
 print()
 
+print("Checking heartbeat")
+print(umami.heartbeat())
+print()
+
 websites = umami.websites()
 print(f"Found {len(websites):,} websites.")
 print("First website in list:")

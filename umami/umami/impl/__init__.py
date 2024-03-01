@@ -1,3 +1,4 @@
+import json
 import sys
 from typing import Optional
 
@@ -5,7 +6,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.1.13'
+__version__ = '0.1.14'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -484,6 +485,53 @@ def verify_token(check_server: bool = True) -> bool:
         resp.raise_for_status()
 
         return 'username' in resp.json()
+    except Exception:
+        return False
+
+
+async def heartbeat_async() -> bool:
+    """
+    Verifies that the server is reachable via the internet and is healthy.
+
+    Returns: True if the server is healthy and accessible.
+    """
+    # noinspection PyBroadException
+    try:
+        global auth_token
+        validate_state(url=True, user=False)
+
+        url = f'{url_base}{urls.heartbeat}'
+        headers = {
+            'User-Agent': user_agent,
+        }
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(url, headers=headers, follow_redirects=True)
+            resp.raise_for_status()
+
+        return True
+    except Exception:
+        return False
+
+
+def heartbeat() -> bool:
+    """
+    Verifies that the server is reachable via the internet and is healthy.
+
+    Returns: True if the server is healthy and accessible.
+    """
+    # noinspection PyBroadException
+    try:
+        global auth_token
+        validate_state(url=True, user=False)
+
+        url = f'{url_base}{urls.heartbeat}'
+        headers = {
+            'User-Agent': user_agent,
+        }
+        resp = httpx.post(url, headers=headers, follow_redirects=True)
+        resp.raise_for_status()
+
+        return True
     except Exception:
         return False
 
