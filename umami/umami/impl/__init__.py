@@ -1,3 +1,4 @@
+import base64
 import json
 import sys
 from typing import Optional
@@ -6,7 +7,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.1.14'
+__version__ = '0.2.15'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -188,7 +189,7 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
-    Returns: The text returned from the Umami API.
+    Returns: The data returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -228,7 +229,8 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-    return resp.text
+    data_str = base64.b64decode(resp.text)
+    return json.loads(data_str)
 
 
 def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
@@ -253,7 +255,7 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
-    Returns: The text returned from the Umami API.
+    Returns: The data returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -292,7 +294,17 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
-    return resp.text
+    # Decode the Base64 encoded string
+    # Ensure the length of the input string is a multiple of 4
+    encoded_string = resp.text
+    while len(encoded_string) % 4 != 0:
+        encoded_string += "="
+    decoded_bytes = base64.urlsafe_b64decode(encoded_string)
+    decoded_string = decoded_bytes.decode("utf-8")
+
+    # Parse the JSON
+    decoded_json = json.loads(decoded_string)
+    return decoded_json
 
 
 async def new_page_view_async(page_title: str, url: str, hostname: Optional[str] = None,
@@ -315,7 +327,7 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
-    Returns: The text returned from the Umami API.
+    Returns: The data returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -351,7 +363,8 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-    return resp.text
+    data_str = base64.b64decode(resp.text)
+    return json.loads(data_str)
 
 
 def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
@@ -374,7 +387,7 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
-    Returns: The text returned from the Umami API.
+    Returns: The data returned from the Umami API.
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -409,7 +422,8 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
-    return resp.text
+    data_str = base64.b64decode(resp.text)
+    return json.loads(data_str)
 
 
 def validate_event_data(event_name, hostname, website_id):
