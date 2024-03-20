@@ -13,7 +13,7 @@ authors = [
     { name = "Michael Kennedy", email = "michael@talkpython.fm" },
 ]
 classifiers = [
-    'Development Status :: 2 - Pre-Alpha',
+    'Development Status :: 4 - Beta',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
@@ -27,7 +27,7 @@ dependencies = [
     "httpx",
     "pydantic",
 ]
-version = "0.2.15"
+version = "0.2.16"
 
 
 [project.urls]
