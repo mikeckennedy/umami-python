@@ -16,9 +16,11 @@ user = settings.get('username') or input("Enter the username for Umami: ")
 password = settings.get('password') or input("Enter the password for ")
 
 umami.set_url_base(url)
+print(f"Not currently logged in? {umami.is_logged_in() == False}")
 
 login = umami.login(user, password)
 print(f"Logged in successfully as {login.user.username} : admin? {login.user.isAdmin}")
+print(f"Currently logged in? {umami.is_logged_in()}")
 print()
 
 print("Verify token:")

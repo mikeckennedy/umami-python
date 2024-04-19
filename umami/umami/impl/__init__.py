@@ -7,7 +7,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.2.16'
+__version__ = '0.2.17'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -65,6 +65,10 @@ def set_hostname(hostname: str) -> None:
     """
     global default_hostname
     default_hostname = hostname
+
+
+def is_logged_in() -> bool:
+    return auth_token is not None
 
 
 async def login_async(username: str, password: str) -> models.LoginResponse:
