@@ -624,7 +624,8 @@ async def website_stats_async(start_at: datetime, end_at: datetime, website_id: 
 
     website_id = website_id or default_website_id
     
-    url = f'{url_base}{urls.websites}/{website_id}/stats'
+    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+
     headers = {
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
@@ -632,6 +633,8 @@ async def website_stats_async(start_at: datetime, end_at: datetime, website_id: 
     params = {
         'start_at': int(start_at.timestamp() * 1000),
         'end_at': int(end_at.timestamp() * 1000),
+    }
+    optional_params = {
         'url': url,
         'referrer': referrer,
         'title': title,
@@ -645,9 +648,10 @@ async def website_stats_async(start_at: datetime, end_at: datetime, website_id: 
         'region': region,
         'city': city,
     }
+    params.update({k: v for k, v in optional_params.items() if v is not None})
     
     async with httpx.AsyncClient() as client:
-        resp = await client.get(url, headers=headers, params=params, follow_redirects=True)
+        resp = await client.get(api_url, headers=headers, params=params, follow_redirects=True)
         resp.raise_for_status()
     
     return models.WebsiteStats(**resp.json())
@@ -681,17 +685,19 @@ def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str
     """
     validate_state(url=True, user=True)
     
-    url = f'{url_base}{urls.websites}/{website_id}/stats'
-
     website_id = website_id or default_website_id
+
+    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
 
     headers = {
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
     }
     params = {
-        'start_at': int(start_at.timestamp() * 1000),
-        'end_at': int(end_at.timestamp() * 1000),
+        'startAt': int(start_at.timestamp() * 1000),
+        'endAt': int(end_at.timestamp() * 1000),
+    }
+    optional_params = {
         'url': url,
         'referrer': referrer,
         'title': title,
@@ -705,8 +711,9 @@ def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str
         'region': region,
         'city': city,
     }
+    params.update({k: v for k, v in optional_params.items() if v is not None})
     
-    resp = httpx.get(url, headers=headers, params=params, follow_redirects=True)
+    resp = httpx.get(api_url, headers=headers, params=params, follow_redirects=True)
     resp.raise_for_status()
     
     return models.WebsiteStats(**resp.json())
