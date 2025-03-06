@@ -594,7 +594,10 @@ def active_users(website_id: Optional[str] = None) -> int:
     return int(resp.json().get("x", 0))
 
 
-async def website_stats_async(start_at: datetime, end_at: datetime, website_id: Optional[str] = None, url: Optional[str] = None, referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStatsResponse:
+async def website_stats_async(start_at: datetime, end_at: datetime, website_id: Optional[str] = None, url: Optional[str] = None, 
+                              referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, 
+                              host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, 
+                              country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStats:
     """
     Retrieves the statistics for a specific website.
     
@@ -650,7 +653,10 @@ async def website_stats_async(start_at: datetime, end_at: datetime, website_id: 
     return models.WebsiteStats(**resp.json())
 
 
-def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str] = None, url: Optional[str] = None, referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStatsResponse:
+def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str] = None, url: Optional[str] = None, 
+                  referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, 
+                  host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, 
+                  country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStats:
     """
     Retrieves the statistics for a specific website.
     
