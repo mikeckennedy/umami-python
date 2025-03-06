@@ -10,6 +10,7 @@ from umami import models, urls
 __version__ = '0.2.17'
 
 from umami.errors import ValidationError, OperationNotAllowedError
+from datetime import datetime
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
@@ -539,6 +540,159 @@ def validate_login(email: str, password: str) -> None:
     if not password:
         raise ValidationError("Password cannot be empty")
 
+
+async def get_active_users_async(website_id: str) -> int:
+    """
+    Retrieves the active users for a specific website.
+    
+    Args:
+        website_id: The ID of the website in Umami.
+    
+    Returns: The number of active users.
+    """
+    validate_state(url=True, user=True)
+    
+    url = f'{url_base}{urls.websites}/{website_id}/active'
+    headers = {
+        'User-Agent': user_agent,
+        'Authorization': f'Bearer {auth_token}',
+    }
+    
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(url, headers=headers, follow_redirects=True)
+        resp.raise_for_status()
+    
+    return int(resp.json().get("x", 0))
+
+
+def get_active_users(website_id: str) -> int:
+    """
+    Retrieves the active users for a specific website.
+    
+    Args:
+        website_id: The ID of the website in Umami.
+    
+    Returns: The number of active users.
+    """
+    validate_state(url=True, user=True)
+    
+    url = f'{url_base}{urls.websites}/{website_id}/active'
+    headers = {
+        'User-Agent': user_agent,
+        'Authorization': f'Bearer {auth_token}',
+    }
+    
+    resp = httpx.get(url, headers=headers, follow_redirects=True)
+    resp.raise_for_status()
+    
+    return int(resp.json().get("x", 0))
+
+
+async def get_website_stats_async(website_id: str, start_at: datetime, end_at: datetime, url: Optional[str] = None, referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStatsResponse:
+    """
+    Retrieves the statistics for a specific website.
+    
+    Args:
+        website_id: The ID of the website in Umami.
+        start_at: Starting date as a datetime object.
+        end_at: End date as a datetime object.
+        url: (optional) Name of URL.
+        referrer: (optional) Name of referrer.
+        title: (optional) Name of page title.
+        query: (optional) Name of query.
+        event: (optional) Name of event.
+        host: (optional) Name of hostname.
+        os: (optional) Name of operating system.
+        browser: (optional) Name of browser.
+        device: (optional) Name of device (ex. Mobile)
+        country: (optional) Name of country.
+        region: (optional) Name of region/state/province.
+        city: (optional) Name of city.
+    
+    Returns: A WebsiteStatsResponse model containing the website statistics data.
+    """
+    validate_state(url=True, user=True)
+    
+    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+    headers = {
+        'User-Agent': user_agent,
+        'Authorization': f'Bearer {auth_token}',
+    }
+    params = {
+        'start_at': int(start_at.timestamp() * 1000),
+        'end_at': int(end_at.timestamp() * 1000),
+        'url': url,
+        'referrer': referrer,
+        'title': title,
+        'query': query,
+        'event': event,
+        'host': host,
+        'os': os,
+        'browser': browser,
+        'device': device,
+        'country': country,
+        'region': region,
+        'city': city,
+    }
+    
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(api_url, headers=headers, params=params, follow_redirects=True)
+        resp.raise_for_status()
+    
+    return models.WebsiteStats(**resp.json())
+
+
+def get_website_stats(website_id: str, start_at: datetime, end_at: datetime, url: Optional[str] = None, referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStatsResponse:
+    """
+    Retrieves the statistics for a specific website.
+    
+    Args:
+        website_id: The ID of the website in Umami.
+        start_at: Starting date as a datetime object.
+        end_at: End date as a datetime object.
+        url: (optional) Name of URL.
+        referrer: (optional) Name of referrer.
+        title: (optional) Name of page title.
+        query: (optional) Name of query.
+        event: (optional) Name of event.
+        host: (optional) Name of hostname.
+        os: (optional) Name of operating system.
+        browser: (optional) Name of browser.
+        device: (optional) Name of device (ex. Mobile)
+        country: (optional) Name of country.
+        region: (optional) Name of region/state/province.
+        city: (optional) Name of city.
+    
+    Returns: A WebsiteStatsResponse model containing the website statistics data.
+    """
+    validate_state(url=True, user=True)
+    
+    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+    headers = {
+        'User-Agent': user_agent,
+        'Authorization': f'Bearer {auth_token}',
+    }
+    params = {
+        'start_at': int(start_at.timestamp() * 1000),
+        'end_at': int(end_at.timestamp() * 1000),
+        'url': url,
+        'referrer': referrer,
+        'title': title,
+        'query': query,
+        'event': event,
+        'host': host,
+        'os': os,
+        'browser': browser,
+        'device': device,
+        'country': country,
+        'region': region,
+        'city': city,
+    }
+    
+    resp = httpx.get(api_url, headers=headers, params=params, follow_redirects=True)
+    resp.raise_for_status()
+    
+    return models.WebsiteStats(**resp.json())
 
 def validate_state(url: bool = False, user: bool = False):
     """
