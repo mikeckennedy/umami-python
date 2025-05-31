@@ -34,6 +34,17 @@ class Website(pydantic.BaseModel):
     teamId: typing.Optional[str] = None
     user: WebsiteUser
 
+class Metric(pydantic.BaseModel):
+    value: int
+    prev: int
+
+class WebsiteStats(pydantic.BaseModel):
+    pageviews: Metric
+    visitors: Metric
+    visits: Metric
+    bounces: Metric
+    totaltime: Metric
+
 
 class WebsitesResponse(pydantic.BaseModel):
     websites: list[Website] = pydantic.Field(alias='data')
