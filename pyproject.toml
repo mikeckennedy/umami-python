@@ -1,7 +1,7 @@
 [project]
 name = "umami-analytics"
 description = "Umami Analytics Client for Python"
-readme = "../README.md"
+readme = "README.md"
 license = "MIT"
 requires-python = ">=3.9"
 keywords = [
@@ -45,22 +45,22 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.sdist]
 exclude = [
     "/.github",
-    "/tests",
-    "/example_client",
+    "/umami/tests",
+    "/umami/example_client",
     "setup.py",
     "settings.json",
-    "tox.ini",
-    "/example_client",
+    "/umami/tox.ini",
+    "/umami/example_client",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["umami"]
+packages = ["umami/umami"]
 exclude = [
     "/.github",
-    "/tests",
-    "/example_client",
+    "/umami/tests",
+    "/umami/example_client",
     "setup.py",
     "settings.json",
-    "tox.ini",
-    "/example_client",
+    "/umami/tox.ini",
+    "/umami/example_client",
 ]
