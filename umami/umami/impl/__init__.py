@@ -7,7 +7,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.2.17'
+__version__ = '0.2.18'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 
@@ -92,7 +92,7 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
         "password": password,
     }
     async with httpx.AsyncClient() as client:
-        resp = await client.post(url, data=api_data, headers=headers, follow_redirects=True)
+        resp = await client.post(url, json=api_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
     model = models.LoginResponse(**resp.json())
@@ -121,7 +121,7 @@ def login(username: str, password: str) -> models.LoginResponse:
         "username": username,
         "password": password,
     }
-    resp = httpx.post(url, data=api_data, headers=headers, follow_redirects=True)
+    resp = httpx.post(url, json=api_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
     model = models.LoginResponse(**resp.json())
