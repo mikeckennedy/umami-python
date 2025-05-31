@@ -7,7 +7,7 @@ import httpx
 
 from umami import models, urls
 
-__version__ = '0.2.18'
+__version__ = '0.2.19'
 
 from umami.errors import ValidationError, OperationNotAllowedError
 

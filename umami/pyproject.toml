@@ -63,4 +63,4 @@ exclude = [
     "settings.json",
     "/umami/tox.ini",
     "/umami/example_client",
-]
+] 
