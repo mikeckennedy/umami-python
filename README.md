@@ -25,6 +25,36 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 * ⚒️ **Structured data with Pydantic** models for API responses.
 * 👩‍💻 **Login / authenticate** for either a self-hosted or SaaS hosted instance of Umami.
 * 🥇Set a **default website** for a **simplified API** going forward.
+* 🔧 **Enable/disable tracking** for development and testing environments.
+
+## Development and Testing Support
+
+🔧 **Disable tracking in development**: Use `umami.disable()` to disable all event and page view tracking without changing your code. Perfect for development and testing environments where you don't want to pollute your analytics with test data.
+
+```python
+import umami
+
+# Configure as usual
+umami.set_url_base("https://umami.hostedbyyouorthem.com")
+umami.set_website_id('cc726914-8e68-4d1a-4be0-af4ca8933456')
+umami.set_hostname('somedomain.com')
+
+# Disable tracking for development/testing
+umami.disable()
+
+# These calls will return immediately without sending data to Umami
+umami.new_event('test-event')  # No HTTP request made
+umami.new_page_view('Test Page', '/test')  # No HTTP request made
+
+# Re-enable when needed (default state is enabled)
+umami.enable()
+```
+
+When tracking is disabled:
+- ✅ **No HTTP requests** are made to your Umami server
+- ✅ **API calls still validate** parameters (helps catch configuration issues)
+- ✅ **All other functions work normally** (login, websites, stats, etc.)
+- ✅ **Functions return appropriate values** for compatibility
 
 See the usage example below for the Python API around these features.
 
@@ -50,6 +80,9 @@ login = umami.login(username, password)
 # Skip the need to pass the target website in subsequent calls.
 umami.set_website_id('cc726914-8e68-4d1a-4be0-af4ca8933456')
 umami.set_hostname('somedomain.com')
+
+# Optional: Disable tracking for development/testing
+# umami.disable()  # Uncomment to disable tracking
 
 # List your websites
 websites = umami.websites()
