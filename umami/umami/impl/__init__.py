@@ -565,63 +565,76 @@ def validate_login(email: str, password: str) -> None:
 async def active_users_async(website_id: Optional[str] = None) -> int:
     """
     Retrieves the active users for a specific website.
-    
+
     Args:
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
 
-    
+
     Returns: The number of active users.
     """
     validate_state(url=True, user=True)
 
     website_id = website_id or default_website_id
-    
+
     url = f'{url_base}{urls.websites}/{website_id}/active'
     headers = {
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
     }
-    
+
     async with httpx.AsyncClient() as client:
         resp = await client.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
-    
-    return int(resp.json().get("x", 0))
+
+    return int(resp.json().get('x', 0))
 
 
 def active_users(website_id: Optional[str] = None) -> int:
     """
     Retrieves the active users for a specific website.
-    
+
     Args:
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
 
-    
+
     Returns: The number of active users.
     """
     validate_state(url=True, user=True)
 
     website_id = website_id or default_website_id
-    
+
     url = f'{url_base}{urls.websites}/{website_id}/active'
     headers = {
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
     }
-    
+
     resp = httpx.get(url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
-    
-    return int(resp.json().get("x", 0))
+
+    return int(resp.json().get('x', 0))
 
 
-async def website_stats_async(start_at: datetime, end_at: datetime, website_id: Optional[str] = None, url: Optional[str] = None, 
-                              referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, 
-                              host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, 
-                              country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStats:
+async def website_stats_async(
+    start_at: datetime,
+    end_at: datetime,
+    website_id: Optional[str] = None,
+    url: Optional[str] = None,
+    referrer: Optional[str] = None,
+    title: Optional[str] = None,
+    query: Optional[str] = None,
+    event: Optional[str] = None,
+    host: Optional[str] = None,
+    os: Optional[str] = None,
+    browser: Optional[str] = None,
+    device: Optional[str] = None,
+    country: Optional[str] = None,
+    region: Optional[str] = None,
+    city: Optional[str] = None,
+) -> models.WebsiteStats:
     """
     Retrieves the statistics for a specific website.
-    
+
     Args:
         start_at: Starting date as a datetime object.
         end_at: End date as a datetime object.
@@ -638,13 +651,13 @@ async def website_stats_async(start_at: datetime, end_at: datetime, website_id: 
         country: OPTIONAL: Name of country.
         region: OPTIONAL: Name of region/state/province.
         city: OPTIONAL: Name of city.
-    
+
     Returns: A WebsiteStatsResponse model containing the website statistics data.
     """
     validate_state(url=True, user=True)
 
     website_id = website_id or default_website_id
-    
+
     api_url = f'{url_base}{urls.websites}/{website_id}/stats'
 
     headers = {
@@ -670,21 +683,34 @@ async def website_stats_async(start_at: datetime, end_at: datetime, website_id: 
         'city': city,
     }
     params.update({k: v for k, v in optional_params.items() if v is not None})
-    
+
     async with httpx.AsyncClient() as client:
         resp = await client.get(api_url, headers=headers, params=params, follow_redirects=True)
         resp.raise_for_status()
-    
+
     return models.WebsiteStats(**resp.json())
 
 
-def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str] = None, url: Optional[str] = None, 
-                  referrer: Optional[str] = None, title: Optional[str] = None, query: Optional[str] = None, event: Optional[str] = None, 
-                  host: Optional[str] = None, os: Optional[str] = None, browser: Optional[str] = None, device: Optional[str] = None, 
-                  country: Optional[str] = None, region: Optional[str] = None, city: Optional[str] = None) -> models.WebsiteStats:
+def website_stats(
+    start_at: datetime,
+    end_at: datetime,
+    website_id: Optional[str] = None,
+    url: Optional[str] = None,
+    referrer: Optional[str] = None,
+    title: Optional[str] = None,
+    query: Optional[str] = None,
+    event: Optional[str] = None,
+    host: Optional[str] = None,
+    os: Optional[str] = None,
+    browser: Optional[str] = None,
+    device: Optional[str] = None,
+    country: Optional[str] = None,
+    region: Optional[str] = None,
+    city: Optional[str] = None,
+) -> models.WebsiteStats:
     """
     Retrieves the statistics for a specific website.
-    
+
     Args:
         start_at: Starting date as a datetime object.
         end_at: End date as a datetime object.
@@ -701,11 +727,11 @@ def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str
         country: OPTIONAL: Name of country.
         region: OPTIONAL: Name of region/state/province.
         city: OPTIONAL: Name of city.
-    
+
     Returns: A WebsiteStatsResponse model containing the website statistics data.
     """
     validate_state(url=True, user=True)
-    
+
     website_id = website_id or default_website_id
 
     api_url = f'{url_base}{urls.websites}/{website_id}/stats'
@@ -733,11 +759,12 @@ def website_stats(start_at: datetime, end_at: datetime, website_id: Optional[str
         'city': city,
     }
     params.update({k: v for k, v in optional_params.items() if v is not None})
-    
+
     resp = httpx.get(api_url, headers=headers, params=params, follow_redirects=True)
     resp.raise_for_status()
-    
+
     return models.WebsiteStats(**resp.json())
+
 
 def validate_state(url: bool = False, user: bool = False):
     """
