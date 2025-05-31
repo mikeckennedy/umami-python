@@ -16,6 +16,7 @@ url_base: Optional[str] = None
 auth_token: Optional[str] = None
 default_website_id: Optional[str] = None
 default_hostname: Optional[str] = None
+tracking_enabled: bool = True
 # An actual browser UA is needed to get around the bot detection in Umami
 # You can also set DISABLE_BOT_CHECK=true in your Umami environment to disable the bot check entirely:
 # https://github.com/umami-software/umami/blob/7a3443cd06772f3cde37bdbb0bf38eabf4515561/pages/api/collect.js#L13
@@ -175,6 +176,29 @@ def websites() -> list[models.Website]:
     return model.websites
 
 
+def enable() -> None:
+    """
+    Enable event and page view tracking.
+
+    When enabled, new_event() and new_page_view() functions will send
+    data to Umami normally. This is the default state.
+    """
+    global tracking_enabled
+    tracking_enabled = True
+
+
+def disable() -> None:
+    """
+    Disable event and page view tracking.
+
+    When disabled, new_event() and new_page_view() functions will return
+    immediately without sending data to Umami. This is useful for
+    development and testing environments.
+    """
+    global tracking_enabled
+    tracking_enabled = False
+
+
 async def new_event_async(
     event_name: str,
     hostname: Optional[str] = None,
@@ -214,6 +238,10 @@ async def new_event_async(
     custom_data = custom_data or {}
 
     validate_event_data(event_name, hostname, website_id)
+
+    # Early return if tracking is disabled
+    if not tracking_enabled:
+        return ''
 
     api_url = f'{url_base}{urls.events}'
     headers = {
@@ -284,6 +312,10 @@ def new_event(
 
     validate_event_data(event_name, hostname, website_id)
 
+    # Early return if tracking is disabled
+    if not tracking_enabled:
+        return
+
     api_url = f'{url_base}{urls.events}'
     headers = {
         'User-Agent': event_user_agent,
@@ -344,6 +376,10 @@ async def new_page_view_async(
 
     validate_event_data(event_name='NOT NEEDED', hostname=hostname, website_id=website_id)
 
+    # Early return if tracking is disabled
+    if not tracking_enabled:
+        return
+
     api_url = f'{url_base}{urls.events}'
     headers = {
         'User-Agent': ua,
@@ -402,6 +438,10 @@ def new_page_view(
     hostname = hostname or default_hostname
 
     validate_event_data(event_name='NOT NEEDED', hostname=hostname, website_id=website_id)
+
+    # Early return if tracking is disabled
+    if not tracking_enabled:
+        return
 
     api_url = f'{url_base}{urls.events}'
     headers = {
