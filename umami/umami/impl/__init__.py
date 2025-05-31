@@ -1,7 +1,7 @@
 import base64
 import json
 import sys
-from typing import Optional
+from typing import Optional, Any, Dict
 
 import httpx
 
@@ -19,9 +19,11 @@ default_hostname: Optional[str] = None
 # You can also set DISABLE_BOT_CHECK=true in your Umami environment to disable the bot check entirely:
 # https://github.com/umami-software/umami/blob/7a3443cd06772f3cde37bdbb0bf38eabf4515561/pages/api/collect.js#L13
 event_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0'
-user_agent = (f'Umami-Client v{__version__} / '
-              f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / '
-              f'{sys.platform.capitalize()}')
+user_agent = (
+    f'Umami-Client v{__version__} / '
+    f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / '
+    f'{sys.platform.capitalize()}'
+)
 
 
 def set_url_base(url: str) -> None:
@@ -32,12 +34,12 @@ def set_url_base(url: str) -> None:
         url: The base URL of your instance without /api.
     """
     if not url or not url.strip():
-        raise ValidationError("URL must not be empty.")
+        raise ValidationError('URL must not be empty.')
 
     # noinspection HttpUrlsUsage
     if not url.startswith('http://') and not url.startswith('https://'):
         # noinspection HttpUrlsUsage
-        raise ValidationError("The url must start with the HTTP scheme (http:// or https://).")
+        raise ValidationError('The url must start with the HTTP scheme (http:// or https://).')
 
     if url.endswith('/'):
         url = url.rstrip('/')
@@ -73,14 +75,14 @@ def is_logged_in() -> bool:
 
 async def login_async(username: str, password: str) -> models.LoginResponse:
     """
-        Logs into Umami and retrieves a temporary auth token. If the token is expired,
-        you'll need to log in again. This can be checked with verify_token().
-        Args:
-            username: Your Umami username
-            password: Your Umami password
+    Logs into Umami and retrieves a temporary auth token. If the token is expired,
+    you'll need to log in again. This can be checked with verify_token().
+    Args:
+        username: Your Umami username
+        password: Your Umami password
 
-        Returns: LoginResponse object which your token and user details (no need to save this).
-        """
+    Returns: LoginResponse object which your token and user details (no need to save this).
+    """
     global auth_token
     validate_state(url=True)
     validate_login(username, password)
@@ -88,8 +90,8 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
     url = f'{url_base}{urls.login}'
     headers = {'User-Agent': user_agent}
     api_data = {
-        "username": username,
-        "password": password,
+        'username': username,
+        'password': password,
     }
     async with httpx.AsyncClient() as client:
         resp = await client.post(url, json=api_data, headers=headers, follow_redirects=True)
@@ -118,8 +120,8 @@ def login(username: str, password: str) -> models.LoginResponse:
     url = f'{url_base}{urls.login}'
     headers = {'User-Agent': user_agent}
     api_data = {
-        "username": username,
-        "password": password,
+        'username': username,
+        'password': password,
     }
     resp = httpx.post(url, json=api_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
@@ -131,8 +133,8 @@ def login(username: str, password: str) -> models.LoginResponse:
 
 async def websites_async() -> list[models.Website]:
     """
-        All the websites that are registered in your Umami instance.
-        Returns: A list of Website Pydantic models.
+    All the websites that are registered in your Umami instance.
+    Returns: A list of Website Pydantic models.
     """
     global auth_token
     validate_state(url=True, user=True)
@@ -142,7 +144,8 @@ async def websites_async() -> list[models.Website]:
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
     }
-    async with httpx.AsyncClient() as client:
+    client: Optional[httpx.AsyncClient] = None
+    async with httpx.AsyncClient() as client:  # type: ignore
         resp = await client.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
@@ -152,8 +155,8 @@ async def websites_async() -> list[models.Website]:
 
 def websites() -> list[models.Website]:
     """
-        All the websites that are registered in your Umami instance.
-        Returns: A list of Website Pydantic models.
+    All the websites that are registered in your Umami instance.
+    Returns: A list of Website Pydantic models.
     """
     global auth_token
     validate_state(url=True, user=True)
@@ -171,10 +174,18 @@ def websites() -> list[models.Website]:
     return model.websites
 
 
-async def new_event_async(event_name: str, hostname: Optional[str] = None, url: str = '/',
-                          website_id: Optional[str] = None, title: Optional[str] = None,
-                          custom_data=None, referrer: str = '', language: str = 'en-US',
-                          screen: str = "1920x1080", ip_address: Optional[str] = None) -> str:
+async def new_event_async(
+    event_name: str,
+    hostname: Optional[str] = None,
+    url: str = '/',
+    website_id: Optional[str] = None,
+    title: Optional[str] = None,
+    custom_data: Optional[Dict[str, Any]] = None,
+    referrer: str = '',
+    language: str = 'en-US',
+    screen: str = '1920x1080',
+    ip_address: Optional[str] = None,
+) -> str:
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
@@ -210,24 +221,21 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     }
 
     payload = {
-        "hostname": hostname,
-        "language": language,
-        "referrer": referrer,
-        "screen": screen,
-        "title": title,
-        "url": url,
-        "website": website_id,
-        "name": event_name,
-        "data": custom_data
+        'hostname': hostname,
+        'language': language,
+        'referrer': referrer,
+        'screen': screen,
+        'title': title,
+        'url': url,
+        'website': website_id,
+        'name': event_name,
+        'data': custom_data,
     }
 
     if ip_address and ip_address.strip():
         payload['ip'] = ip_address
 
-    event_data = {
-        'payload': payload,
-        'type': 'event'
-    }
+    event_data = {'payload': payload, 'type': 'event'}
 
     async with httpx.AsyncClient() as client:
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
@@ -237,10 +245,18 @@ async def new_event_async(event_name: str, hostname: Optional[str] = None, url: 
     return json.loads(data_str)
 
 
-def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/event-api-endpoint',
-              website_id: Optional[str] = None, title: Optional[str] = None,
-              custom_data=None, referrer: str = '', language: str = 'en-US',
-              screen: str = "1920x1080", ip_address: Optional[str] = None):
+def new_event(
+    event_name: str,
+    hostname: Optional[str] = None,
+    url: str = '/event-api-endpoint',
+    website_id: Optional[str] = None,
+    title: Optional[str] = None,
+    custom_data: Optional[Dict[str, Any]] = None,
+    referrer: str = '',
+    language: str = 'en-US',
+    screen: str = '1920x1080',
+    ip_address: Optional[str] = None,
+):
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
@@ -274,33 +290,37 @@ def new_event(event_name: str, hostname: Optional[str] = None, url: str = '/even
     }
 
     payload = {
-        "hostname": hostname,
-        "language": language,
-        "referrer": referrer,
-        "screen": screen,
-        "title": title,
-        "url": url,
-        "website": website_id,
-        "name": event_name,
-        "data": custom_data
+        'hostname': hostname,
+        'language': language,
+        'referrer': referrer,
+        'screen': screen,
+        'title': title,
+        'url': url,
+        'website': website_id,
+        'name': event_name,
+        'data': custom_data,
     }
 
     if ip_address and ip_address.strip():
         payload['ip'] = ip_address
 
-    event_data = {
-        'payload': payload,
-        'type': 'event'
-    }
+    event_data = {'payload': payload, 'type': 'event'}
 
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
 
-async def new_page_view_async(page_title: str, url: str, hostname: Optional[str] = None,
-                              website_id: Optional[str] = None, referrer: str = '',
-                              language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent,
-                              ip_address: Optional[str] = None):
+async def new_page_view_async(
+    page_title: str,
+    url: str,
+    hostname: Optional[str] = None,
+    website_id: Optional[str] = None,
+    referrer: str = '',
+    language: str = 'en-US',
+    screen: str = '1920x1080',
+    ua: str = event_user_agent,
+    ip_address: Optional[str] = None,
+):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). This is equivalent to what
@@ -321,7 +341,7 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
 
-    validate_event_data(event_name="NOT NEEDED", hostname=hostname, website_id=website_id)
+    validate_event_data(event_name='NOT NEEDED', hostname=hostname, website_id=website_id)
 
     api_url = f'{url_base}{urls.events}'
     headers = {
@@ -330,32 +350,36 @@ async def new_page_view_async(page_title: str, url: str, hostname: Optional[str]
     }
 
     payload = {
-        "hostname": hostname,
-        "language": language,
-        "referrer": referrer,
-        "screen": screen,
-        "title": page_title,
-        "url": url,
-        "website": website_id,
+        'hostname': hostname,
+        'language': language,
+        'referrer': referrer,
+        'screen': screen,
+        'title': page_title,
+        'url': url,
+        'website': website_id,
     }
 
     if ip_address and ip_address.strip():
         payload['ip'] = ip_address
 
-    event_data = {
-        'payload': payload,
-        'type': 'event'
-    }
+    event_data = {'payload': payload, 'type': 'event'}
 
     async with httpx.AsyncClient() as client:
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
 
-def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
-                  website_id: Optional[str] = None, referrer: str = '',
-                  language: str = 'en-US', screen: str = "1920x1080", ua: str = event_user_agent,
-                  ip_address: Optional[str] = None):
+def new_page_view(
+    page_title: str,
+    url: str,
+    hostname: Optional[str] = None,
+    website_id: Optional[str] = None,
+    referrer: str = '',
+    language: str = 'en-US',
+    screen: str = '1920x1080',
+    ua: str = event_user_agent,
+    ip_address: Optional[str] = None,
+):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). This is equivalent to what
@@ -376,7 +400,7 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
 
-    validate_event_data(event_name="NOT NEEDED", hostname=hostname, website_id=website_id)
+    validate_event_data(event_name='NOT NEEDED', hostname=hostname, website_id=website_id)
 
     api_url = f'{url_base}{urls.events}'
     headers = {
@@ -385,43 +409,40 @@ def new_page_view(page_title: str, url: str, hostname: Optional[str] = None,
     }
 
     payload = {
-        "hostname": hostname,
-        "language": language,
-        "referrer": referrer,
-        "screen": screen,
-        "title": page_title,
-        "url": url,
-        "website": website_id,
+        'hostname': hostname,
+        'language': language,
+        'referrer': referrer,
+        'screen': screen,
+        'title': page_title,
+        'url': url,
+        'website': website_id,
     }
 
     if ip_address and ip_address.strip():
         payload['ip'] = ip_address
 
-    event_data = {
-        'payload': payload,
-        'type': 'event'
-    }
+    event_data = {'payload': payload, 'type': 'event'}
 
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
 
-def validate_event_data(event_name, hostname, website_id):
+def validate_event_data(event_name: str, hostname: Optional[str], website_id: Optional[str]):
     """
     Internal use only.
     """
     if not hostname:
-        raise Exception("The hostname must be set, either as a parameter here or via set_hostname().")
+        raise Exception('The hostname must be set, either as a parameter here or via set_hostname().')
     if not website_id:
-        raise Exception("The website_id must be set, either as a parameter here or via set_website_id().")
+        raise Exception('The website_id must be set, either as a parameter here or via set_website_id().')
     if not event_name and not event_name.strip():
-        raise Exception("The event_name is required.")
+        raise Exception('The event_name is required.')
 
 
 async def verify_token_async(check_server: bool = True) -> bool:
     """
     Verifies that the token set when you called login() is still valid. Umami says this token will expire,
-    but I'm not sure if that's minutes, hours, or years. 
+    but I'm not sure if that's minutes, hours, or years.
 
     Args:
         check_server: If true, we will contact the server and verify that the token is valid.
@@ -535,9 +556,9 @@ def validate_login(email: str, password: str) -> None:
     Internal helper function, not need to use this.
     """
     if not email:
-        raise ValidationError("Email cannot be empty")
+        raise ValidationError('Email cannot be empty')
     if not password:
-        raise ValidationError("Password cannot be empty")
+        raise ValidationError('Password cannot be empty')
 
 
 def validate_state(url: bool = False, user: bool = False):
@@ -545,7 +566,7 @@ def validate_state(url: bool = False, user: bool = False):
     Internal helper function, not need to use this.
     """
     if url and not url_base:
-        raise OperationNotAllowedError("URL Base must be set to proceed.")
+        raise OperationNotAllowedError('URL Base must be set to proceed.')
 
     if user and not auth_token:
-        raise OperationNotAllowedError("You must login before proceeding.")
+        raise OperationNotAllowedError('You must login before proceeding.')
