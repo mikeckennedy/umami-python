@@ -16,7 +16,10 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 ## Core Features
 
 * ➕ **Add a custom event** to your Umami analytics dashboard.
+* 📄 **Add a page view** to your Umami analytics dashboard.
 * 🌐 List all websites with details that you have registered at Umami.
+* 📊 **Get website statistics** including page views, visitors, bounce rate, and more.
+* 👥 **Get active users** count for real-time monitoring.
 * 🔀 Both **sync** and **async** programming models.
 * ⚒️ **Structured data with Pydantic** models for API responses.
 * 👩‍💻 **Login / authenticate** for either a self-hosted or SaaS hosted instance of Umami.
@@ -67,6 +70,27 @@ page_view_resp = umami.new_page_view(
     hostname='somedomain.com', # Only send if overriding default above.
     url='/users/actions',
     referrer='https://some_url')
+
+# Get website statistics for a date range
+from datetime import datetime, timedelta
+
+end_date = datetime.now()
+start_date = end_date - timedelta(days=7)  # Last 7 days
+
+stats = umami.website_stats(
+    start_at=start_date,
+    end_at=end_date,
+    website_id='a7cd-5d1a-2b33'  # Only send if overriding default above
+)
+print(f"Page views: {stats.pageviews}")
+print(f"Unique visitors: {stats.visitors}")
+print(f"Bounce rate: {stats.bounces}")
+
+# Get current active users count
+active_count = umami.active_users(
+    website_id='a7cd-5d1a-2b33'  # Only send if overriding default above
+)
+print(f"Currently active users: {active_count}")
 
 # Call after logging in to make sure the auth token is still valid.
 umami.verify_token()
