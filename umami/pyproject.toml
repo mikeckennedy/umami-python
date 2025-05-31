@@ -29,7 +29,7 @@ dependencies = [
     "httpx",
     "pydantic",
 ]
-version = "0.2.18"
+version = "0.2.19"
 
 
 [project.urls]
@@ -45,22 +45,20 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.sdist]
 exclude = [
     "/.github",
-    "/umami/tests",
-    "/umami/example_client",
+    "/tests",
+    "/example_client",
     "setup.py",
     "settings.json",
-    "/umami/tox.ini",
-    "/umami/example_client",
+    "/tox.ini",
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = ["umami/umami"]
+packages = ["umami"]
 exclude = [
     "/.github",
-    "/umami/tests",
-    "/umami/example_client",
+    "/tests",
+    "/example_client",
     "setup.py",
     "settings.json",
-    "/umami/tox.ini",
-    "/umami/example_client",
+    "/tox.ini",
 ] 
