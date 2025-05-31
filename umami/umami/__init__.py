@@ -18,16 +18,36 @@ user_agent = impl.user_agent
 # fmt: off
 # ruff: noqa
 __all__ = [
+    # Core modules
     'models',
     'errors',
-    'set_url_base', 'set_website_id', 'set_hostname',
-    'login_async', 'login', 'is_logged_in',
-    'websites_async', 'websites',
-    'website_stats_async', 'website_stats',
-    'active_users_async', 'active_users',
-    'new_event_async', 'new_event',
-    'new_page_view', 'new_page_view_async',
-    'verify_token_async', 'verify_token',
-    'heartbeat_async', 'heartbeat',
+    
+    # Configuration/Setup
+    'set_url_base', 
+    'set_website_id', 
+    'set_hostname',
+    
+    # Authentication
+    'login', 
+    'login_async', 
+    'is_logged_in',
+    'verify_token', 
+    'verify_token_async',
+    
+    # Basic operations
+    'websites', 
+    'websites_async',
+    'heartbeat', 
+    'heartbeat_async',
+    
+    # Main features - Events and Analytics
+    'new_event', 
+    'new_event_async',
+    'new_page_view', 
+    'new_page_view_async',
+    'website_stats', 
+    'website_stats_async',
+    'active_users', 
+    'active_users_async',
 ]
 # fmt: on
