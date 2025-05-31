@@ -20,6 +20,7 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 * 🌐 List all websites with details that you have registered at Umami.
 * 📊 **Get website statistics** including page views, visitors, bounce rate, and more.
 * 👥 **Get active users** count for real-time monitoring.
+* 💓 **Heartbeat check** to verify Umami server connectivity.
 * 🔀 Both **sync** and **async** programming models.
 * ⚒️ **Structured data with Pydantic** models for API responses.
 * 👩‍💻 **Login / authenticate** for either a self-hosted or SaaS hosted instance of Umami.
@@ -91,6 +92,10 @@ active_count = umami.active_users(
     website_id='a7cd-5d1a-2b33'  # Only send if overriding default above
 )
 print(f"Currently active users: {active_count}")
+
+# Check if Umami server is accessible
+server_ok = umami.heartbeat()
+print(f"Umami server is {'accessible' if server_ok else 'not accessible'}")
 
 # Call after logging in to make sure the auth token is still valid.
 umami.verify_token()

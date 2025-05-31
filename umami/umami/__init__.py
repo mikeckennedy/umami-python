@@ -7,8 +7,8 @@ from .impl import new_page_view, new_page_view_async  # noqa: F401, E402
 from .impl import set_url_base, set_website_id, set_hostname  # noqa: F401, E402
 from .impl import verify_token_async, verify_token  # noqa: F401, E402
 from .impl import websites_async, websites  # noqa: F401, E402
-from .impl import website_stats, website_stats_async
-from .impl import active_users, active_users_async
+from .impl import website_stats, website_stats_async  # noqa: F401, E402
+from .impl import active_users, active_users_async  # noqa: F401, E402
 
 __author__ = 'Michael Kennedy <michael@talkpython.fm>'
 __version__ = impl.__version__
