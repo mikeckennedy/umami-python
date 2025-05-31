@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
+from typing import Any
 
 import umami
 
 file = Path(__file__).parent / 'settings.json'
 
-settings = {}
+settings: dict[str, Any] = {}
 if file.exists():
     settings = json.loads(file.read_text())
 
@@ -16,7 +17,7 @@ user = settings.get('username') or input('Enter the username for Umami: ')
 password = settings.get('password') or input('Enter the password for ')
 
 umami.set_url_base(url)
-print(f'Not currently logged in? {umami.is_logged_in() == False}')
+print(f'Not currently logged in? {not umami.is_logged_in()}')
 
 login = umami.login(user, password)
 print(f'Logged in successfully as {login.user.username} : admin? {login.user.isAdmin}')

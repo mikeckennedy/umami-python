@@ -145,7 +145,7 @@ async def websites_async() -> list[models.Website]:
         'User-Agent': user_agent,
         'Authorization': f'Bearer {auth_token}',
     }
-    client: Optional[httpx.AsyncClient] = None
+
     async with httpx.AsyncClient() as client:  # type: ignore
         resp = await client.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
@@ -668,7 +668,7 @@ async def website_stats_async(
         'start_at': int(start_at.timestamp() * 1000),
         'end_at': int(end_at.timestamp() * 1000),
     }
-    optional_params = {
+    optional_params: dict[str, Any] = {
         'url': url,
         'referrer': referrer,
         'title': title,
@@ -744,7 +744,7 @@ def website_stats(
         'startAt': int(start_at.timestamp() * 1000),
         'endAt': int(end_at.timestamp() * 1000),
     }
-    optional_params = {
+    optional_params: dict[str, Any] = {
         'url': url,
         'referrer': referrer,
         'title': title,
