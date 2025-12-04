@@ -35,17 +35,21 @@ class Website(pydantic.BaseModel):
     user: WebsiteUser
 
 
-class Metric(pydantic.BaseModel):
-    value: int
-    prev: int
+class WebsiteStatsCmp(pydantic.BaseModel):
+    pageviews: int
+    visitors: int
+    visits: int
+    bounces: int
+    totaltime: int
 
 
 class WebsiteStats(pydantic.BaseModel):
-    pageviews: Metric
-    visitors: Metric
-    visits: Metric
-    bounces: Metric
-    totaltime: Metric
+    pageviews: int
+    visitors: int
+    visits: int
+    bounces: int
+    totaltime: int
+    comparison: WebsiteStatsCmp
 
 
 class WebsitesResponse(pydantic.BaseModel):
