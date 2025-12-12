@@ -21,6 +21,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.3.21] - 2025-12-12
+
+### Added
+- Change-log preservation section for tracking historical release details
+- Pyrefly configuration file treating `umami/umami` package as type-resolution root
+
+### Changed
+- Centralized all version information into a single location for easier maintenance
+- Updated Python requirement to 3.10+ (dropped support for Python 3.8 and 3.9)
+- Refactored `WebsiteStats` to use plain integers instead of custom `Metric` type - Thanks @rubitcat (#15)
+- Updated `ruff.toml` to enforce consistent import ordering
+
+### Fixed
+- Suppressed and cleaned up unnecessary type-checking warnings
+
+---
+
 ## [0.2.20] - 2025-05-30
 
 ### Added
