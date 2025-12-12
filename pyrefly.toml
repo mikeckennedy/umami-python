@@ -8,11 +8,11 @@ project-excludes = ["**/.[!/.]*", "**/*venv/**"]
 # add those to `project-excludes` automatically
 use-ignore-files = true
 # import project files from "." and "umami/umami"
-search-path = [".", "umami/umami"]
+search-path = [".", "umami"]
 # let Pyrefly try to guess your search path
 disable-search-path-heuristics = false
-# do not include any third-party packages (except those provided by an interpreter)
-site-package-path = []
+# Query the interpreter for third-party packages (like httpx, pydantic)
+# site-package-path = []  # Commented out to allow interpreter query
 
 ###### configuring your python environment
 
@@ -32,7 +32,7 @@ skip-interpreter-query = false
 # wildcards for which Pyrefly will unconditionally replace the import with `typing.Any`
 replace-imports-with-any = ["quart.*"]
 # wildcards for which Pyrefly will replace the import with `typing.Any` if it can't be found
-ignore-missing-imports = ["quart.*"]
+ignore-missing-imports = ["quart.*", "httpx", "pydantic"]
 # should Pyrefly skip type checking if we find a generated file?
 ignore-errors-in-generated-code = false
 # should Pyrefly do a check to see if a `<library>-stubs` library also has `<library>` installed?
