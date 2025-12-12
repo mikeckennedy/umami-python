@@ -3,7 +3,7 @@ name = "umami-analytics"
 description = "Umami Analytics Client for Python"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = [
     "analytics",
     "website",
@@ -27,7 +27,7 @@ dependencies = [
     "httpx",
     "pydantic",
 ]
-version = "0.2.20"
+version = "0.3.21"
 
 
 [project.urls]
