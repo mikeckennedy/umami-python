@@ -134,7 +134,7 @@ print(f"Umami server is {'accessible' if server_ok else 'not accessible'}")
 umami.verify_token()
 ```
 
-This code listing is very-very high fidelity psuedo code. If you want an actually executable example, see the [example client](./umami/example_client) in the repo.
+This code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the [example client](https://github.com/mikeckennedy/umami-python/tree/main/umami/example_client) in the repo.
 
 ## Want to contribute?
 
