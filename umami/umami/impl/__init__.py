@@ -1,16 +1,21 @@
 import base64
 import json
 import sys
-from typing import Optional, Any, Dict
+from datetime import datetime
+from typing import Any, Dict, Optional
 
 import httpx
 
 from umami import models, urls
+from umami.errors import OperationNotAllowedError, ValidationError
 
-__version__ = '0.2.20'
+try:
+    from importlib.metadata import version
 
-from umami.errors import ValidationError, OperationNotAllowedError
-from datetime import datetime
+    __version__ = version('umami-analytics')
+except Exception:
+    __version__ = '0.0.0'  # Fallback for development environments
+
 
 url_base: Optional[str] = None
 auth_token: Optional[str] = None
@@ -20,7 +25,10 @@ tracking_enabled: bool = True
 # An actual browser UA is needed to get around the bot detection in Umami
 # You can also set DISABLE_BOT_CHECK=true in your Umami environment to disable the bot check entirely:
 # https://github.com/umami-software/umami/blob/7a3443cd06772f3cde37bdbb0bf38eabf4515561/pages/api/collect.js#L13
-event_user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:121.0) Gecko/20100101 Firefox/121.0'
+event_user_agent = (
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
+    'Chrome/142.0.0.0 Safari/537.36'
+)
 user_agent = (
     f'Umami-Client v{__version__} / '
     f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / '
@@ -230,7 +238,7 @@ async def new_event_async(
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
 
     Returns: The data returned from the Umami API.
-    """
+    """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
@@ -303,7 +311,7 @@ def new_event(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-    """
+    """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
@@ -369,7 +377,7 @@ async def new_page_view_async(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-    """
+    """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
@@ -432,7 +440,7 @@ def new_page_view(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-    """
+    """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname

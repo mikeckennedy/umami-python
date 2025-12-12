@@ -1,4 +1,4 @@
-from umami import impl
+from . import impl
 from . import errors  # noqa: F401, E402
 from . import models  # noqa: F401, E402
 from .impl import active_users, active_users_async  # noqa: F401, E402
