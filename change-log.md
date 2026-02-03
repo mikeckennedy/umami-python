@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.22] - 2026-02-02
+
+### Fixed
+- `new_event_async` crashed with `binascii.Error` due to erroneous `base64.b64decode` / `json.loads` calls on the plain-JSON API response; now returns `resp.json()` directly, matching the other event and page-view methods
+
+### Removed
+- Unused `base64` and `json` imports from `umami/impl/__init__.py`
+
+---
+
 ## [Unreleased]
 
 ### Added

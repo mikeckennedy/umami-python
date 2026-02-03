@@ -1,5 +1,3 @@
-import base64
-import json
 import sys
 from datetime import datetime
 from typing import Any, Dict, Optional
@@ -218,7 +216,7 @@ async def new_event_async(
     language: str = 'en-US',
     screen: str = '1920x1080',
     ip_address: Optional[str] = None,
-) -> str:
+) -> dict:
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
     if you have set them with the other functions such as set_hostname()). These events will both
@@ -249,7 +247,7 @@ async def new_event_async(
 
     # Early return if tracking is disabled
     if not tracking_enabled:
-        return ''
+        return {}
 
     api_url = f'{url_base}{urls.events}'
     headers = {
@@ -278,8 +276,7 @@ async def new_event_async(
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-    data_str = base64.b64decode(resp.text)
-    return json.loads(data_str)
+    return resp.json()
 
 
 def new_event(
