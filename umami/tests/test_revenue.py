@@ -1,8 +1,9 @@
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
+from umami.errors import ValidationError
 
 import umami
-from umami.errors import ValidationError
 
 
 @pytest.fixture(autouse=True)
