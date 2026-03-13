@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/michaelkennedy/.claude/plans/agents/**)",
+      "Read(//Users/michaelkennedy/.claude/plans/**)",
+      "Read(//Users/michaelkennedy/.claude/**)",
+      "Bash(pytest tests/ -v)"
+    ]
+  }
+}

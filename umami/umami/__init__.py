@@ -5,6 +5,7 @@ from .impl import active_users, active_users_async  # type: ignore noqa: F401, E
 from .impl import heartbeat_async, heartbeat  # type: ignore noqa: F401, E402
 from .impl import login_async, login, is_logged_in  # type: ignore noqa: F401, E402
 from .impl import new_event_async, new_event  # type: ignore noqa: F401, E402
+from .impl import new_revenue_event, new_revenue_event_async  # type: ignore noqa: F401, E402
 from .impl import new_page_view, new_page_view_async  # type: ignore noqa: F401, E402
 from .impl import set_url_base, set_website_id, set_hostname  # type: ignore noqa: F401, E402
 from .impl import verify_token_async, verify_token  # type: ignore noqa: F401, E402
@@ -44,9 +45,11 @@ __all__ = [
     'heartbeat_async',
     
     # Main features - Events and Analytics
-    'new_event', 
+    'new_event',
     'new_event_async',
-    'new_page_view', 
+    'new_revenue_event',
+    'new_revenue_event_async',
+    'new_page_view',
     'new_page_view_async',
     'website_stats', 
     'website_stats_async',

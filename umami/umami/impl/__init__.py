@@ -348,6 +348,122 @@ def new_event(
     resp.raise_for_status()
 
 
+async def new_revenue_event_async(
+    revenue: float,
+    currency: str = 'USD',
+    event_name: str = 'revenue',
+    hostname: Optional[str] = None,
+    url: str = '/',
+    website_id: Optional[str] = None,
+    title: Optional[str] = None,
+    custom_data: Optional[Dict[str, Any]] = None,
+    referrer: str = '',
+    language: str = 'en-US',
+    screen: str = '1920x1080',
+    ip_address: Optional[str] = None,
+) -> dict:
+    """
+    Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()
+    that automatically includes the revenue and currency properties required by Umami's revenue tracking.
+
+    Args:
+        revenue: The monetary amount of the transaction (must be >= 0).
+        currency: ISO 4217 currency code (e.g. 'USD', 'EUR'). Defaults to 'USD'.
+        event_name: The name of your custom event. Defaults to 'revenue'.
+        hostname: OPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.
+        url: The simulated URL for the custom event.
+        website_id: OPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).
+        title: The title of the custom event, defaults to event_name if empty.
+        custom_data: Any additional data to send along with the event. Revenue and currency keys will be overwritten.
+        referrer: The referrer of the client if there is any.
+        language: The language of the event / client.
+        screen: The screen resolution of the client.
+        ip_address: OPTIONAL: The true IP address of the user.
+
+    Returns: The data returned from the Umami API.
+    """  # noqa
+    if not isinstance(revenue, (int, float)):
+        raise ValidationError('Revenue must be a number (int or float).')
+    if revenue < 0:
+        raise ValidationError('Revenue must be >= 0.')
+    if not currency or not currency.strip():
+        raise ValidationError('Currency must be a non-empty string.')
+
+    merged_data = dict(custom_data or {})
+    merged_data['revenue'] = revenue
+    merged_data['currency'] = currency
+
+    return await new_event_async(
+        event_name=event_name,
+        hostname=hostname,
+        url=url,
+        website_id=website_id,
+        title=title,
+        custom_data=merged_data,
+        referrer=referrer,
+        language=language,
+        screen=screen,
+        ip_address=ip_address,
+    )
+
+
+def new_revenue_event(
+    revenue: float,
+    currency: str = 'USD',
+    event_name: str = 'revenue',
+    hostname: Optional[str] = None,
+    url: str = '/event-api-endpoint',
+    website_id: Optional[str] = None,
+    title: Optional[str] = None,
+    custom_data: Optional[Dict[str, Any]] = None,
+    referrer: str = '',
+    language: str = 'en-US',
+    screen: str = '1920x1080',
+    ip_address: Optional[str] = None,
+):
+    """
+    Creates a new revenue event in Umami. This is a convenience wrapper around new_event()
+    that automatically includes the revenue and currency properties required by Umami's revenue tracking.
+
+    Args:
+        revenue: The monetary amount of the transaction (must be >= 0).
+        currency: ISO 4217 currency code (e.g. 'USD', 'EUR'). Defaults to 'USD'.
+        event_name: The name of your custom event. Defaults to 'revenue'.
+        hostname: OPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.
+        url: The simulated URL for the custom event.
+        website_id: OPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).
+        title: The title of the custom event, defaults to event_name if empty.
+        custom_data: Any additional data to send along with the event. Revenue and currency keys will be overwritten.
+        referrer: The referrer of the client if there is any.
+        language: The language of the event / client.
+        screen: The screen resolution of the client.
+        ip_address: OPTIONAL: The true IP address of the user.
+    """  # noqa
+    if not isinstance(revenue, (int, float)):
+        raise ValidationError('Revenue must be a number (int or float).')
+    if revenue < 0:
+        raise ValidationError('Revenue must be >= 0.')
+    if not currency or not currency.strip():
+        raise ValidationError('Currency must be a non-empty string.')
+
+    merged_data = dict(custom_data or {})
+    merged_data['revenue'] = revenue
+    merged_data['currency'] = currency
+
+    return new_event(
+        event_name=event_name,
+        hostname=hostname,
+        url=url,
+        website_id=website_id,
+        title=title,
+        custom_data=merged_data,
+        referrer=referrer,
+        language=language,
+        screen=screen,
+        ip_address=ip_address,
+    )
+
+
 async def new_page_view_async(
     page_title: str,
     url: str,

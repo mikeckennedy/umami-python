@@ -16,6 +16,7 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 ## Core Features
 
 * ➕ **Add a custom event** to your Umami analytics dashboard.
+* 💰 **Track revenue** with dedicated revenue event support.
 * 📄 **Add a page view** to your Umami analytics dashboard.
 * 🌐 List all websites with details that you have registered at Umami.
 * 📊 **Get website statistics** including page views, visitors, bounce rate, and more.
@@ -104,6 +105,14 @@ page_view_resp = umami.new_page_view(
     hostname='somedomain.com', # Only send if overriding default above.
     url='/users/actions',
     referrer='https://some_url')
+
+# Track revenue for a transaction
+revenue_resp = umami.new_revenue_event(
+    revenue=19.99,  # Monetary amount (required)
+    currency='USD',  # ISO 4217 currency code, defaults to 'USD'
+    event_name='checkout-cart',  # Defaults to 'revenue' if omitted
+    url='/checkout',
+    custom_data={'product': 'widget', 'quantity': 2})
 
 # Get website statistics for a date range
 from datetime import datetime, timedelta
