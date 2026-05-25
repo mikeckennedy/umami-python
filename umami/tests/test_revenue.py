@@ -9,9 +9,9 @@ import umami
 @pytest.fixture(autouse=True)
 def _setup_umami():
     """Set up default umami state for all tests."""
-    umami.set_url_base("https://example.com")
-    umami.set_hostname("test.com")
-    umami.set_website_id("test-website-id")
+    umami.set_url_base('https://example.com')
+    umami.set_hostname('test.com')
+    umami.set_website_id('test-website-id')
     umami.enable()
     yield
 
@@ -19,49 +19,47 @@ def _setup_umami():
 class TestNewRevenueEvent:
     """Tests for the sync new_revenue_event function."""
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_new_event_includes_distinct_id(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
         mock_resp.raise_for_status = MagicMock()
         mock_post.return_value = mock_resp
 
-        umami.new_event(event_name="signup", distinct_id="user-123")
+        umami.new_event(event_name='signup', distinct_id='user-123')
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["id"] == "user-123"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['id'] == 'user-123'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_new_event_normalizes_integer_distinct_id(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
         mock_resp.raise_for_status = MagicMock()
         mock_post.return_value = mock_resp
 
-        umami.new_event(event_name="signup", distinct_id=12345)
+        umami.new_event(event_name='signup', distinct_id=12345)
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["id"] == "12345"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['id'] == '12345'
 
     def test_new_event_rejects_invalid_distinct_id_type(self):
-        with pytest.raises(ValidationError, match="string or integer"):
-            umami.new_event(event_name="signup", distinct_id=["bad-type"])  # type: ignore[arg-type]
+        with pytest.raises(ValidationError, match='string or integer'):
+            umami.new_event(event_name='signup', distinct_id=['bad-type'])  # type: ignore[arg-type]
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_new_page_view_includes_distinct_id(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
         mock_resp.raise_for_status = MagicMock()
         mock_post.return_value = mock_resp
 
-        umami.new_page_view(
-            page_title="Account", url="/account", distinct_id="user-456"
-        )
+        umami.new_page_view(page_title='Account', url='/account', distinct_id='user-456')
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["id"] == "user-456"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['id'] == 'user-456'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_default_revenue_event(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
@@ -71,53 +69,51 @@ class TestNewRevenueEvent:
         umami.new_revenue_event(revenue=19.99)
 
         call_kwargs = mock_post.call_args
-        payload = call_kwargs.kwargs["json"]["payload"]
-        assert payload["name"] == "revenue"
-        assert payload["data"]["revenue"] == 19.99
-        assert payload["data"]["currency"] == "USD"
+        payload = call_kwargs.kwargs['json']['payload']
+        assert payload['name'] == 'revenue'
+        assert payload['data']['revenue'] == 19.99
+        assert payload['data']['currency'] == 'USD'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_custom_currency(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
         mock_resp.raise_for_status = MagicMock()
         mock_post.return_value = mock_resp
 
-        umami.new_revenue_event(revenue=49.00, currency="EUR")
+        umami.new_revenue_event(revenue=49.00, currency='EUR')
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["data"]["currency"] == "EUR"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['data']['currency'] == 'EUR'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_custom_event_name(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
         mock_resp.raise_for_status = MagicMock()
         mock_post.return_value = mock_resp
 
-        umami.new_revenue_event(revenue=10.00, event_name="checkout-cart")
+        umami.new_revenue_event(revenue=10.00, event_name='checkout-cart')
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["name"] == "checkout-cart"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['name'] == 'checkout-cart'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_additional_custom_data_preserved(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
         mock_resp.raise_for_status = MagicMock()
         mock_post.return_value = mock_resp
 
-        umami.new_revenue_event(
-            revenue=25.00, custom_data={"product": "widget", "quantity": 2}
-        )
+        umami.new_revenue_event(revenue=25.00, custom_data={'product': 'widget', 'quantity': 2})
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["data"]["product"] == "widget"
-        assert payload["data"]["quantity"] == 2
-        assert payload["data"]["revenue"] == 25.00
-        assert payload["data"]["currency"] == "USD"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['data']['product'] == 'widget'
+        assert payload['data']['quantity'] == 2
+        assert payload['data']['revenue'] == 25.00
+        assert payload['data']['currency'] == 'USD'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_revenue_currency_override_custom_data(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
@@ -126,18 +122,18 @@ class TestNewRevenueEvent:
 
         umami.new_revenue_event(
             revenue=30.00,
-            currency="GBP",
+            currency='GBP',
             custom_data={
-                "revenue": "should_be_overridden",
-                "currency": "should_be_overridden",
+                'revenue': 'should_be_overridden',
+                'currency': 'should_be_overridden',
             },
         )
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["data"]["revenue"] == 30.00
-        assert payload["data"]["currency"] == "GBP"
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['data']['revenue'] == 30.00
+        assert payload['data']['currency'] == 'GBP'
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_zero_revenue_allowed(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
@@ -146,20 +142,20 @@ class TestNewRevenueEvent:
 
         umami.new_revenue_event(revenue=0)
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["data"]["revenue"] == 0
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['data']['revenue'] == 0
 
     def test_negative_revenue_raises(self):
-        with pytest.raises(ValidationError, match="must be >= 0"):
+        with pytest.raises(ValidationError, match='must be >= 0'):
             umami.new_revenue_event(revenue=-5.00)
 
     def test_non_numeric_revenue_raises(self):
-        with pytest.raises(ValidationError, match="must be a number"):
-            umami.new_revenue_event(revenue="not_a_number")  # type: ignore
+        with pytest.raises(ValidationError, match='must be a number'):
+            umami.new_revenue_event(revenue='not_a_number')  # type: ignore
 
     def test_empty_currency_raises(self):
-        with pytest.raises(ValidationError, match="non-empty string"):
-            umami.new_revenue_event(revenue=10.00, currency="")
+        with pytest.raises(ValidationError, match='non-empty string'):
+            umami.new_revenue_event(revenue=10.00, currency='')
 
     def test_tracking_disabled_returns_early(self):
         umami.disable()
@@ -167,7 +163,7 @@ class TestNewRevenueEvent:
         # Should return without making any HTTP call
         assert result is None
 
-    @patch("umami.impl.httpx.post")
+    @patch('umami.impl.httpx.post')
     def test_integer_revenue(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
@@ -176,8 +172,8 @@ class TestNewRevenueEvent:
 
         umami.new_revenue_event(revenue=100)
 
-        payload = mock_post.call_args.kwargs["json"]["payload"]
-        assert payload["data"]["revenue"] == 100
+        payload = mock_post.call_args.kwargs['json']['payload']
+        assert payload['data']['revenue'] == 100
 
 
 class TestNewRevenueEventAsync:
@@ -194,11 +190,11 @@ class TestNewRevenueEventAsync:
         mock_client.__aexit__ = AsyncMock(return_value=False)
         mock_client.post = AsyncMock(return_value=mock_resp)
 
-        with patch("umami.impl.httpx.AsyncClient", return_value=mock_client):
-            await umami.new_event_async(event_name="signup", distinct_id="user-123")
+        with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
+            await umami.new_event_async(event_name='signup', distinct_id='user-123')
 
-        payload = mock_client.post.call_args.kwargs["json"]["payload"]
-        assert payload["id"] == "user-123"
+        payload = mock_client.post.call_args.kwargs['json']['payload']
+        assert payload['id'] == 'user-123'
 
     @pytest.mark.asyncio
     async def test_new_page_view_async_includes_distinct_id(self):
@@ -211,13 +207,11 @@ class TestNewRevenueEventAsync:
         mock_client.__aexit__ = AsyncMock(return_value=False)
         mock_client.post = AsyncMock(return_value=mock_resp)
 
-        with patch("umami.impl.httpx.AsyncClient", return_value=mock_client):
-            await umami.new_page_view_async(
-                page_title="Account", url="/account", distinct_id="user-456"
-            )
+        with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
+            await umami.new_page_view_async(page_title='Account', url='/account', distinct_id='user-456')
 
-        payload = mock_client.post.call_args.kwargs["json"]["payload"]
-        assert payload["id"] == "user-456"
+        payload = mock_client.post.call_args.kwargs['json']['payload']
+        assert payload['id'] == 'user-456'
 
     @pytest.mark.asyncio
     async def test_new_page_view_async_normalizes_integer_distinct_id(self):
@@ -230,13 +224,11 @@ class TestNewRevenueEventAsync:
         mock_client.__aexit__ = AsyncMock(return_value=False)
         mock_client.post = AsyncMock(return_value=mock_resp)
 
-        with patch("umami.impl.httpx.AsyncClient", return_value=mock_client):
-            await umami.new_page_view_async(
-                page_title="Account", url="/account", distinct_id=67890
-            )
+        with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
+            await umami.new_page_view_async(page_title='Account', url='/account', distinct_id=67890)
 
-        payload = mock_client.post.call_args.kwargs["json"]["payload"]
-        assert payload["id"] == "67890"
+        payload = mock_client.post.call_args.kwargs['json']['payload']
+        assert payload['id'] == '67890'
 
     @pytest.mark.asyncio
     async def test_default_revenue_event_async(self):
@@ -249,14 +241,14 @@ class TestNewRevenueEventAsync:
         mock_client.__aexit__ = AsyncMock(return_value=False)
         mock_client.post = AsyncMock(return_value=mock_resp)
 
-        with patch("umami.impl.httpx.AsyncClient", return_value=mock_client):
+        with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
             result = await umami.new_revenue_event_async(revenue=19.99)
 
         call_kwargs = mock_client.post.call_args
-        payload = call_kwargs.kwargs["json"]["payload"]
-        assert payload["name"] == "revenue"
-        assert payload["data"]["revenue"] == 19.99
-        assert payload["data"]["currency"] == "USD"
+        payload = call_kwargs.kwargs['json']['payload']
+        assert payload['name'] == 'revenue'
+        assert payload['data']['revenue'] == 19.99
+        assert payload['data']['currency'] == 'USD'
         assert result == {}
 
     @pytest.mark.asyncio
@@ -270,19 +262,19 @@ class TestNewRevenueEventAsync:
         mock_client.__aexit__ = AsyncMock(return_value=False)
         mock_client.post = AsyncMock(return_value=mock_resp)
 
-        with patch("umami.impl.httpx.AsyncClient", return_value=mock_client):
+        with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
             await umami.new_revenue_event_async(
                 revenue=49.00,
-                currency="EUR",
-                event_name="checkout-cart",
-                url="/checkout",
+                currency='EUR',
+                event_name='checkout-cart',
+                url='/checkout',
             )
 
-        payload = mock_client.post.call_args.kwargs["json"]["payload"]
-        assert payload["name"] == "checkout-cart"
-        assert payload["data"]["revenue"] == 49.00
-        assert payload["data"]["currency"] == "EUR"
-        assert payload["url"] == "/checkout"
+        payload = mock_client.post.call_args.kwargs['json']['payload']
+        assert payload['name'] == 'checkout-cart'
+        assert payload['data']['revenue'] == 49.00
+        assert payload['data']['currency'] == 'EUR'
+        assert payload['url'] == '/checkout'
 
     @pytest.mark.asyncio
     async def test_tracking_disabled_async(self):
@@ -292,5 +284,5 @@ class TestNewRevenueEventAsync:
 
     @pytest.mark.asyncio
     async def test_negative_revenue_raises_async(self):
-        with pytest.raises(ValidationError, match="must be >= 0"):
+        with pytest.raises(ValidationError, match='must be >= 0'):
             await umami.new_revenue_event_async(revenue=-5.00)
