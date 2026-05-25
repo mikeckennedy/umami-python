@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `distinct_id` support in `new_event` and `new_page_view` payloads, sent to Umami as payload field `id` in both sync and async variants
 
 ### Changed
 

@@ -96,6 +96,7 @@ event_resp = umami.new_event(
     hostname='somedomain.com', # Only send if overriding default above.
     url='/users/actions',
     custom_data={'client': 'umami-tester-v1'},
+    distinct_id='user-123',
     referrer='https://some_url')
 
 # Create a new page view in the pages section of the dashboards.
@@ -104,6 +105,7 @@ page_view_resp = umami.new_page_view(
     page_title='Umami-Test', # Defaults to event_name if omitted.
     hostname='somedomain.com', # Only send if overriding default above.
     url='/users/actions',
+    distinct_id='user-123',
     referrer='https://some_url')
 
 # Track revenue for a transaction

@@ -10,9 +10,9 @@ from umami.errors import OperationNotAllowedError, ValidationError
 try:
     from importlib.metadata import version
 
-    __version__ = version('umami-analytics')
+    __version__ = version("umami-analytics")
 except Exception:
-    __version__ = '0.0.0'  # Fallback for development environments
+    __version__ = "0.0.0"  # Fallback for development environments
 
 
 url_base: Optional[str] = None
@@ -24,13 +24,13 @@ tracking_enabled: bool = True
 # You can also set DISABLE_BOT_CHECK=true in your Umami environment to disable the bot check entirely:
 # https://github.com/umami-software/umami/blob/7a3443cd06772f3cde37bdbb0bf38eabf4515561/pages/api/collect.js#L13
 event_user_agent = (
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
-    'Chrome/142.0.0.0 Safari/537.36'
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/142.0.0.0 Safari/537.36"
 )
 user_agent = (
-    f'Umami-Client v{__version__} / '
-    f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / '
-    f'{sys.platform.capitalize()}'
+    f"Umami-Client v{__version__} / "
+    f"Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / "
+    f"{sys.platform.capitalize()}"
 )
 
 
@@ -42,15 +42,17 @@ def set_url_base(url: str) -> None:
         url: The base URL of your instance without /api.
     """
     if not url or not url.strip():
-        raise ValidationError('URL must not be empty.')
+        raise ValidationError("URL must not be empty.")
 
     # noinspection HttpUrlsUsage
-    if not url.startswith('http://') and not url.startswith('https://'):
+    if not url.startswith("http://") and not url.startswith("https://"):
         # noinspection HttpUrlsUsage
-        raise ValidationError('The url must start with the HTTP scheme (http:// or https://).')
+        raise ValidationError(
+            "The url must start with the HTTP scheme (http:// or https://)."
+        )
 
-    if url.endswith('/'):
-        url = url.rstrip('/')
+    if url.endswith("/"):
+        url = url.rstrip("/")
 
     global url_base
     url_base = url.strip()
@@ -95,14 +97,16 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
     validate_state(url=True)
     validate_login(username, password)
 
-    url = f'{url_base}{urls.login}'
-    headers = {'User-Agent': user_agent}
+    url = f"{url_base}{urls.login}"
+    headers = {"User-Agent": user_agent}
     api_data = {
-        'username': username,
-        'password': password,
+        "username": username,
+        "password": password,
     }
     async with httpx.AsyncClient() as client:
-        resp = await client.post(url, json=api_data, headers=headers, follow_redirects=True)
+        resp = await client.post(
+            url, json=api_data, headers=headers, follow_redirects=True
+        )
         resp.raise_for_status()
 
     model = models.LoginResponse(**resp.json())
@@ -125,11 +129,11 @@ def login(username: str, password: str) -> models.LoginResponse:
     validate_state(url=True)
     validate_login(username, password)
 
-    url = f'{url_base}{urls.login}'
-    headers = {'User-Agent': user_agent}
+    url = f"{url_base}{urls.login}"
+    headers = {"User-Agent": user_agent}
     api_data = {
-        'username': username,
-        'password': password,
+        "username": username,
+        "password": password,
     }
     resp = httpx.post(url, json=api_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
@@ -147,10 +151,10 @@ async def websites_async() -> list[models.Website]:
     global auth_token
     validate_state(url=True, user=True)
 
-    url = f'{url_base}{urls.websites}'
+    url = f"{url_base}{urls.websites}"
     headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     async with httpx.AsyncClient() as client:  # type: ignore
@@ -169,10 +173,10 @@ def websites() -> list[models.Website]:
     global auth_token
     validate_state(url=True, user=True)
 
-    url = f'{url_base}{urls.websites}'
+    url = f"{url_base}{urls.websites}"
     headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
     resp = httpx.get(url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
@@ -208,14 +212,15 @@ def disable() -> None:
 async def new_event_async(
     event_name: str,
     hostname: Optional[str] = None,
-    url: str = '/',
+    url: str = "/",
     website_id: Optional[str] = None,
     title: Optional[str] = None,
     custom_data: Optional[Dict[str, Any]] = None,
-    referrer: str = '',
-    language: str = 'en-US',
-    screen: str = '1920x1080',
+    referrer: str = "",
+    language: str = "en-US",
+    screen: str = "1920x1080",
     ip_address: Optional[str] = None,
+    distinct_id: Optional[str] = None,
 ) -> dict:
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
@@ -234,6 +239,7 @@ async def new_event_async(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
 
     Returns: The data returned from the Umami API.
     """  # noqa
@@ -249,31 +255,36 @@ async def new_event_async(
     if not tracking_enabled:
         return {}
 
-    api_url = f'{url_base}{urls.events}'
+    api_url = f"{url_base}{urls.events}"
     headers = {
-        'User-Agent': event_user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": event_user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     payload = {
-        'hostname': hostname,
-        'language': language,
-        'referrer': referrer,
-        'screen': screen,
-        'title': title,
-        'url': url,
-        'website': website_id,
-        'name': event_name,
-        'data': custom_data,
+        "hostname": hostname,
+        "language": language,
+        "referrer": referrer,
+        "screen": screen,
+        "title": title,
+        "url": url,
+        "website": website_id,
+        "name": event_name,
+        "data": custom_data,
     }
 
     if ip_address and ip_address.strip():
-        payload['ip'] = ip_address
+        payload["ip"] = ip_address
 
-    event_data = {'payload': payload, 'type': 'event'}
+    if distinct_id and distinct_id.strip():
+        payload["id"] = distinct_id
+
+    event_data = {"payload": payload, "type": "event"}
 
     async with httpx.AsyncClient() as client:
-        resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
+        resp = await client.post(
+            api_url, json=event_data, headers=headers, follow_redirects=True
+        )
         resp.raise_for_status()
 
     return resp.json()
@@ -282,14 +293,15 @@ async def new_event_async(
 def new_event(
     event_name: str,
     hostname: Optional[str] = None,
-    url: str = '/event-api-endpoint',
+    url: str = "/event-api-endpoint",
     website_id: Optional[str] = None,
     title: Optional[str] = None,
     custom_data: Optional[Dict[str, Any]] = None,
-    referrer: str = '',
-    language: str = 'en-US',
-    screen: str = '1920x1080',
+    referrer: str = "",
+    language: str = "en-US",
+    screen: str = "1920x1080",
     ip_address: Optional[str] = None,
+    distinct_id: Optional[str] = None,
 ):
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
@@ -308,6 +320,7 @@ def new_event(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -321,28 +334,31 @@ def new_event(
     if not tracking_enabled:
         return
 
-    api_url = f'{url_base}{urls.events}'
+    api_url = f"{url_base}{urls.events}"
     headers = {
-        'User-Agent': event_user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": event_user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     payload = {
-        'hostname': hostname,
-        'language': language,
-        'referrer': referrer,
-        'screen': screen,
-        'title': title,
-        'url': url,
-        'website': website_id,
-        'name': event_name,
-        'data': custom_data,
+        "hostname": hostname,
+        "language": language,
+        "referrer": referrer,
+        "screen": screen,
+        "title": title,
+        "url": url,
+        "website": website_id,
+        "name": event_name,
+        "data": custom_data,
     }
 
     if ip_address and ip_address.strip():
-        payload['ip'] = ip_address
+        payload["ip"] = ip_address
 
-    event_data = {'payload': payload, 'type': 'event'}
+    if distinct_id and distinct_id.strip():
+        payload["id"] = distinct_id
+
+    event_data = {"payload": payload, "type": "event"}
 
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
@@ -350,16 +366,16 @@ def new_event(
 
 async def new_revenue_event_async(
     revenue: float,
-    currency: str = 'USD',
-    event_name: str = 'revenue',
+    currency: str = "USD",
+    event_name: str = "revenue",
     hostname: Optional[str] = None,
-    url: str = '/',
+    url: str = "/",
     website_id: Optional[str] = None,
     title: Optional[str] = None,
     custom_data: Optional[Dict[str, Any]] = None,
-    referrer: str = '',
-    language: str = 'en-US',
-    screen: str = '1920x1080',
+    referrer: str = "",
+    language: str = "en-US",
+    screen: str = "1920x1080",
     ip_address: Optional[str] = None,
 ) -> dict:
     """
@@ -383,15 +399,15 @@ async def new_revenue_event_async(
     Returns: The data returned from the Umami API.
     """  # noqa
     if not isinstance(revenue, (int, float)):
-        raise ValidationError('Revenue must be a number (int or float).')
+        raise ValidationError("Revenue must be a number (int or float).")
     if revenue < 0:
-        raise ValidationError('Revenue must be >= 0.')
+        raise ValidationError("Revenue must be >= 0.")
     if not currency or not currency.strip():
-        raise ValidationError('Currency must be a non-empty string.')
+        raise ValidationError("Currency must be a non-empty string.")
 
     merged_data = dict(custom_data or {})
-    merged_data['revenue'] = revenue
-    merged_data['currency'] = currency
+    merged_data["revenue"] = revenue
+    merged_data["currency"] = currency
 
     return await new_event_async(
         event_name=event_name,
@@ -409,16 +425,16 @@ async def new_revenue_event_async(
 
 def new_revenue_event(
     revenue: float,
-    currency: str = 'USD',
-    event_name: str = 'revenue',
+    currency: str = "USD",
+    event_name: str = "revenue",
     hostname: Optional[str] = None,
-    url: str = '/event-api-endpoint',
+    url: str = "/event-api-endpoint",
     website_id: Optional[str] = None,
     title: Optional[str] = None,
     custom_data: Optional[Dict[str, Any]] = None,
-    referrer: str = '',
-    language: str = 'en-US',
-    screen: str = '1920x1080',
+    referrer: str = "",
+    language: str = "en-US",
+    screen: str = "1920x1080",
     ip_address: Optional[str] = None,
 ):
     """
@@ -440,15 +456,15 @@ def new_revenue_event(
         ip_address: OPTIONAL: The true IP address of the user.
     """  # noqa
     if not isinstance(revenue, (int, float)):
-        raise ValidationError('Revenue must be a number (int or float).')
+        raise ValidationError("Revenue must be a number (int or float).")
     if revenue < 0:
-        raise ValidationError('Revenue must be >= 0.')
+        raise ValidationError("Revenue must be >= 0.")
     if not currency or not currency.strip():
-        raise ValidationError('Currency must be a non-empty string.')
+        raise ValidationError("Currency must be a non-empty string.")
 
     merged_data = dict(custom_data or {})
-    merged_data['revenue'] = revenue
-    merged_data['currency'] = currency
+    merged_data["revenue"] = revenue
+    merged_data["currency"] = currency
 
     return new_event(
         event_name=event_name,
@@ -469,11 +485,12 @@ async def new_page_view_async(
     url: str,
     hostname: Optional[str] = None,
     website_id: Optional[str] = None,
-    referrer: str = '',
-    language: str = 'en-US',
-    screen: str = '1920x1080',
+    referrer: str = "",
+    language: str = "en-US",
+    screen: str = "1920x1080",
     ua: str = event_user_agent,
     ip_address: Optional[str] = None,
+    distinct_id: Optional[str] = None,
 ):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
@@ -490,40 +507,48 @@ async def new_page_view_async(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
 
-    validate_event_data(event_name='NOT NEEDED', hostname=hostname, website_id=website_id)
+    validate_event_data(
+        event_name="NOT NEEDED", hostname=hostname, website_id=website_id
+    )
 
     # Early return if tracking is disabled
     if not tracking_enabled:
         return
 
-    api_url = f'{url_base}{urls.events}'
+    api_url = f"{url_base}{urls.events}"
     headers = {
-        'User-Agent': ua,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": ua,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     payload = {
-        'hostname': hostname,
-        'language': language,
-        'referrer': referrer,
-        'screen': screen,
-        'title': page_title,
-        'url': url,
-        'website': website_id,
+        "hostname": hostname,
+        "language": language,
+        "referrer": referrer,
+        "screen": screen,
+        "title": page_title,
+        "url": url,
+        "website": website_id,
     }
 
     if ip_address and ip_address.strip():
-        payload['ip'] = ip_address
+        payload["ip"] = ip_address
 
-    event_data = {'payload': payload, 'type': 'event'}
+    if distinct_id and distinct_id.strip():
+        payload["id"] = distinct_id
+
+    event_data = {"payload": payload, "type": "event"}
 
     async with httpx.AsyncClient() as client:
-        resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
+        resp = await client.post(
+            api_url, json=event_data, headers=headers, follow_redirects=True
+        )
         resp.raise_for_status()
 
 
@@ -532,11 +557,12 @@ def new_page_view(
     url: str,
     hostname: Optional[str] = None,
     website_id: Optional[str] = None,
-    referrer: str = '',
-    language: str = 'en-US',
-    screen: str = '1920x1080',
+    referrer: str = "",
+    language: str = "en-US",
+    screen: str = "1920x1080",
     ua: str = event_user_agent,
     ip_address: Optional[str] = None,
+    distinct_id: Optional[str] = None,
 ):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
@@ -553,52 +579,64 @@ def new_page_view(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
 
-    validate_event_data(event_name='NOT NEEDED', hostname=hostname, website_id=website_id)
+    validate_event_data(
+        event_name="NOT NEEDED", hostname=hostname, website_id=website_id
+    )
 
     # Early return if tracking is disabled
     if not tracking_enabled:
         return
 
-    api_url = f'{url_base}{urls.events}'
+    api_url = f"{url_base}{urls.events}"
     headers = {
-        'User-Agent': ua,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": ua,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     payload = {
-        'hostname': hostname,
-        'language': language,
-        'referrer': referrer,
-        'screen': screen,
-        'title': page_title,
-        'url': url,
-        'website': website_id,
+        "hostname": hostname,
+        "language": language,
+        "referrer": referrer,
+        "screen": screen,
+        "title": page_title,
+        "url": url,
+        "website": website_id,
     }
 
     if ip_address and ip_address.strip():
-        payload['ip'] = ip_address
+        payload["ip"] = ip_address
 
-    event_data = {'payload': payload, 'type': 'event'}
+    if distinct_id and distinct_id.strip():
+        payload["id"] = distinct_id
+
+    event_data = {"payload": payload, "type": "event"}
 
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
 
-def validate_event_data(event_name: str, hostname: Optional[str], website_id: Optional[str]):
+def validate_event_data(
+    event_name: str, hostname: Optional[str], website_id: Optional[str]
+):
     """
     Internal use only.
     """
     if not hostname:
-        raise Exception('The hostname must be set, either as a parameter here or via set_hostname().')
+        raise Exception(
+            "The hostname must be set, either as a parameter here or via set_hostname()."
+        )
     if not website_id:
-        raise Exception('The website_id must be set, either as a parameter here or via set_website_id().')
+        raise Exception(
+            "The website_id must be set, either as a parameter here or via set_website_id()."
+        )
     if not event_name and not event_name.strip():
-        raise Exception('The event_name is required.')
+        raise Exception("The event_name is required.")
 
 
 async def verify_token_async(check_server: bool = True) -> bool:
@@ -620,16 +658,16 @@ async def verify_token_async(check_server: bool = True) -> bool:
         if not check_server:
             return True
 
-        url = f'{url_base}{urls.verify}'
+        url = f"{url_base}{urls.verify}"
         headers = {
-            'User-Agent': event_user_agent,
-            'Authorization': f'Bearer {auth_token}',
+            "User-Agent": event_user_agent,
+            "Authorization": f"Bearer {auth_token}",
         }
         async with httpx.AsyncClient() as client:
             resp = await client.post(url, headers=headers, follow_redirects=True)
             resp.raise_for_status()
 
-        return 'username' in resp.json()
+        return "username" in resp.json()
     except Exception:
         return False
 
@@ -653,15 +691,15 @@ def verify_token(check_server: bool = True) -> bool:
         if not check_server:
             return True
 
-        url = f'{url_base}{urls.verify}'
+        url = f"{url_base}{urls.verify}"
         headers = {
-            'User-Agent': event_user_agent,
-            'Authorization': f'Bearer {auth_token}',
+            "User-Agent": event_user_agent,
+            "Authorization": f"Bearer {auth_token}",
         }
         resp = httpx.post(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-        return 'username' in resp.json()
+        return "username" in resp.json()
     except Exception:
         return False
 
@@ -677,9 +715,9 @@ async def heartbeat_async() -> bool:
         global auth_token
         validate_state(url=True, user=False)
 
-        url = f'{url_base}{urls.heartbeat}'
+        url = f"{url_base}{urls.heartbeat}"
         headers = {
-            'User-Agent': user_agent,
+            "User-Agent": user_agent,
         }
         async with httpx.AsyncClient() as client:
             resp = await client.post(url, headers=headers, follow_redirects=True)
@@ -701,9 +739,9 @@ def heartbeat() -> bool:
         global auth_token
         validate_state(url=True, user=False)
 
-        url = f'{url_base}{urls.heartbeat}'
+        url = f"{url_base}{urls.heartbeat}"
         headers = {
-            'User-Agent': user_agent,
+            "User-Agent": user_agent,
         }
         resp = httpx.post(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
@@ -718,9 +756,9 @@ def validate_login(email: str, password: str) -> None:
     Internal helper function, not need to use this.
     """
     if not email:
-        raise ValidationError('Email cannot be empty')
+        raise ValidationError("Email cannot be empty")
     if not password:
-        raise ValidationError('Password cannot be empty')
+        raise ValidationError("Password cannot be empty")
 
 
 async def active_users_async(website_id: Optional[str] = None) -> int:
@@ -737,17 +775,17 @@ async def active_users_async(website_id: Optional[str] = None) -> int:
 
     website_id = website_id or default_website_id
 
-    url = f'{url_base}{urls.websites}/{website_id}/active'
+    url = f"{url_base}{urls.websites}/{website_id}/active"
     headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     async with httpx.AsyncClient() as client:
         resp = await client.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
-    return int(resp.json().get('x', 0))
+    return int(resp.json().get("x", 0))
 
 
 def active_users(website_id: Optional[str] = None) -> int:
@@ -764,16 +802,16 @@ def active_users(website_id: Optional[str] = None) -> int:
 
     website_id = website_id or default_website_id
 
-    url = f'{url_base}{urls.websites}/{website_id}/active'
+    url = f"{url_base}{urls.websites}/{website_id}/active"
     headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
 
     resp = httpx.get(url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
-    return int(resp.json().get('x', 0))
+    return int(resp.json().get("x", 0))
 
 
 async def website_stats_async(
@@ -819,34 +857,36 @@ async def website_stats_async(
 
     website_id = website_id or default_website_id
 
-    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+    api_url = f"{url_base}{urls.websites}/{website_id}/stats"
 
     headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
     params = {
-        'start_at': int(start_at.timestamp() * 1000),
-        'end_at': int(end_at.timestamp() * 1000),
+        "start_at": int(start_at.timestamp() * 1000),
+        "end_at": int(end_at.timestamp() * 1000),
     }
     optional_params: dict[str, Any] = {
-        'url': url,
-        'referrer': referrer,
-        'title': title,
-        'query': query,
-        'event': event,
-        'host': host,
-        'os': os,
-        'browser': browser,
-        'device': device,
-        'country': country,
-        'region': region,
-        'city': city,
+        "url": url,
+        "referrer": referrer,
+        "title": title,
+        "query": query,
+        "event": event,
+        "host": host,
+        "os": os,
+        "browser": browser,
+        "device": device,
+        "country": country,
+        "region": region,
+        "city": city,
     }
     params.update({k: v for k, v in optional_params.items() if v is not None})
 
     async with httpx.AsyncClient() as client:
-        resp = await client.get(api_url, headers=headers, params=params, follow_redirects=True)
+        resp = await client.get(
+            api_url, headers=headers, params=params, follow_redirects=True
+        )
         resp.raise_for_status()
 
     return models.WebsiteStats(**resp.json())
@@ -895,29 +935,29 @@ def website_stats(
 
     website_id = website_id or default_website_id
 
-    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+    api_url = f"{url_base}{urls.websites}/{website_id}/stats"
 
     headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
+        "User-Agent": user_agent,
+        "Authorization": f"Bearer {auth_token}",
     }
     params = {
-        'startAt': int(start_at.timestamp() * 1000),
-        'endAt': int(end_at.timestamp() * 1000),
+        "startAt": int(start_at.timestamp() * 1000),
+        "endAt": int(end_at.timestamp() * 1000),
     }
     optional_params: dict[str, Any] = {
-        'url': url,
-        'referrer': referrer,
-        'title': title,
-        'query': query,
-        'event': event,
-        'host': host,
-        'os': os,
-        'browser': browser,
-        'device': device,
-        'country': country,
-        'region': region,
-        'city': city,
+        "url": url,
+        "referrer": referrer,
+        "title": title,
+        "query": query,
+        "event": event,
+        "host": host,
+        "os": os,
+        "browser": browser,
+        "device": device,
+        "country": country,
+        "region": region,
+        "city": city,
     }
     params.update({k: v for k, v in optional_params.items() if v is not None})
 
@@ -932,7 +972,7 @@ def validate_state(url: bool = False, user: bool = False):
     Internal helper function, not need to use this.
     """
     if url and not url_base:
-        raise OperationNotAllowedError('URL Base must be set to proceed.')
+        raise OperationNotAllowedError("URL Base must be set to proceed.")
 
     if user and not auth_token:
-        raise OperationNotAllowedError('You must login before proceeding.')
+        raise OperationNotAllowedError("You must login before proceeding.")
