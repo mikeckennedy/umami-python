@@ -1,6 +1,6 @@
 import sys
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import httpx
 
@@ -32,6 +32,17 @@ user_agent = (
     f"Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro} / "
     f"{sys.platform.capitalize()}"
 )
+
+
+def normalize_distinct_id(distinct_id: Optional[Union[str, int]]) -> Optional[str]:
+    if distinct_id is None:
+        return None
+
+    if isinstance(distinct_id, bool) or not isinstance(distinct_id, (str, int)):
+        raise ValidationError("distinct_id must be a string or integer.")
+
+    normalized_distinct_id = str(distinct_id).strip()
+    return normalized_distinct_id or None
 
 
 def set_url_base(url: str) -> None:
@@ -220,7 +231,7 @@ async def new_event_async(
     language: str = "en-US",
     screen: str = "1920x1080",
     ip_address: Optional[str] = None,
-    distinct_id: Optional[str] = None,
+    distinct_id: Optional[Union[str, int]] = None,
 ) -> dict:
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
@@ -239,7 +250,7 @@ async def new_event_async(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
 
     Returns: The data returned from the Umami API.
     """  # noqa
@@ -248,6 +259,7 @@ async def new_event_async(
     hostname = hostname or default_hostname
     title = title or event_name
     custom_data = custom_data or {}
+    normalized_distinct_id = normalize_distinct_id(distinct_id)
 
     validate_event_data(event_name, hostname, website_id)
 
@@ -276,8 +288,8 @@ async def new_event_async(
     if ip_address and ip_address.strip():
         payload["ip"] = ip_address
 
-    if distinct_id and distinct_id.strip():
-        payload["id"] = distinct_id
+    if normalized_distinct_id:
+        payload["id"] = normalized_distinct_id
 
     event_data = {"payload": payload, "type": "event"}
 
@@ -301,7 +313,7 @@ def new_event(
     language: str = "en-US",
     screen: str = "1920x1080",
     ip_address: Optional[str] = None,
-    distinct_id: Optional[str] = None,
+    distinct_id: Optional[Union[str, int]] = None,
 ):
     """
     Creates a new custom event in Umami for the given website_id and hostname (both use the default
@@ -320,13 +332,14 @@ def new_event(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
     title = title or event_name
     custom_data = custom_data or {}
+    normalized_distinct_id = normalize_distinct_id(distinct_id)
 
     validate_event_data(event_name, hostname, website_id)
 
@@ -355,8 +368,8 @@ def new_event(
     if ip_address and ip_address.strip():
         payload["ip"] = ip_address
 
-    if distinct_id and distinct_id.strip():
-        payload["id"] = distinct_id
+    if normalized_distinct_id:
+        payload["id"] = normalized_distinct_id
 
     event_data = {"payload": payload, "type": "event"}
 
@@ -490,7 +503,7 @@ async def new_page_view_async(
     screen: str = "1920x1080",
     ua: str = event_user_agent,
     ip_address: Optional[str] = None,
-    distinct_id: Optional[str] = None,
+    distinct_id: Optional[Union[str, int]] = None,
 ):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
@@ -507,11 +520,12 @@ async def new_page_view_async(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
+    normalized_distinct_id = normalize_distinct_id(distinct_id)
 
     validate_event_data(
         event_name="NOT NEEDED", hostname=hostname, website_id=website_id
@@ -540,8 +554,8 @@ async def new_page_view_async(
     if ip_address and ip_address.strip():
         payload["ip"] = ip_address
 
-    if distinct_id and distinct_id.strip():
-        payload["id"] = distinct_id
+    if normalized_distinct_id:
+        payload["id"] = normalized_distinct_id
 
     event_data = {"payload": payload, "type": "event"}
 
@@ -562,7 +576,7 @@ def new_page_view(
     screen: str = "1920x1080",
     ua: str = event_user_agent,
     ip_address: Optional[str] = None,
-    distinct_id: Optional[str] = None,
+    distinct_id: Optional[Union[str, int]] = None,
 ):
     """
     Creates a new page view event in Umami for the given website_id and hostname (both use the default
@@ -579,11 +593,12 @@ def new_page_view(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
     hostname = hostname or default_hostname
+    normalized_distinct_id = normalize_distinct_id(distinct_id)
 
     validate_event_data(
         event_name="NOT NEEDED", hostname=hostname, website_id=website_id
@@ -612,8 +627,8 @@ def new_page_view(
     if ip_address and ip_address.strip():
         payload["ip"] = ip_address
 
-    if distinct_id and distinct_id.strip():
-        payload["id"] = distinct_id
+    if normalized_distinct_id:
+        payload["id"] = normalized_distinct_id
 
     event_data = {"payload": payload, "type": "event"}
 

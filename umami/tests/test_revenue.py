@@ -32,6 +32,22 @@ class TestNewRevenueEvent:
         assert payload["id"] == "user-123"
 
     @patch("umami.impl.httpx.post")
+    def test_new_event_normalizes_integer_distinct_id(self, mock_post):
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = {}
+        mock_resp.raise_for_status = MagicMock()
+        mock_post.return_value = mock_resp
+
+        umami.new_event(event_name="signup", distinct_id=12345)
+
+        payload = mock_post.call_args.kwargs["json"]["payload"]
+        assert payload["id"] == "12345"
+
+    def test_new_event_rejects_invalid_distinct_id_type(self):
+        with pytest.raises(ValidationError, match="string or integer"):
+            umami.new_event(event_name="signup", distinct_id=["bad-type"])  # type: ignore[arg-type]
+
+    @patch("umami.impl.httpx.post")
     def test_new_page_view_includes_distinct_id(self, mock_post):
         mock_resp = MagicMock()
         mock_resp.json.return_value = {}
@@ -202,6 +218,25 @@ class TestNewRevenueEventAsync:
 
         payload = mock_client.post.call_args.kwargs["json"]["payload"]
         assert payload["id"] == "user-456"
+
+    @pytest.mark.asyncio
+    async def test_new_page_view_async_normalizes_integer_distinct_id(self):
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = {}
+        mock_resp.raise_for_status = MagicMock()
+
+        mock_client = AsyncMock()
+        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
+        mock_client.__aexit__ = AsyncMock(return_value=False)
+        mock_client.post = AsyncMock(return_value=mock_resp)
+
+        with patch("umami.impl.httpx.AsyncClient", return_value=mock_client):
+            await umami.new_page_view_async(
+                page_title="Account", url="/account", distinct_id=67890
+            )
+
+        payload = mock_client.post.call_args.kwargs["json"]["payload"]
+        assert payload["id"] == "67890"
 
     @pytest.mark.asyncio
     async def test_default_revenue_event_async(self):
