@@ -1,7 +1,7 @@
 # Umami Analytics Client for Python
 
 Client for privacy-preserving, open source [Umami analytics platform](https://umami.is) based on 
-`httpx` and `pydantic`. 
+`httpx2` and `pydantic`. 
 
 `umami-analytics` is intended for adding custom data to your Umami instance (self-hosted or SaaS). Many umami events can supplied directly from HTML via their `data-*` attributes. However, some cannot. For example, if you have an event that is triggered in your app but doesn't have a clear HTML action you can add custom events. These will appear at the bottom of your Umami analtytics page for a website.
 

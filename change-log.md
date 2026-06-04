@@ -21,6 +21,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.24] - 2026-06-04
+
+### Changed
+- Migrated HTTP backend from `httpx` to `httpx2`, imported as `import httpx2 as httpx` so all call sites remain unchanged
+- Files: `umami/umami/impl/__init__.py`, `umami/requirements.txt`, `umami/pyproject.toml`, `pyrefly.toml`, `README.md`, `umami/README.md`
+
+### Notes
+- Motivated by supply-chain/maintainer-governance concerns around `httpx` (stalled releases, locked-down issues/discussions). Confirm `httpx2` is the intended, API-compatible fork before publishing this release.
+
+---
+
 ## [0.4.23] - 2026-03-12
 
 ### Added

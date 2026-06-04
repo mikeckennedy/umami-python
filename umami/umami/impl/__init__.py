@@ -2,7 +2,7 @@ import sys
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-import httpx
+import httpx2 as httpx
 
 from umami import models, urls
 from umami.errors import OperationNotAllowedError, ValidationError
