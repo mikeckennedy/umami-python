@@ -873,12 +873,12 @@ async def website_stats_async(
         'endAt': int(end_at.timestamp() * 1000),
     }
     optional_params: dict[str, Any] = {
-        'url': url,
+        'path': url,  # API filter renamed 'url' -> 'path' (2025-10-07)
         'referrer': referrer,
         'title': title,
         'query': query,
         'event': event,
-        'host': host,
+        'hostname': host,  # API filter renamed 'host' -> 'hostname' (2025-10-07)
         'os': os,
         'browser': browser,
         'device': device,
@@ -949,12 +949,12 @@ def website_stats(
         'endAt': int(end_at.timestamp() * 1000),
     }
     optional_params: dict[str, Any] = {
-        'url': url,
+        'path': url,  # API filter renamed 'url' -> 'path' (2025-10-07)
         'referrer': referrer,
         'title': title,
         'query': query,
         'event': event,
-        'host': host,
+        'hostname': host,  # API filter renamed 'host' -> 'hostname' (2025-10-07)
         'os': os,
         'browser': browser,
         'device': device,

@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `active_users()` and `active_users_async()` read the active-visitor count from a
   non-existent `x` key, so they always returned `0`. They now read Umami's current
   `visitors` key (falling back to the legacy `x` key for compatibility). (#19)
+- `website_stats()` / `website_stats_async()` sent their `url` and `host` filters under
+  the old query-param names, which Umami renamed on 2025-10-07 (`url` → `path`,
+  `host` → `hostname`) — so filtering stats by URL or hostname was a silent no-op. The
+  public `url`/`host` keyword arguments are unchanged; they now map to the current
+  `path`/`hostname` wire names. (#20)
 
 ### Security
 

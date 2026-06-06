@@ -74,3 +74,34 @@ class TestWebsiteStatsDateParams:
         assert params['endAt'] == int(_END.timestamp() * 1000)
         assert 'start_at' not in params
         assert 'end_at' not in params
+
+
+class TestWebsiteStatsFilterParams:
+    """The url/host filter kwargs must reach Umami as path/hostname query params.
+
+    Regression for #20: Umami renamed these filter keys on 2025-10-07
+    (url -> path, host -> hostname). The old names are ignored, so filtering
+    stats by URL or hostname was a silent no-op. The public kwargs stay url/host.
+    """
+
+    def test_sync_maps_url_and_host_to_path_and_hostname(self):
+        with patch('umami.impl.auth_token', 'fake-token'):
+            with patch('umami.impl.httpx.get', _mock_get()) as mock_get:
+                umami.website_stats(start_at=_START, end_at=_END, url='/pricing', host='example.com')
+        params = mock_get.call_args.kwargs['params']
+        assert params['path'] == '/pricing'
+        assert params['hostname'] == 'example.com'
+        assert 'url' not in params
+        assert 'host' not in params
+
+    @pytest.mark.asyncio
+    async def test_async_maps_url_and_host_to_path_and_hostname(self):
+        mock_client = _mock_async_client()
+        with patch('umami.impl.auth_token', 'fake-token'):
+            with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
+                await umami.website_stats_async(start_at=_START, end_at=_END, url='/pricing', host='example.com')
+        params = mock_client.get.call_args.kwargs['params']
+        assert params['path'] == '/pricing'
+        assert params['hostname'] == 'example.com'
+        assert 'url' not in params
+        assert 'host' not in params
