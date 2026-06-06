@@ -30,6 +30,13 @@ dependencies = [
 ]
 version = "0.5.24"
 
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+]
+
 
 [project.urls]
 Homepage = "https://github.com/mikeckennedy/umami-python"
@@ -60,4 +67,8 @@ exclude = [
     "setup.py",
     "settings.json",
     "/tox.ini",
-] 
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

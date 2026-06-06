@@ -89,11 +89,28 @@ if test_domain := settings.get('test_domain'):
         title='This event should appear in Umami',
         url='/re-enabled-test',
         custom_data={'tracking_restored': True},
+        distinct_id='user-123',  # Stable per-user id, sent to Umami as payload field id
     )
     print('   ✓ Event sent to Umami')
 
     print('\nSending event as if we are a browser user')
-    umami.new_page_view('Account Details - Your App', '/account/details', ip_address='127.100.200.1')
+    umami.new_page_view(
+        'Account Details - Your App',
+        '/account/details',
+        ip_address='127.100.200.1',
+        distinct_id='user-123',
+    )
+
+    print('\nTracking a revenue event')
+    umami.new_revenue_event(
+        revenue=19.99,
+        currency='USD',
+        event_name='checkout-cart',
+        url='/checkout',
+        distinct_id='user-123',
+        custom_data={'product': 'widget', 'quantity': 2},
+    )
+    print('   ✓ Revenue event sent to Umami')
 else:
     print('No test domain, skipping event creation.')
 

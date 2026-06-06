@@ -246,7 +246,7 @@ async def new_event_async(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
 
     Returns: The data returned from the Umami API.
     """  # noqa
@@ -326,7 +326,7 @@ def new_event(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -384,6 +384,7 @@ async def new_revenue_event_async(
     language: str = 'en-US',
     screen: str = '1920x1080',
     ip_address: Optional[str] = None,
+    distinct_id: Optional[Union[str, int]] = None,
 ) -> dict:
     """
     Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()
@@ -402,6 +403,7 @@ async def new_revenue_event_async(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
 
     Returns: The data returned from the Umami API.
     """  # noqa
@@ -427,6 +429,7 @@ async def new_revenue_event_async(
         language=language,
         screen=screen,
         ip_address=ip_address,
+        distinct_id=distinct_id,
     )
 
 
@@ -443,6 +446,7 @@ def new_revenue_event(
     language: str = 'en-US',
     screen: str = '1920x1080',
     ip_address: Optional[str] = None,
+    distinct_id: Optional[Union[str, int]] = None,
 ):
     """
     Creates a new revenue event in Umami. This is a convenience wrapper around new_event()
@@ -461,6 +465,7 @@ def new_revenue_event(
         language: The language of the event / client.
         screen: The screen resolution of the client.
         ip_address: OPTIONAL: The true IP address of the user.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
     """  # noqa
     if not isinstance(revenue, (int, float)):
         raise ValidationError('Revenue must be a number (int or float).')
@@ -484,6 +489,7 @@ def new_revenue_event(
         language=language,
         screen=screen,
         ip_address=ip_address,
+        distinct_id=distinct_id,
     )
 
 
@@ -514,7 +520,7 @@ async def new_page_view_async(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -583,7 +589,7 @@ def new_page_view(
         screen: OPTIONAL: The screen resolution of the client.
         ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
-        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer. Sent to the API as payload field id.
+        distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
