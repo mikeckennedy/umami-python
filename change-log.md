@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   params, which the Umami API ignores — it silently returned all-time stats regardless
   of the requested window. Now sends camelCase `startAt`/`endAt`, matching the sync
   `website_stats()`. (#18)
+- `active_users()` and `active_users_async()` read the active-visitor count from a
+  non-existent `x` key, so they always returned `0`. They now read Umami's current
+  `visitors` key (falling back to the legacy `x` key for compatibility). (#19)
 
 ### Security
 
