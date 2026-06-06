@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Fixed
+- `website_stats_async()` sent its date range as snake_case `start_at`/`end_at` query
+  params, which the Umami API ignores — it silently returned all-time stats regardless
+  of the requested window. Now sends camelCase `startAt`/`endAt`, matching the sync
+  `website_stats()`. (#18)
 
 ### Security
 

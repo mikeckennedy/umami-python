@@ -867,8 +867,8 @@ async def website_stats_async(
         'Authorization': f'Bearer {auth_token}',
     }
     params = {
-        'start_at': int(start_at.timestamp() * 1000),
-        'end_at': int(end_at.timestamp() * 1000),
+        'startAt': int(start_at.timestamp() * 1000),
+        'endAt': int(end_at.timestamp() * 1000),
     }
     optional_params: dict[str, Any] = {
         'url': url,
