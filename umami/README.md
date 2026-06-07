@@ -25,6 +25,7 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 * 🔀 Both **sync** and **async** programming models.
 * ⚒️ **Structured data with Pydantic** models for API responses.
 * 👩‍💻 **Login / authenticate** for either a self-hosted or SaaS hosted instance of Umami.
+* ☁️ **Authenticate against Umami Cloud** with an API key via `set_cloud_api_key()` — no `login()` needed.
 * 🥇Set a **default website** for a **simplified API** going forward.
 * 🔧 **Enable/disable tracking** for development and testing environments.
 
@@ -147,6 +148,40 @@ umami.verify_token()
 ```
 
 This code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the [example client](./umami/example_client) in the repo.
+
+## Umami Cloud
+
+Using [Umami Cloud](https://cloud.umami.is) instead of a self-hosted instance? Authenticate with an **API key** rather than `login()`. Create one in Umami Cloud under **Settings → API keys**.
+
+In Cloud mode you do **not** call `set_url_base()` or `login()` — `set_cloud_api_key()` takes care of both the host routing and the authentication header for you:
+
+```python
+import umami
+from datetime import datetime, timedelta
+
+# Authenticate with your Cloud API key. region is optional ('us' or 'eu');
+# omit it to use the region of the account that owns the key.
+umami.set_cloud_api_key("your-cloud-api-key", region="eu")
+umami.set_website_id("your-website-id")
+
+# Data/management calls go to https://api.umami.is/v1[/region]/...
+# and send the x-umami-api-key header automatically.
+active_count = umami.active_users()
+
+end = datetime.now()
+stats = umami.website_stats(start_at=end - timedelta(days=7), end_at=end)
+print(f"Visitors (last 7 days): {stats.visitors}")
+
+# Events are sent to https://cloud.umami.is/api/send automatically.
+umami.new_event(event_name="purchase", url="/checkout", hostname="example.com")
+
+# Return to self-hosted / token behavior at any time:
+# umami.clear_cloud_api_key()
+```
+
+> **Routing is handled for you:** data and management calls go to `https://api.umami.is/v1` (authenticated with the `x-umami-api-key` header), while events are sent to `https://cloud.umami.is/api/send`. Note that the Umami Cloud API is rate-limited to **50 calls / 15 seconds**.
+
+The **self-hosted (`login()`) usage shown above is unchanged** — Cloud mode is simply a labeled alternative, and existing code keeps working exactly as before.
 
 ## Want to contribute?
 

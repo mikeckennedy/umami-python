@@ -8,6 +8,7 @@ from .impl import new_event_async, new_event  # type: ignore noqa: F401, E402
 from .impl import new_revenue_event, new_revenue_event_async  # type: ignore noqa: F401, E402
 from .impl import new_page_view, new_page_view_async  # type: ignore noqa: F401, E402
 from .impl import set_url_base, set_website_id, set_hostname  # type: ignore noqa: F401, E402
+from .impl import set_cloud_api_key, clear_cloud_api_key  # type: ignore noqa: F401, E402
 from .impl import verify_token_async, verify_token  # type: ignore noqa: F401, E402
 from .impl import website_stats, website_stats_async  # type: ignore noqa: F401, E402
 from .impl import websites_async, websites  # type: ignore noqa: F401, E402
@@ -25,9 +26,11 @@ __all__ = [
     'errors',
     
     # Configuration/Setup
-    'set_url_base', 
-    'set_website_id', 
+    'set_url_base',
+    'set_website_id',
     'set_hostname',
+    'set_cloud_api_key',
+    'clear_cloud_api_key',
     'enable',
     'disable',
     

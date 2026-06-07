@@ -10,8 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `distinct_id` support in `new_event`, `new_page_view`, and `new_revenue_event` payloads
   (sync and async), sent to Umami as payload field `id`
+- Umami Cloud API-key authentication via `set_cloud_api_key(key, region=None)` and
+  `clear_cloud_api_key()`. In Cloud mode, data/management calls route to
+  `https://api.umami.is/v1[/region]` with an `x-umami-api-key` header, and events are sent to
+  `https://cloud.umami.is/api/send` — no `set_url_base()` or `login()` required. Existing
+  self-hosted (`login()` + token) usage is byte-for-byte unchanged. Added `urls.me` for Cloud
+  key validation in `verify_token`/`verify_token_async`. In Cloud mode, `heartbeat()` /
+  `heartbeat_async()` check liveness via the authenticated `/me` endpoint (Cloud has no
+  `/api/heartbeat`), and `login()` / `login_async()` raise `OperationNotAllowedError` to fail
+  fast (the API key is the credential — there is no username/password login on Cloud).
 
 ### Changed
+- `validate_state` error messages now mention `set_cloud_api_key()` alongside `set_url_base()` /
+  `login()`. Same exception type (`OperationNotAllowedError`) and trigger conditions; text only.
 
 ### Deprecated
 

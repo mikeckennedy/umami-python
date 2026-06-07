@@ -20,6 +20,15 @@ auth_token: Optional[str] = None
 default_website_id: Optional[str] = None
 default_hostname: Optional[str] = None
 tracking_enabled: bool = True
+
+# Umami Cloud API-key auth (see set_cloud_api_key). When api_key is None we are in
+# self-hosted/token mode and every code path behaves exactly as before.
+api_key: Optional[str] = None
+cloud_region: Optional[str] = None  # None | 'us' | 'eu'
+
+# Official Umami Cloud hosts
+_CLOUD_DATA_BASE = 'https://api.umami.is/v1'  # data/management API (x-umami-api-key)
+_CLOUD_SEND_BASE = 'https://cloud.umami.is/api'  # public ingestion (/send, /batch)
 # An actual browser UA is needed to get around the bot detection in Umami
 # You can also set DISABLE_BOT_CHECK=true in your Umami environment to disable the bot check entirely:
 # https://github.com/umami-software/umami/blob/7a3443cd06772f3cde37bdbb0bf38eabf4515561/pages/api/collect.js#L13
@@ -88,8 +97,79 @@ def set_hostname(hostname: str) -> None:
     default_hostname = hostname
 
 
+def set_cloud_api_key(key: str, region: Optional[str] = None) -> None:
+    """
+    Authenticate against Umami Cloud with an API key instead of login().
+
+    Enables "Cloud mode": data/management calls are routed to
+    https://api.umami.is/v1 and authenticated with the `x-umami-api-key`
+    header, and events are sent to https://cloud.umami.is/api/send. You do
+    NOT need to call set_url_base() or login() in this mode.
+
+    Args:
+        key: Your Umami Cloud API key.
+        region: Optional 'us' or 'eu' to pin the data region. Defaults to the
+                region of the account that owns the key.
+    """
+    global api_key, cloud_region
+    if not key or not key.strip():
+        raise ValidationError('API key must not be empty.')
+    if region is not None and region not in ('us', 'eu'):
+        raise ValidationError("region must be 'us', 'eu', or None.")
+    api_key = key.strip()
+    cloud_region = region
+
+
+def clear_cloud_api_key() -> None:
+    """Exit Cloud mode and return to token/self-hosted behavior."""
+    global api_key, cloud_region
+    api_key = None
+    cloud_region = None
+
+
+def _is_cloud() -> bool:
+    return api_key is not None
+
+
+def _data_url(path_const: str, suffix: str = '') -> str:
+    """
+    Full URL for a data/auth endpoint in the active mode.
+    `path_const` is a value from urls.py (e.g. urls.websites == '/api/websites').
+    """
+    if _is_cloud():
+        region = f'/{cloud_region}' if cloud_region else ''
+        rel = path_const[4:] if path_const.startswith('/api') else path_const  # '/api/x' -> '/x'
+        return f'{_CLOUD_DATA_BASE}{region}{rel}{suffix}'  # .../v1[/region]/x
+    return f'{url_base}{path_const}{suffix}'  # unchanged self-hosted
+
+
+def _send_url() -> str:
+    """Full URL for the ingestion endpoint (/api/send) in the active mode."""
+    if _is_cloud():
+        return f'{_CLOUD_SEND_BASE}/send'  # https://cloud.umami.is/api/send
+    return f'{url_base}{urls.events}'  # unchanged self-hosted (or cloud-events via set_url_base)
+
+
+def _data_headers() -> dict:
+    """Auth headers for data/management calls in the active mode."""
+    headers = {'User-Agent': user_agent}
+    if _is_cloud():
+        headers['x-umami-api-key'] = api_key  # type: ignore[assignment]
+    else:
+        headers['Authorization'] = f'Bearer {auth_token}'  # identical to today
+    return headers
+
+
+def _send_headers(ua: str = event_user_agent) -> dict:
+    """Headers for ingestion calls. Self-hosted unchanged; Cloud send is unauthenticated."""
+    headers = {'User-Agent': ua}
+    if not _is_cloud():
+        headers['Authorization'] = f'Bearer {auth_token}'  # identical to today (may be 'Bearer None')
+    return headers
+
+
 def is_logged_in() -> bool:
-    return auth_token is not None
+    return auth_token is not None or api_key is not None
 
 
 async def login_async(username: str, password: str) -> models.LoginResponse:
@@ -103,10 +183,15 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
     Returns: LoginResponse object which your token and user details (no need to save this).
     """
     global auth_token
+    if _is_cloud():
+        raise OperationNotAllowedError(
+            'login() is not used in Cloud mode; your API key from set_cloud_api_key() is the '
+            'credential. Call clear_cloud_api_key() first to use username/password login.'
+        )
     validate_state(url=True)
     validate_login(username, password)
 
-    url = f'{url_base}{urls.login}'
+    url = _data_url(urls.login)
     headers = {'User-Agent': user_agent}
     api_data = {
         'username': username,
@@ -133,10 +218,15 @@ def login(username: str, password: str) -> models.LoginResponse:
     """
     global auth_token
 
+    if _is_cloud():
+        raise OperationNotAllowedError(
+            'login() is not used in Cloud mode; your API key from set_cloud_api_key() is the '
+            'credential. Call clear_cloud_api_key() first to use username/password login.'
+        )
     validate_state(url=True)
     validate_login(username, password)
 
-    url = f'{url_base}{urls.login}'
+    url = _data_url(urls.login)
     headers = {'User-Agent': user_agent}
     api_data = {
         'username': username,
@@ -158,11 +248,8 @@ async def websites_async() -> list[models.Website]:
     global auth_token
     validate_state(url=True, user=True)
 
-    url = f'{url_base}{urls.websites}'
-    headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    url = _data_url(urls.websites)
+    headers = _data_headers()
 
     async with httpx.AsyncClient() as client:  # type: ignore
         resp = await client.get(url, headers=headers, follow_redirects=True)
@@ -180,11 +267,8 @@ def websites() -> list[models.Website]:
     global auth_token
     validate_state(url=True, user=True)
 
-    url = f'{url_base}{urls.websites}'
-    headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    url = _data_url(urls.websites)
+    headers = _data_headers()
     resp = httpx.get(url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
@@ -263,11 +347,8 @@ async def new_event_async(
     if not tracking_enabled:
         return {}
 
-    api_url = f'{url_base}{urls.events}'
-    headers = {
-        'User-Agent': event_user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    api_url = _send_url()
+    headers = _send_headers()
 
     payload = {
         'hostname': hostname,
@@ -341,11 +422,8 @@ def new_event(
     if not tracking_enabled:
         return
 
-    api_url = f'{url_base}{urls.events}'
-    headers = {
-        'User-Agent': event_user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    api_url = _send_url()
+    headers = _send_headers()
 
     payload = {
         'hostname': hostname,
@@ -533,11 +611,8 @@ async def new_page_view_async(
     if not tracking_enabled:
         return
 
-    api_url = f'{url_base}{urls.events}'
-    headers = {
-        'User-Agent': ua,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    api_url = _send_url()
+    headers = _send_headers(ua=ua)
 
     payload = {
         'hostname': hostname,
@@ -602,11 +677,8 @@ def new_page_view(
     if not tracking_enabled:
         return
 
-    api_url = f'{url_base}{urls.events}'
-    headers = {
-        'User-Agent': ua,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    api_url = _send_url()
+    headers = _send_headers(ua=ua)
 
     payload = {
         'hostname': hostname,
@@ -659,7 +731,16 @@ async def verify_token_async(check_server: bool = True) -> bool:
         validate_state(url=True, user=True)
 
         if not check_server:
-            return True
+            return is_logged_in()
+
+        if _is_cloud():
+            url = _data_url(urls.me)
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(url, headers=_data_headers(), follow_redirects=True)
+                resp.raise_for_status()
+            body = resp.json()
+            # /api/me nests username under 'user'; the 'username' check is a defensive fallback.
+            return 'user' in body or 'username' in body
 
         url = f'{url_base}{urls.verify}'
         headers = {
@@ -692,7 +773,15 @@ def verify_token(check_server: bool = True) -> bool:
         validate_state(url=True, user=True)
 
         if not check_server:
-            return True
+            return is_logged_in()
+
+        if _is_cloud():
+            url = _data_url(urls.me)
+            resp = httpx.get(url, headers=_data_headers(), follow_redirects=True)
+            resp.raise_for_status()
+            body = resp.json()
+            # /api/me nests username under 'user'; the 'username' check is a defensive fallback.
+            return 'user' in body or 'username' in body
 
         url = f'{url_base}{urls.verify}'
         headers = {
@@ -718,6 +807,14 @@ async def heartbeat_async() -> bool:
         global auth_token
         validate_state(url=True, user=False)
 
+        if _is_cloud():
+            # Cloud has no /api/heartbeat; use the authenticated /me endpoint as a liveness check.
+            url = _data_url(urls.me)
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(url, headers=_data_headers(), follow_redirects=True)
+                resp.raise_for_status()
+            return True
+
         url = f'{url_base}{urls.heartbeat}'
         headers = {
             'User-Agent': user_agent,
@@ -741,6 +838,13 @@ def heartbeat() -> bool:
     try:
         global auth_token
         validate_state(url=True, user=False)
+
+        if _is_cloud():
+            # Cloud has no /api/heartbeat; use the authenticated /me endpoint as a liveness check.
+            url = _data_url(urls.me)
+            resp = httpx.get(url, headers=_data_headers(), follow_redirects=True)
+            resp.raise_for_status()
+            return True
 
         url = f'{url_base}{urls.heartbeat}'
         headers = {
@@ -778,11 +882,8 @@ async def active_users_async(website_id: Optional[str] = None) -> int:
 
     website_id = website_id or default_website_id
 
-    url = f'{url_base}{urls.websites}/{website_id}/active'
-    headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    url = _data_url(urls.websites, f'/{website_id}/active')
+    headers = _data_headers()
 
     async with httpx.AsyncClient() as client:
         resp = await client.get(url, headers=headers, follow_redirects=True)
@@ -806,11 +907,8 @@ def active_users(website_id: Optional[str] = None) -> int:
 
     website_id = website_id or default_website_id
 
-    url = f'{url_base}{urls.websites}/{website_id}/active'
-    headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    url = _data_url(urls.websites, f'/{website_id}/active')
+    headers = _data_headers()
 
     resp = httpx.get(url, headers=headers, follow_redirects=True)
     resp.raise_for_status()
@@ -862,12 +960,9 @@ async def website_stats_async(
 
     website_id = website_id or default_website_id
 
-    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+    api_url = _data_url(urls.websites, f'/{website_id}/stats')
 
-    headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    headers = _data_headers()
     params = {
         'startAt': int(start_at.timestamp() * 1000),
         'endAt': int(end_at.timestamp() * 1000),
@@ -938,12 +1033,9 @@ def website_stats(
 
     website_id = website_id or default_website_id
 
-    api_url = f'{url_base}{urls.websites}/{website_id}/stats'
+    api_url = _data_url(urls.websites, f'/{website_id}/stats')
 
-    headers = {
-        'User-Agent': user_agent,
-        'Authorization': f'Bearer {auth_token}',
-    }
+    headers = _data_headers()
     params = {
         'startAt': int(start_at.timestamp() * 1000),
         'endAt': int(end_at.timestamp() * 1000),
@@ -974,8 +1066,8 @@ def validate_state(url: bool = False, user: bool = False):
     """
     Internal helper function, not need to use this.
     """
-    if url and not url_base:
-        raise OperationNotAllowedError('URL Base must be set to proceed.')
+    if url and not url_base and not _is_cloud():
+        raise OperationNotAllowedError('Set a URL base with set_url_base() or call set_cloud_api_key().')
 
-    if user and not auth_token:
-        raise OperationNotAllowedError('You must login before proceeding.')
+    if user and not auth_token and not _is_cloud():
+        raise OperationNotAllowedError('Call login() or set_cloud_api_key() before proceeding.')

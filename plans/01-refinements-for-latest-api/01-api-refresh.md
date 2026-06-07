@@ -122,7 +122,11 @@ where `mock_client.get` is an `AsyncMock`).
 
 ## Done when
 
-- [ ] Async `website_stats_async` sends `startAt`/`endAt`.
-- [ ] Both `active_users` variants read `visitors`.
-- [ ] Both `website_stats` variants send `path`/`hostname` for the `url`/`host` kwargs.
-- [ ] New tests pass; existing tests unchanged.
+- [x] Async `website_stats_async` sends `startAt`/`endAt`.
+- [x] Both `active_users` variants read `visitors`.
+- [x] Both `website_stats` variants send `path`/`hostname` for the `url`/`host` kwargs.
+- [x] New tests pass; existing tests unchanged.
+
+> **Shipped** as issues #18 (`f95fa2e`), #19 (`8527adc`), and #20 (`5ea4eb8`) — all merged to
+> `main` and closed. The only remaining item is the *optional* deprecated-alias follow-up in §1.3,
+> left to the backlog.
