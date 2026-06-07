@@ -1,5 +1,6 @@
-from datetime import datetime
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
+
+from _mocks import END, START, make_sync_mock
 
 import umami
 from umami import models
@@ -14,12 +15,9 @@ class TestWebsiteStatsComparisonOptional:
 
     def test_website_stats_parses_without_comparison(self):
         payload = {'pageviews': 10, 'visitors': 5, 'visits': 7, 'bounces': 2, 'totaltime': 100}
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = payload
-        mock_resp.raise_for_status = MagicMock()
         with patch('umami.impl.auth_token', 'fake-token'):
-            with patch('umami.impl.httpx.get', MagicMock(return_value=mock_resp)):
-                stats = umami.website_stats(start_at=datetime(2025, 1, 1), end_at=datetime(2025, 1, 31))
+            with patch('umami.impl.httpx.get', make_sync_mock(payload)):
+                stats = umami.website_stats(start_at=START, end_at=END)
         assert stats.comparison is None
         assert stats.visitors == 5
 

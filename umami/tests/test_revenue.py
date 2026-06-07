@@ -1,6 +1,7 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
 import pytest
+from _mocks import make_async_client, mock_response
 from umami.errors import ValidationError
 
 import umami
@@ -11,10 +12,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_default_revenue_event(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(revenue=19.99)
 
@@ -26,10 +24,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_custom_currency(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(revenue=49.00, currency='EUR')
 
@@ -38,10 +33,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_custom_event_name(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(revenue=10.00, event_name='checkout-cart')
 
@@ -50,10 +42,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_additional_custom_data_preserved(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(revenue=25.00, custom_data={'product': 'widget', 'quantity': 2})
 
@@ -65,10 +54,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_revenue_currency_override_custom_data(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(
             revenue=30.00,
@@ -85,10 +71,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_zero_revenue_allowed(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(revenue=0)
 
@@ -115,10 +98,7 @@ class TestNewRevenueEvent:
 
     @patch('umami.impl.httpx.post')
     def test_integer_revenue(self, mock_post):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-        mock_post.return_value = mock_resp
+        mock_post.return_value = mock_response()
 
         umami.new_revenue_event(revenue=100)
 
@@ -131,14 +111,7 @@ class TestNewRevenueEventAsync:
 
     @pytest.mark.asyncio
     async def test_default_revenue_event_async(self):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-
-        mock_client = AsyncMock()
-        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-        mock_client.__aexit__ = AsyncMock(return_value=False)
-        mock_client.post = AsyncMock(return_value=mock_resp)
+        mock_client = make_async_client()
 
         with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
             result = await umami.new_revenue_event_async(revenue=19.99)
@@ -152,14 +125,7 @@ class TestNewRevenueEventAsync:
 
     @pytest.mark.asyncio
     async def test_custom_params_async(self):
-        mock_resp = MagicMock()
-        mock_resp.json.return_value = {}
-        mock_resp.raise_for_status = MagicMock()
-
-        mock_client = AsyncMock()
-        mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-        mock_client.__aexit__ = AsyncMock(return_value=False)
-        mock_client.post = AsyncMock(return_value=mock_resp)
+        mock_client = make_async_client()
 
         with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
             await umami.new_revenue_event_async(

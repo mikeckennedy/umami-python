@@ -1,49 +1,9 @@
-from datetime import datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
 import pytest
+from _mocks import END, START, STATS_JSON, make_async_client, make_sync_mock
 
 import umami
-
-# A minimal but valid WebsiteStats payload (see models.WebsiteStats).
-_STATS_JSON = {
-    'pageviews': 10,
-    'visitors': 5,
-    'visits': 7,
-    'bounces': 2,
-    'totaltime': 1234,
-    'comparison': {
-        'pageviews': 9,
-        'visitors': 4,
-        'visits': 6,
-        'bounces': 1,
-        'totaltime': 1000,
-    },
-}
-
-_START = datetime(2025, 1, 1)
-_END = datetime(2025, 1, 31)
-
-
-def _mock_get():
-    """A MagicMock standing in for httpx.get with a stats-returning response."""
-    mock_resp = MagicMock()
-    mock_resp.json.return_value = _STATS_JSON
-    mock_resp.raise_for_status = MagicMock()
-    return MagicMock(return_value=mock_resp)
-
-
-def _mock_async_client():
-    """An AsyncMock standing in for httpx.AsyncClient (async context manager)."""
-    mock_resp = MagicMock()
-    mock_resp.json.return_value = _STATS_JSON
-    mock_resp.raise_for_status = MagicMock()
-
-    mock_client = AsyncMock()
-    mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-    mock_client.__aexit__ = AsyncMock(return_value=False)
-    mock_client.get = AsyncMock(return_value=mock_resp)
-    return mock_client
 
 
 class TestWebsiteStatsDateParams:
@@ -55,23 +15,23 @@ class TestWebsiteStatsDateParams:
 
     def test_sync_sends_camelcase_date_params(self):
         with patch('umami.impl.auth_token', 'fake-token'):
-            with patch('umami.impl.httpx.get', _mock_get()) as mock_get:
-                umami.website_stats(start_at=_START, end_at=_END)
+            with patch('umami.impl.httpx.get', make_sync_mock(STATS_JSON)) as mock_get:
+                umami.website_stats(start_at=START, end_at=END)
         params = mock_get.call_args.kwargs['params']
-        assert params['startAt'] == int(_START.timestamp() * 1000)
-        assert params['endAt'] == int(_END.timestamp() * 1000)
+        assert params['startAt'] == int(START.timestamp() * 1000)
+        assert params['endAt'] == int(END.timestamp() * 1000)
         assert 'start_at' not in params
         assert 'end_at' not in params
 
     @pytest.mark.asyncio
     async def test_async_sends_camelcase_date_params(self):
-        mock_client = _mock_async_client()
+        mock_client = make_async_client(STATS_JSON)
         with patch('umami.impl.auth_token', 'fake-token'):
             with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
-                await umami.website_stats_async(start_at=_START, end_at=_END)
+                await umami.website_stats_async(start_at=START, end_at=END)
         params = mock_client.get.call_args.kwargs['params']
-        assert params['startAt'] == int(_START.timestamp() * 1000)
-        assert params['endAt'] == int(_END.timestamp() * 1000)
+        assert params['startAt'] == int(START.timestamp() * 1000)
+        assert params['endAt'] == int(END.timestamp() * 1000)
         assert 'start_at' not in params
         assert 'end_at' not in params
 
@@ -86,8 +46,8 @@ class TestWebsiteStatsFilterParams:
 
     def test_sync_maps_url_and_host_to_path_and_hostname(self):
         with patch('umami.impl.auth_token', 'fake-token'):
-            with patch('umami.impl.httpx.get', _mock_get()) as mock_get:
-                umami.website_stats(start_at=_START, end_at=_END, url='/pricing', host='example.com')
+            with patch('umami.impl.httpx.get', make_sync_mock(STATS_JSON)) as mock_get:
+                umami.website_stats(start_at=START, end_at=END, url='/pricing', host='example.com')
         params = mock_get.call_args.kwargs['params']
         assert params['path'] == '/pricing'
         assert params['hostname'] == 'example.com'
@@ -96,10 +56,10 @@ class TestWebsiteStatsFilterParams:
 
     @pytest.mark.asyncio
     async def test_async_maps_url_and_host_to_path_and_hostname(self):
-        mock_client = _mock_async_client()
+        mock_client = make_async_client(STATS_JSON)
         with patch('umami.impl.auth_token', 'fake-token'):
             with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
-                await umami.website_stats_async(start_at=_START, end_at=_END, url='/pricing', host='example.com')
+                await umami.website_stats_async(start_at=START, end_at=END, url='/pricing', host='example.com')
         params = mock_client.get.call_args.kwargs['params']
         assert params['path'] == '/pricing'
         assert params['hostname'] == 'example.com'

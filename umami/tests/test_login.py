@@ -1,6 +1,7 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
 import pytest
+from _mocks import make_async_client, make_sync_mock
 
 import umami
 
@@ -16,30 +17,12 @@ _LOGIN_JSON = {
 }
 
 
-def _mock_sync(payload):
-    mock_resp = MagicMock()
-    mock_resp.json.return_value = payload
-    mock_resp.raise_for_status = MagicMock()
-    return MagicMock(return_value=mock_resp)
-
-
-def _mock_async_client(payload):
-    mock_resp = MagicMock()
-    mock_resp.json.return_value = payload
-    mock_resp.raise_for_status = MagicMock()
-    mock_client = AsyncMock()
-    mock_client.__aenter__ = AsyncMock(return_value=mock_client)
-    mock_client.__aexit__ = AsyncMock(return_value=False)
-    mock_client.post = AsyncMock(return_value=mock_resp)
-    return mock_client
-
-
 class TestLogin:
     """login() posts credentials, parses LoginResponse, and caches the token."""
 
     def test_login_posts_and_caches_token(self):
         with patch('umami.impl.auth_token', None):
-            with patch('umami.impl.httpx.post', _mock_sync(_LOGIN_JSON)) as mock_post:
+            with patch('umami.impl.httpx.post', make_sync_mock(_LOGIN_JSON)) as mock_post:
                 result = umami.login('mkennedy', 'pw')
             assert result.token == 'tok-123'
             assert result.user.username == 'mkennedy'
@@ -58,7 +41,7 @@ class TestLogin:
 
 class TestLoginAsync:
     async def test_login_async_caches_token(self):
-        mock_client = _mock_async_client(_LOGIN_JSON)
+        mock_client = make_async_client(_LOGIN_JSON)
         with patch('umami.impl.auth_token', None):
             with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
                 result = await umami.login_async('mkennedy', 'pw')

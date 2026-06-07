@@ -26,11 +26,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Response models are more tolerant of variant/partial responses: `WebsiteStats.comparison` and
   `Website.user` are now optional, and `Website` accepts `createUser` (returned by team-website
   listings, where `userId` is null). Successful responses today are unaffected.
-- Internal: expanded the unit test suite (now 112 tests) following a suite review — added
+- Internal: expanded the unit test suite (now 128 tests) following a suite review — added
   behavioral coverage for `set_url_base` validation, the `validate_state` guards, the
   `login`/`login_async` happy path and response-model deserialization (`LoginResponse`,
-  `WebsitesResponse`), `websites`/`websites_async`, and the `disable()` no-op (asserting no HTTP
-  request is made). No production behavior changed.
+  `WebsitesResponse`), `websites`/`websites_async`, the `disable()` no-op (asserting no HTTP
+  request is made), `ip_address` payload inclusion/omission, explicit-arg-overrides-defaults
+  precedence, `heartbeat_async` self-hosted, and the `verify_token`/`heartbeat` failure branches.
+  Added a sync/async parity harness and consolidated the per-file HTTP mock builders into a shared
+  `tests/_mocks.py` (net ~210 fewer lines). No production behavior changed.
 
 ### Deprecated
 
