@@ -28,7 +28,7 @@ dependencies = [
     "httpx2",
     "pydantic",
 ]
-version = "0.5.25"
+version = "0.6.25"
 
 [project.optional-dependencies]
 dev = [

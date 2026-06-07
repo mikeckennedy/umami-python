@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+---
+
+## [0.6.25] - 2026-06-07
+
+### Added
 - `distinct_id` support in `new_event`, `new_page_view`, and `new_revenue_event` payloads
   (sync and async), sent to Umami as payload field `id`
 - Umami Cloud API-key authentication via `set_cloud_api_key(key, region=None)` and
