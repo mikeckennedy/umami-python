@@ -589,7 +589,7 @@ async def new_page_view_async(
     happens when a visit views a page and the JS library records it.
 
     Args:
-        page_title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+        page_title: The title of the page view to record (required).
         url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
         hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
@@ -655,7 +655,7 @@ def new_page_view(
     happens when a visit views a page and the JS library records it.
 
     Args:
-        page_title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+        page_title: The title of the page view to record (required).
         url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
         hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).

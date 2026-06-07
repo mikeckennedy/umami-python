@@ -18,8 +18,9 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 * ➕ **Add a custom event** to your Umami analytics dashboard.
 * 💰 **Track revenue** with dedicated revenue event support.
 * 📄 **Add a page view** to your Umami analytics dashboard.
+* 🆔 **Attach a per-user `distinct_id`** to events, page views, and revenue (sent as the Umami payload `id`).
 * 🌐 List all websites with details that you have registered at Umami.
-* 📊 **Get website statistics** including page views, visitors, bounce rate, and more.
+* 📊 **Get website statistics** including page views, visitors, visits, and bounce counts.
 * 👥 **Get active users** count for real-time monitoring.
 * 💓 **Heartbeat check** to verify Umami server connectivity.
 * 🔀 Both **sync** and **async** programming models.
@@ -103,7 +104,7 @@ event_resp = umami.new_event(
 # Create a new page view in the pages section of the dashboards.
 page_view_resp = umami.new_page_view(
     website_id='a7cd-5d1a-2b33', # Only send if overriding default above
-    page_title='Umami-Test', # Defaults to event_name if omitted.
+    page_title='Umami-Test', # Required: the page title to record.
     hostname='somedomain.com', # Only send if overriding default above.
     url='/users/actions',
     distinct_id='user-123',  # OPTIONAL: stable per-user id, sent as payload id
@@ -131,7 +132,7 @@ stats = umami.website_stats(
 )
 print(f"Page views: {stats.pageviews}")
 print(f"Unique visitors: {stats.visitors}")
-print(f"Bounce rate: {stats.bounces}")
+print(f"Bounces: {stats.bounces}")
 
 # Get current active users count
 active_count = umami.active_users(
