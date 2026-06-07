@@ -385,7 +385,7 @@ Coverage map (every networked call also has an `_async` twin, e.g. `new_event_as
 | `new_event(event_name, url, ...)` | `POST /api/send` (`type=event`) | Custom event; no auth needed. `distinct_id` → payload `id`. |
 | `new_page_view(page_title, url, ...)` | `POST /api/send` | Page view (no event name). |
 | `new_revenue_event(revenue, currency, ...)` | `POST /api/send` | Adds `revenue`/`currency` to the event data. |
-| `heartbeat()` | `POST /api/heartbeat` | Server-reachability check. |
+| `heartbeat()` | `GET /api/heartbeat` | Server-reachability check (returns `{"ok": true}`). On Cloud, checks `GET /v1/me`. |
 
 **Beyond the wrapped subset** — reports, sessions, event data, metrics/pageview series, realtime, teams, users, links, pixels, and share pages — call the HTTP API directly. After `umami.login(...)` you already have a token; a thin helper plus the two date converters (for the [ms-vs-ISO split](#two-date-conventions-read-this)) is all you need:
 

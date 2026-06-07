@@ -41,6 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `host` → `hostname`) — so filtering stats by URL or hostname was a silent no-op. The
   public `url`/`host` keyword arguments are unchanged; they now map to the current
   `path`/`hostname` wire names. (#20)
+- `heartbeat()` / `heartbeat_async()` issued a `POST` to `/api/heartbeat`, which current Umami
+  answers with `405 Method Not Allowed`; the broad exception handler swallowed the error so the
+  call always returned `False` even against a healthy server. They now issue a `GET` (the endpoint
+  returns `{"ok": true}`).
 
 ### Security
 

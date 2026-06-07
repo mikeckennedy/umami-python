@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -37,6 +38,15 @@ websites = umami.websites()
 print(f'Found {len(websites):,} websites.')
 print('First website in list:')
 print(websites[0])
+print()
+
+# Query stats and active users for the first website (login required for both).
+print(f'Stats for {websites[0].domain} over the last 7 days:')
+end_at = datetime.now()
+start_at = end_at - timedelta(days=7)
+stats = umami.website_stats(start_at=start_at, end_at=end_at, website_id=websites[0].id)
+print(f'   Page views: {stats.pageviews:,}, visitors: {stats.visitors:,}, visits: {stats.visits:,}')
+print(f'   Active users right now: {umami.active_users(website_id=websites[0].id):,}')
 print()
 
 if test_domain := settings.get('test_domain'):

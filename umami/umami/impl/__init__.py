@@ -820,7 +820,7 @@ async def heartbeat_async() -> bool:
             'User-Agent': user_agent,
         }
         async with httpx.AsyncClient() as client:
-            resp = await client.post(url, headers=headers, follow_redirects=True)
+            resp = await client.get(url, headers=headers, follow_redirects=True)
             resp.raise_for_status()
 
         return True
@@ -850,7 +850,7 @@ def heartbeat() -> bool:
         headers = {
             'User-Agent': user_agent,
         }
-        resp = httpx.post(url, headers=headers, follow_redirects=True)
+        resp = httpx.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
         return True

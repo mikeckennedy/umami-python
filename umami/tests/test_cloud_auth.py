@@ -247,12 +247,13 @@ class TestSelfHostedRegression:
         }
         assert 'x-umami-api-key' not in headers
 
-    def test_heartbeat_url_and_headers_unchanged(self):
-        with patch('umami.impl.httpx.post', _mock_sync({})) as mock_post:
+    def test_heartbeat_self_hosted_uses_get(self):
+        # Umami's /api/heartbeat is a GET (POST returns 405); see regression note in changelog.
+        with patch('umami.impl.httpx.get', _mock_sync({'ok': True})) as mock_get:
             result = umami.heartbeat()
         assert result is True
-        url = mock_post.call_args.args[0]
-        headers = mock_post.call_args.kwargs['headers']
+        url = mock_get.call_args.args[0]
+        headers = mock_get.call_args.kwargs['headers']
         assert url == 'https://example.com/api/heartbeat'
         assert headers == {'User-Agent': umami.impl.user_agent}
 
