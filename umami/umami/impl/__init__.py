@@ -380,7 +380,7 @@ async def new_event_async(
 def new_event(
     event_name: str,
     hostname: Optional[str] = None,
-    url: str = '/event-api-endpoint',
+    url: str = '/',
     website_id: Optional[str] = None,
     title: Optional[str] = None,
     custom_data: Optional[Dict[str, Any]] = None,
@@ -516,7 +516,7 @@ def new_revenue_event(
     currency: str = 'USD',
     event_name: str = 'revenue',
     hostname: Optional[str] = None,
-    url: str = '/event-api-endpoint',
+    url: str = '/',
     website_id: Optional[str] = None,
     title: Optional[str] = None,
     custom_data: Optional[Dict[str, Any]] = None,

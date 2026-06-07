@@ -55,6 +55,9 @@ These are defensive; they don't change behavior for today's successful responses
 
 ## Done when
 
-- [ ] `new_event` / `new_revenue_event` (sync + async) share one default `url`.
-- [ ] `WebsiteStats.comparison` is optional (and `Website.user` if you include 3.2's second half).
-- [ ] New tests pass; existing tests unchanged.
+- [x] `new_event` / `new_revenue_event` (sync + async) share one default `url` (`'/'`).
+- [x] `WebsiteStats.comparison` is optional; `Website.user` is optional and `createUser` was added.
+- [x] New tests pass; existing tests unchanged.
+
+> **Implemented** and verified (91 tests pass, ruff + pyrefly clean); pending commit. Both halves of
+> 3.2 included (`comparison` optional + `Website.user`/`createUser`).

@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `validate_state` error messages now mention `set_cloud_api_key()` alongside `set_url_base()` /
   `login()`. Same exception type (`OperationNotAllowedError`) and trigger conditions; text only.
+- Response models are more tolerant of variant/partial responses: `WebsiteStats.comparison` and
+  `Website.user` are now optional, and `Website` accepts `createUser` (returned by team-website
+  listings, where `userId` is null). Successful responses today are unaffected.
 
 ### Deprecated
 
@@ -45,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   answers with `405 Method Not Allowed`; the broad exception handler swallowed the error so the
   call always returned `False` even against a healthy server. They now issue a `GET` (the endpoint
   returns `{"ok": true}`).
+- `new_event()` and `new_revenue_event()` (sync) defaulted `url` to `'/event-api-endpoint'` while
+  their async twins used `'/'`. All four now default to `'/'`, so the sync/async twins agree and no
+  placeholder path appears in dashboards.
 
 ### Security
 

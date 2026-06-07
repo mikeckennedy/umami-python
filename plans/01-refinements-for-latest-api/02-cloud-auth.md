@@ -282,9 +282,14 @@ umami.new_event(event_name="purchase", url="/checkout", hostname="example.com")
 
 ## Done when
 
-- [ ] README "Umami Cloud" section written (the spec) + Core Features bullet.
-- [ ] `set_cloud_api_key` / `clear_cloud_api_key` added and exported in `__all__`.
-- [ ] `urls.me` added.
-- [ ] Routing/auth helpers added; all listed functions routed through them.
-- [ ] `validate_state`, `is_logged_in`, `verify_token` (+ async) recognize Cloud mode.
-- [ ] Cloud + regression tests pass; existing self-hosted tests unchanged.
+- [x] README "Umami Cloud" section written (the spec) + Core Features bullet.
+- [x] `set_cloud_api_key` / `clear_cloud_api_key` added and exported in `__all__`.
+- [x] `urls.me` added.
+- [x] Routing/auth helpers added; all listed functions routed through them.
+- [x] `validate_state`, `is_logged_in`, `verify_token` (+ async) recognize Cloud mode.
+- [x] Cloud + regression tests pass; existing self-hosted tests unchanged.
+
+> **Shipped** in `2065000` (`feat: Umami Cloud API-key auth`). Hardened after a 4-lens adversarial
+> review: Cloud-aware `heartbeat` (via `/me`), `login()` fail-fast in Cloud mode, and added
+> regression/coverage tests. A related stale-method fix — `heartbeat` POST→GET — shipped in
+> `93087b1`.

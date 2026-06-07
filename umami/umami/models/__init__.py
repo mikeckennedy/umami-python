@@ -32,7 +32,9 @@ class Website(pydantic.BaseModel):
     updatedAt: str
     deletedAt: typing.Any
     teamId: typing.Optional[str] = None
-    user: WebsiteUser
+    user: typing.Optional[WebsiteUser] = None
+    # GET /api/teams/:id/websites returns createUser instead of user (and userId is null there).
+    createUser: typing.Optional[WebsiteUser] = None
 
 
 class WebsiteStatsCmp(pydantic.BaseModel):
@@ -49,7 +51,7 @@ class WebsiteStats(pydantic.BaseModel):
     visits: int
     bounces: int
     totaltime: int
-    comparison: WebsiteStatsCmp
+    comparison: typing.Optional[WebsiteStatsCmp] = None
 
 
 class WebsitesResponse(pydantic.BaseModel):
