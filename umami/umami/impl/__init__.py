@@ -169,6 +169,14 @@ def _send_headers(ua: str = event_user_agent) -> dict:
 
 
 def is_logged_in() -> bool:
+    """
+    Whether a credential is currently set locally.
+
+    Returns:
+        True if a self-hosted login token or an Umami Cloud API key has been set, False otherwise.
+        This only reflects that a credential exists in this process, not that it is still valid on
+        the server — use verify_token() to confirm validity.
+    """
     return auth_token is not None or api_key is not None
 
 
@@ -180,7 +188,8 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
         username: Your Umami username
         password: Your Umami password
 
-    Returns: LoginResponse object which your token and user details (no need to save this).
+    Returns:
+        LoginResponse object which your token and user details (no need to save this).
     """
     global auth_token
     if _is_cloud():
@@ -214,7 +223,8 @@ def login(username: str, password: str) -> models.LoginResponse:
         username: Your Umami username
         password: Your Umami password
 
-    Returns: LoginResponse object which your token and user details (no need to save this).
+    Returns:
+        LoginResponse object which your token and user details (no need to save this).
     """
     global auth_token
 
@@ -243,7 +253,8 @@ def login(username: str, password: str) -> models.LoginResponse:
 async def websites_async() -> list[models.Website]:
     """
     All the websites that are registered in your Umami instance.
-    Returns: A list of Website Pydantic models.
+    Returns:
+        A list of Website Pydantic models.
     """
     global auth_token
     validate_state(url=True, user=True)
@@ -262,7 +273,8 @@ async def websites_async() -> list[models.Website]:
 def websites() -> list[models.Website]:
     """
     All the websites that are registered in your Umami instance.
-    Returns: A list of Website Pydantic models.
+    Returns:
+        A list of Website Pydantic models.
     """
     global auth_token
     validate_state(url=True, user=True)
@@ -332,7 +344,8 @@ async def new_event_async(
         ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
         distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
 
-    Returns: The data returned from the Umami API.
+    Returns:
+        The data returned from the Umami API.
     """  # noqa
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -483,7 +496,8 @@ async def new_revenue_event_async(
         ip_address: OPTIONAL: The true IP address of the user.
         distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
 
-    Returns: The data returned from the Umami API.
+    Returns:
+        The data returned from the Umami API.
     """  # noqa
     if not isinstance(revenue, (int, float)):
         raise ValidationError('Revenue must be a number (int or float).')
@@ -723,7 +737,8 @@ async def verify_token_async(check_server: bool = True) -> bool:
         check_server: If true, we will contact the server and verify that the token is valid.
                       If false, this only checks that an auth token has been stored from a previous successful login.
 
-    Returns: True if the token is still valid, False otherwise.
+    Returns:
+        True if the token is still valid, False otherwise.
     """
     # noinspection PyBroadException
     try:
@@ -765,7 +780,8 @@ def verify_token(check_server: bool = True) -> bool:
         check_server: If true, we will contact the server and verify that the token is valid.
                       If false, this only checks that an auth token has been stored from a previous successful login.
 
-    Returns: True if the token is still valid, False otherwise.
+    Returns:
+        True if the token is still valid, False otherwise.
     """
     # noinspection PyBroadException
     try:
@@ -800,7 +816,8 @@ async def heartbeat_async() -> bool:
     """
     Verifies that the server is reachable via the internet and is healthy.
 
-    Returns: True if the server is healthy and accessible.
+    Returns:
+        True if the server is healthy and accessible.
     """
     # noinspection PyBroadException
     try:
@@ -832,7 +849,8 @@ def heartbeat() -> bool:
     """
     Verifies that the server is reachable via the internet and is healthy.
 
-    Returns: True if the server is healthy and accessible.
+    Returns:
+        True if the server is healthy and accessible.
     """
     # noinspection PyBroadException
     try:
@@ -876,7 +894,8 @@ async def active_users_async(website_id: Optional[str] = None) -> int:
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
 
 
-    Returns: The number of active users.
+    Returns:
+        The number of active users.
     """
     validate_state(url=True, user=True)
 
@@ -901,7 +920,8 @@ def active_users(website_id: Optional[str] = None) -> int:
         website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
 
 
-    Returns: The number of active users.
+    Returns:
+        The number of active users.
     """
     validate_state(url=True, user=True)
 
@@ -954,7 +974,8 @@ async def website_stats_async(
         region: OPTIONAL: Name of region/state/province.
         city: OPTIONAL: Name of city.
 
-    Returns: A WebsiteStatsResponse model containing the website statistics data.
+    Returns:
+        A WebsiteStatsResponse model containing the website statistics data.
     """
     validate_state(url=True, user=True)
 
@@ -1027,7 +1048,8 @@ def website_stats(
         region: OPTIONAL: Name of region/state/province.
         city: OPTIONAL: Name of city.
 
-    Returns: A WebsiteStatsResponse model containing the website statistics data.
+    Returns:
+        A WebsiteStatsResponse model containing the website statistics data.
     """
     validate_state(url=True, user=True)
 

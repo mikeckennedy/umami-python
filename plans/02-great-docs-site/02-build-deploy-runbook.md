@@ -16,38 +16,50 @@ manual by decision — no CI, no script).
 
 ---
 
-## The subpath gotcha (read first)
+## How subpath hosting actually resolves (verified)
 
-Because `site_url` ends in `/docs/umami-python/`, Quarto emits asset/nav links **prefixed** with that
-path (e.g. `/docs/umami-python/site_libs/…`). That's exactly right for production — **and** it means
-a naïve local server that serves `_site` at `/` will 404 every asset and the page will look
-unstyled. **That is not a broken build.** Verify the right way (below) before concluding anything is
-wrong.
+This Quarto/Great-Docs version emits **relative** asset/nav links, not root-absolute ones:
+`site_libs/…` on the landing page, `../site_libs/…` on nested reference pages. Relative paths are
+**inherently subpath-safe** — they resolve correctly at any base, including `/docs/umami-python/`, so
+there is nothing to "fix" with a path prefix. `site_url` is still set (it writes `website.site-url`
+into `_quarto.yml`, used for the sitemap, canonical links, and `og:` URLs), but the asset wiring does
+**not** depend on it here.
 
-### Verify correctness two ways
+Consequence: a plain server that serves `_site` at `/` mostly works too, but to test the **real**
+production layout, serve it under the actual path. The reliable check is a faithful serve + asset
+status codes (do **not** grep for a `/docs/umami-python/…` prefix — there isn't one; the paths are
+relative):
 
-1. **Confirm the prefix is baked in** (fast, proves production-correctness):
+```bash
+cd umami && great-docs build
+mkdir -p /tmp/docpreview/docs
+ln -snf "$(pwd)/great-docs/_site" /tmp/docpreview/docs/umami-python
+( cd /tmp/docpreview && python -m http.server 8099 --bind 127.0.0.1 ) &
+B=http://127.0.0.1:8099/docs/umami-python
+for u in "/" "/reference/" "/reference/new_event.html" "/search.json" "/sitemap.xml"; do
+  printf "%-32s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "$B$u"; done
+# also confirm the CSS/JS the landing page links return 200:
+for c in $(curl -s "$B/" | grep -oE '(href|src)="(site_libs[^"]+)"' | sed -E 's/.*"(site_libs[^"]+)"/\1/'); do
+  printf "%-60s " "$c"; curl -s -o /dev/null -w "%{http_code}\n" "$B/$c"; done
+pkill -f "http.server 8099"
+```
 
-   ```bash
-   cd umami
-   grep -o '/docs/umami-python/site_libs[^"]*' great-docs/_site/index.html | head
-   ```
+All page URLs and every linked `site_libs/…` asset should return `200`. (`great-docs preview` is also
+fine for fast content iteration.)
 
-   Seeing `/docs/umami-python/site_libs/…` means the base path is wired correctly. (Empty output ⇒
-   `site_url` is wrong/missing — fix Unit 1 before going further.)
+> **Build gotcha — inline `Returns:`.** Great Docs renders docstrings via griffe. An inline
+> `Returns: <text>` (description on the same line) is parsed as a *trailing text section* and the
+> renderer aborts the whole API build with `unexpected text section DocstringSectionKind.text`. Use
+> block form (`Returns:` then the description on the next, indented line). This repo was scrubbed of
+> inline `Returns:` on 2026-06-08; keep new docstrings in block form.
 
-2. **Preview under the real path** (faithful end-to-end, mirrors nginx `alias`):
-
-   ```bash
-   cd umami
-   mkdir -p /tmp/docpreview/docs
-   ln -snf "$(pwd)/great-docs/_site" /tmp/docpreview/docs/umami-python
-   ( cd /tmp/docpreview && python -m http.server 8099 )
-   # open http://localhost:8099/docs/umami-python/  → styled, nav works, reference loads
-   ```
-
-`great-docs preview` is still fine for fast content iteration, but it may show the unstyled look for
-the reason above — trust check #2 for "does it work deployed."
+> **Build gotcha — "source" links (two-tier layout).** Great Docs builds GitHub source links
+> relative to the directory holding `pyproject.toml` (`umami/`), but the git root is one level up,
+> so links come out as `.../blob/main/umami/impl/__init__.py` (404) instead of
+> `.../blob/main/umami/umami/impl/__init__.py`. Fixed by a Quarto `pre_render` hook
+> (`scripts/fix_source_links.py`, wired in `great-docs.yml`) that reinserts the missing `umami/`
+> segment in the generated `.qmd` before render — automatic on every `build`/`preview`, no manual
+> step. `source.path` can't fix this (it collapses every module to its bare filename).
 
 ---
 
@@ -86,11 +98,17 @@ great-docs build          # -> umami/great-docs/_site/
 
 ## Verify (subpath-aware)
 
+Asset links are **relative** (subpath-safe), so serve under the real path and check status codes —
+don't grep for a path prefix:
+
 ```bash
-grep -o '/docs/umami-python/site_libs[^"]*' great-docs/_site/index.html | head   # prefix present?
-# faithful local preview at the real path:
 mkdir -p /tmp/docpreview/docs && ln -snf "$(pwd)/great-docs/_site" /tmp/docpreview/docs/umami-python
-( cd /tmp/docpreview && python -m http.server 8099 )   # http://localhost:8099/docs/umami-python/
+( cd /tmp/docpreview && python -m http.server 8099 --bind 127.0.0.1 ) &
+B=http://127.0.0.1:8099/docs/umami-python
+for u in "/" "/reference/" "/reference/new_event.html" "/search.json"; do
+  printf "%-30s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "$B$u"; done   # all 200
+pkill -f "http.server 8099"
+# open http://localhost:8099/docs/umami-python/ in a browser for a visual check
 ```
 
 ## Publish (transfer to the server)

@@ -3,7 +3,7 @@
 Client for privacy-preserving, open source [Umami analytics platform](https://umami.is) based on 
 `httpx2` and `pydantic`. 
 
-`umami-analytics` is intended for adding custom data to your Umami instance (self-hosted or SaaS). Many umami events can supplied directly from HTML via their `data-*` attributes. However, some cannot. For example, if you have an event that is triggered in your app but doesn't have a clear HTML action you can add custom events. These will appear at the bottom of your Umami analtytics page for a website.
+`umami-analytics` is intended for adding custom data to your Umami instance (self-hosted or SaaS). Many umami events can be supplied directly from HTML via their `data-*` attributes. However, some cannot. For example, if you have an event that is triggered in your app but doesn't have a clear HTML action you can add custom events. These will appear at the bottom of your Umami analytics page for a website.
 
 One example is a **purchase-course** event that happens deep inside the Python code rather than in HTML at [Talk Python Training](https://training.talkpython.fm). This is what our events section looks like for a typical weekend day (US Pacific Time):
 
@@ -11,7 +11,7 @@ One example is a **purchase-course** event that happens deep inside the Python c
 
 ## Focused on what you need, not what is offered
 
-The [Umami API is extensive](https://umami.is/docs/api) and much of that is intended for their frontend code to be able to function. You probably don't want or need that. `umami-analytics` only covers the subset that most developers will need for common SaaS actions such as adding [custom events](https://umami.is/docs/event-data). That said, PRs are weclome.
+The [Umami API is extensive](https://umami.is/docs/api) and much of that is intended for their frontend code to be able to function. You probably don't want or need that. `umami-analytics` only covers the subset that most developers will need for common SaaS actions such as adding [custom events](https://umami.is/docs/event-data). That said, PRs are welcome.
 
 ## Core Features
 
@@ -67,7 +67,7 @@ See the usage example below for the Python API around these features.
 
 ## Installation
 
-Just `pip install umami-analytics`
+Just `uv pip install umami-analytics`
 
 ## Usage
 
