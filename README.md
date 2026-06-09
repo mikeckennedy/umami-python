@@ -1,5 +1,12 @@
 # Umami Analytics Client for Python
 
+[![PyPI - Version](https://img.shields.io/pypi/v/umami-analytics.svg)](https://pypi.org/project/umami-analytics/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/umami-analytics.svg)](https://pypi.org/project/umami-analytics/)
+[![Documentation](https://img.shields.io/badge/docs-mkennedy.codes-blue.svg)](https://mkennedy.codes/docs/umami-python/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/mikeckennedy/umami-python/blob/main/LICENSE)
+
+📚 **Documentation:** [mkennedy.codes/docs/umami-python](https://mkennedy.codes/docs/umami-python/)
+
 Client for privacy-preserving, open source [Umami analytics platform](https://umami.is) based on 
 `httpx2` and `pydantic`. 
 
@@ -68,6 +75,12 @@ See the usage example below for the Python API around these features.
 ## Installation
 
 Just `uv pip install umami-analytics`
+
+## 📚 Documentation
+
+Full documentation lives at **[mkennedy.codes/docs/umami-python](https://mkennedy.codes/docs/umami-python/)**. It covers installation, configuration, the complete [API reference](https://mkennedy.codes/docs/umami-python/reference/) — every public function with its sync and async twin — plus Umami Cloud setup and runnable examples.
+
+The quick tour below gets you started; the docs site is the complete, searchable reference. There's also an [`llms.txt`](https://mkennedy.codes/docs/umami-python/llms.txt) if you'd like to point an AI assistant at the library.
 
 ## Usage
 

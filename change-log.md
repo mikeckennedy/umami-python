@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
+- README now points to the new documentation site at https://mkennedy.codes/docs/umami-python/
+  (added status badges, a documentation pointer near the top, and a "Documentation" section linking
+  the full API reference). Docs-only change — no code or packaging changes.
 
 ### Deprecated
 
