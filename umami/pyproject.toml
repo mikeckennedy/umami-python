@@ -60,6 +60,7 @@ exclude = [
     "setup.py",
     "settings.json",
     "/tox.ini",
+    "/umami/great-docs"
 ]
 
 [tool.hatch.build.targets.wheel]
