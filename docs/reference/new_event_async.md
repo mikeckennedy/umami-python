@@ -81,10 +81,7 @@ tracking is disabled.
 If neither set_url_base() nor set_cloud_api_key() has been called.
 
 `ValidationError`  
-If distinct_id is a bool or any type other than str or int.
-
-`Exception`  
-If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().
+If hostname or website_id is not set (here or via set_hostname()/set_website_id()), or if distinct_id is a bool or any type other than str or int.
 
 `httpx.HTTPStatusError`  
 If Umami returns a non-2xx response (only when tracking is enabled).

@@ -24,7 +24,7 @@ new_page_view(
 
 (both fall back to the defaults set via set_website_id() and set_hostname() when omitted). This is equivalent to what happens when a visitor views a page and the JS library records it.
 
-Requires set_url_base() (or set_cloud_api_key() for Cloud mode) and a website_id and hostname, either set globally via set_website_id()/set_hostname() or passed here. Login is not required to send page views. If tracking has been turned off with disable(), the input is validated but no HTTP request is made.
+Requires set_url_base() (or set_cloud_api_key() for Cloud mode) and a website_id and hostname, either set globally via set_website_id()/set_hostname() or passed here. Login is not required to send page views. If tracking has been turned off with disable(), the input is validated but no HTTP request is made and an empty dict is returned.
 
 
 ## Parameters
@@ -64,7 +64,10 @@ Optional Umami distinct ID for the user, as a string or integer, sent to the API
 ## Returns
 
 
-None.
+`dict`  
+The JSON response from the Umami API as a dict, or an empty dict if
+
+tracking is disabled.
 
 
 ## Raises
@@ -74,10 +77,7 @@ None.
 If neither set_url_base() nor set_cloud_api_key() has been called.
 
 `ValidationError`  
-If distinct_id is a bool or any type other than str or int.
-
-`Exception`  
-If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().
+If hostname or website_id is not set (here or via set_hostname()/set_website_id()), or if distinct_id is a bool or any type other than str or int.
 
 `httpx.HTTPStatusError`  
 If Umami returns a non-2xx response (only when tracking is enabled).

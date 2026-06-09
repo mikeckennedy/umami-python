@@ -19,11 +19,11 @@ class User(pydantic.BaseModel):
         isAdmin: True if the account has administrator privileges.
     """
 
-    id: str
-    username: str
-    role: str
-    createdAt: str
-    isAdmin: bool
+    id: str = pydantic.Field(description="The user's unique identifier.")
+    username: str = pydantic.Field(description='The login username.')
+    role: str = pydantic.Field(description="The account role (e.g. 'admin', 'user').")
+    createdAt: str = pydantic.Field(description='ISO 8601 timestamp of when the account was created.')
+    isAdmin: bool = pydantic.Field(description='True if the account has administrator privileges.')
 
 
 class LoginResponse(pydantic.BaseModel):
@@ -41,8 +41,10 @@ class LoginResponse(pydantic.BaseModel):
         user: The authenticated User account details.
     """
 
-    token: str
-    user: User
+    token: str = pydantic.Field(
+        description='The bearer token used to authenticate subsequent data and management calls.'
+    )
+    user: User = pydantic.Field(description='The authenticated User account details.')
 
 
 class WebsiteUser(pydantic.BaseModel):
@@ -58,8 +60,8 @@ class WebsiteUser(pydantic.BaseModel):
         id: The referenced user's unique identifier.
     """
 
-    username: str
-    id: str
+    username: str = pydantic.Field(description="The referenced user's login username.")
+    id: str = pydantic.Field(description="The referenced user's unique identifier.")
 
 
 class Website(pydantic.BaseModel):
@@ -91,19 +93,29 @@ class Website(pydantic.BaseModel):
         createUser: The creating user, populated for team-website listings.
     """
 
-    id: str
-    name: typing.Optional[str] = None
-    domain: str
-    shareId: typing.Any
-    resetAt: typing.Any
-    userId: typing.Optional[str] = None
-    createdAt: str
-    updatedAt: str
-    deletedAt: typing.Any
-    teamId: typing.Optional[str] = None
-    user: typing.Optional[WebsiteUser] = None
+    id: str = pydantic.Field(description="The website's unique identifier (use this as the website_id elsewhere).")
+    name: typing.Optional[str] = pydantic.Field(default=None, description='The display name of the website, if set.')
+    domain: str = pydantic.Field(description="The website's domain (e.g. 'talkpython.fm').")
+    shareId: typing.Any = pydantic.Field(
+        default=None, description='The public share identifier, or null when sharing is disabled.'
+    )
+    resetAt: typing.Any = pydantic.Field(default=None, description='Timestamp of the last stats reset, or null.')
+    userId: typing.Optional[str] = pydantic.Field(
+        default=None, description="The owning user's id; null for team-website listings."
+    )
+    createdAt: str = pydantic.Field(description='ISO 8601 timestamp of when the website was created.')
+    updatedAt: str = pydantic.Field(description='ISO 8601 timestamp of the last update.')
+    deletedAt: typing.Any = pydantic.Field(default=None, description='Soft-delete timestamp, or null if not deleted.')
+    teamId: typing.Optional[str] = pydantic.Field(
+        default=None, description="The owning team's id, if the website belongs to a team."
+    )
+    user: typing.Optional[WebsiteUser] = pydantic.Field(
+        default=None, description='The owning user, populated for personal website listings.'
+    )
     # GET /api/teams/:id/websites returns createUser instead of user (and userId is null there).
-    createUser: typing.Optional[WebsiteUser] = None
+    createUser: typing.Optional[WebsiteUser] = pydantic.Field(
+        default=None, description='The creating user, populated for team-website listings.'
+    )
 
 
 class WebsiteStatsCmp(pydantic.BaseModel):
@@ -122,11 +134,11 @@ class WebsiteStatsCmp(pydantic.BaseModel):
         totaltime: Total engagement time in seconds for the comparison period.
     """
 
-    pageviews: int
-    visitors: int
-    visits: int
-    bounces: int
-    totaltime: int
+    pageviews: int = pydantic.Field(description='Number of page views in the comparison period.')
+    visitors: int = pydantic.Field(description='Number of unique visitors in the comparison period.')
+    visits: int = pydantic.Field(description='Number of sessions in the comparison period.')
+    bounces: int = pydantic.Field(description='Number of single-page sessions in the comparison period.')
+    totaltime: int = pydantic.Field(description='Total engagement time in seconds for the comparison period.')
 
 
 class WebsiteStats(pydantic.BaseModel):
@@ -146,12 +158,15 @@ class WebsiteStats(pydantic.BaseModel):
             API does not return a comparison block.
     """
 
-    pageviews: int
-    visitors: int
-    visits: int
-    bounces: int
-    totaltime: int
-    comparison: typing.Optional[WebsiteStatsCmp] = None
+    pageviews: int = pydantic.Field(description='Total number of page views.')
+    visitors: int = pydantic.Field(description='Number of unique visitors.')
+    visits: int = pydantic.Field(description='Number of sessions.')
+    bounces: int = pydantic.Field(description='Number of single-page sessions.')
+    totaltime: int = pydantic.Field(description='Total engagement time in seconds.')
+    comparison: typing.Optional[WebsiteStatsCmp] = pydantic.Field(
+        default=None,
+        description='Prior-period totals as a WebsiteStatsCmp, or None when the API returns no comparison block.',
+    )
 
 
 class WebsitesResponse(pydantic.BaseModel):
@@ -176,8 +191,12 @@ class WebsitesResponse(pydantic.BaseModel):
         orderBy: The field results are ordered by, if specified.
     """
 
-    websites: list[Website] = pydantic.Field(alias='data')
-    count: int
-    page: int
-    pageSize: int
-    orderBy: typing.Optional[str] = None
+    websites: list[Website] = pydantic.Field(
+        alias='data', description="The list of Website records on this page (aliased from API 'data')."
+    )
+    count: int = pydantic.Field(description='The total number of websites across all pages.')
+    page: int = pydantic.Field(description='The current page number.')
+    pageSize: int = pydantic.Field(description='The number of records per page.')
+    orderBy: typing.Optional[str] = pydantic.Field(
+        default=None, description='The field results are ordered by, if specified.'
+    )

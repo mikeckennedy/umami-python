@@ -50,3 +50,19 @@ class TestWebsiteUserOptional:
         assert site.user is not None
         assert site.user.username == 'mkennedy'
         assert site.createUser is None
+
+
+class TestWebsiteNullableFieldsOptional:
+    """shareId / resetAt / deletedAt have None defaults, so a response that omits them still
+    constructs instead of raising pydantic.ValidationError."""
+
+    def test_website_constructs_without_nullable_keys(self):
+        site = models.Website(
+            id='w1',
+            domain='example.com',
+            createdAt='2026-01-01T00:00:00Z',
+            updatedAt='2026-01-01T00:00:00Z',
+        )
+        assert site.shareId is None
+        assert site.resetAt is None
+        assert site.deletedAt is None

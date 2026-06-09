@@ -27,7 +27,7 @@ new_revenue_event(
 
 new_event() that automatically includes the revenue and currency properties required by Umami's revenue tracking.
 
-Requires set_url_base() (or set_cloud_api_key() for Cloud mode) and a website_id and hostname, either set globally via set_website_id()/set_hostname() or passed here. Login is not required to send events. If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made.
+Requires set_url_base() (or set_cloud_api_key() for Cloud mode) and a website_id and hostname, either set globally via set_website_id()/set_hostname() or passed here. Login is not required to send events. If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made and an empty dict is returned.
 
 
 ## Parameters
@@ -76,22 +76,20 @@ Optional Umami distinct ID for the user, as a string or integer, sent to the API
 ## Returns
 
 
-None. The async twin, new_revenue_event_async(), returns the parsed
+`dict`  
+The parsed JSON response from the Umami API as a dict, or an empty dict
 
-JSON response dict instead.
+if tracking is disabled.
 
 
 ## Raises
 
 
 `ValidationError`  
-If revenue is not a number, revenue is negative, currency is empty, or distinct_id is an invalid type.
+If revenue is not a number, revenue is negative, currency is empty, distinct_id is an invalid type, or hostname or website_id is not set (here or via set_hostname()/set_website_id()).
 
 `OperationNotAllowedError`  
 If neither set_url_base() nor set_cloud_api_key() has been called.
-
-`Exception`  
-If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().
 
 `httpx.HTTPStatusError`  
 If the Umami API returns a non-2xx response.

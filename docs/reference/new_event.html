@@ -519,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L596-L704" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L595-L704" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">new_event</span>(</span>
@@ -538,7 +538,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-text">
 <p>(both fall back to the defaults set via set_website_id() and set_hostname() when omitted). The event appears in the traffic for the given url and in the events section of your Umami website page. Login is not required; you only need set_url_base() (self-hosted) or set_cloud_api_key() (Cloud), plus a website_id and hostname.</p>
-<p>If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made and the function returns immediately.</p>
+<p>If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made and an empty dict is returned.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
@@ -595,10 +595,10 @@ Optional Umami distinct ID for the user, as a string or integer, sent to the API
 <h2 class="doc-returns">Returns</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code></code></dt>
+<dt><code> <span class="doc-parameter-annotation">dict</span></code></dt>
 <dd>
-<p>None. The async twin, new_event_async(), returns the parsed JSON</p>
-response dict instead.
+<p>The JSON response from the Umami API as a dict, or an empty dict if</p>
+tracking is disabled.
 </dd>
 </dl>
 </div>
@@ -613,11 +613,7 @@ response dict instead.
 </dd>
 <dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
 <dd>
-<p>If distinct_id is a bool or any type other than str or int.</p>
-</dd>
-<dt><code> <span class="doc-parameter-annotation">Exception</span></code></dt>
-<dd>
-<p>If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().</p>
+<p>If hostname or website_id is not set (here or via set_hostname()/set_website_id()), or if distinct_id is a bool or any type other than str or int.</p>
 </dd>
 <dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
 <dd>

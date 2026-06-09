@@ -28,7 +28,7 @@ dependencies = [
     "httpx2",
     "pydantic",
 ]
-version = "0.6.25"
+version = "0.6.26"
 
 [project.optional-dependencies]
 dev = [
@@ -38,6 +38,9 @@ dev = [
     # Documentation site generator (Great Docs). Needs Python >= 3.11; the
     # package itself supports 3.10+, so guard it so `[dev]` still installs on 3.10.
     "great-docs; python_version >= '3.11'",
+    # Griffe extension that surfaces pydantic model fields (Field descriptions,
+    # constraints) in the generated API reference. Same Python floor as great-docs.
+    "griffe-pydantic; python_version >= '3.11'",
 ]
 
 

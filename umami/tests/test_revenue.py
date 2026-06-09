@@ -93,8 +93,8 @@ class TestNewRevenueEvent:
     def test_tracking_disabled_returns_early(self):
         umami.disable()
         result = umami.new_revenue_event(revenue=19.99)
-        # Should return without making any HTTP call
-        assert result is None
+        # Should return an empty dict without making any HTTP call
+        assert result == {}
 
     @patch('umami.impl.httpx.post')
     def test_integer_revenue(self, mock_post):

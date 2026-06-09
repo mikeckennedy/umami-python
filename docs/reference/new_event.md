@@ -25,7 +25,7 @@ new_event(
 
 (both fall back to the defaults set via set_website_id() and set_hostname() when omitted). The event appears in the traffic for the given url and in the events section of your Umami website page. Login is not required; you only need set_url_base() (self-hosted) or set_cloud_api_key() (Cloud), plus a website_id and hostname.
 
-If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made and the function returns immediately.
+If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made and an empty dict is returned.
 
 
 ## Parameters
@@ -68,9 +68,10 @@ Optional Umami distinct ID for the user, as a string or integer, sent to the API
 ## Returns
 
 
-None. The async twin, new_event_async(), returns the parsed JSON
+`dict`  
+The JSON response from the Umami API as a dict, or an empty dict if
 
-response dict instead.
+tracking is disabled.
 
 
 ## Raises
@@ -80,10 +81,7 @@ response dict instead.
 If neither set_url_base() nor set_cloud_api_key() has been called.
 
 `ValidationError`  
-If distinct_id is a bool or any type other than str or int.
-
-`Exception`  
-If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().
+If hostname or website_id is not set (here or via set_hostname()/set_website_id()), or if distinct_id is a bool or any type other than str or int.
 
 `httpx.HTTPStatusError`  
 If Umami returns a non-2xx response (only when tracking is enabled).

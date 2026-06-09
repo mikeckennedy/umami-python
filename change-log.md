@@ -8,8 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `pydantic.Field(description=...)` metadata on every response-model field, plus a `griffe-pydantic`
+  dev dependency, enriching the response models for IDEs, JSON schema, and future API-reference
+  rendering. Note: the current Great Docs version (0.13.0) does not load griffe extensions, so the
+  rendered field docs still come from the docstring `Attributes:` sections; the Field descriptions
+  will surface on the docs site once the generator loads the extension.
 
 ### Changed
+- Synchronous send functions now return the Umami API's JSON response as a dict (and `{}` when
+  tracking is disabled), matching their async twins. Previously `new_event()`, `new_revenue_event()`,
+  and `new_page_view()` returned `None`; `new_page_view_async()` also now returns the response dict
+  instead of `None`.
+- Missing or blank required event fields (hostname, website_id, event_name) now raise
+  `umami.errors.ValidationError` instead of a bare `Exception`, so they can be caught alongside the
+  SDK's other validation errors.
+- `Website.shareId`, `Website.resetAt`, and `Website.deletedAt` are now optional (default `None`), so
+  a websites response that omits those keys no longer raises `pydantic.ValidationError`.
 - README now points to the new documentation site at https://mkennedy.codes/docs/umami-python/
   (added status badges, a documentation pointer near the top, and a "Documentation" section linking
   the full API reference). Docs-only change — no code or packaging changes.
@@ -29,6 +43,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Fixed
+- `validate_event_data` no longer lets a whitespace-only `event_name` through (the check used `and`,
+  so whitespace bypassed it; it now uses `or`).
 
 ### Security
 

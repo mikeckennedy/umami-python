@@ -17,14 +17,14 @@ class TestTrackingDisabled:
         umami.disable()
         with patch('umami.impl.httpx.post', make_sync_mock()) as mock_post:
             result = umami.new_event(event_name='e')
-        assert result is None
+        assert result == {}
         mock_post.assert_not_called()
 
     def test_new_page_view_makes_no_request(self):
         umami.disable()
         with patch('umami.impl.httpx.post', make_sync_mock()) as mock_post:
             result = umami.new_page_view('Home', '/')
-        assert result is None
+        assert result == {}
         mock_post.assert_not_called()
 
     async def test_new_event_async_makes_no_request(self):
@@ -40,7 +40,7 @@ class TestTrackingDisabled:
         mock_client = make_async_client()
         with patch('umami.impl.httpx.AsyncClient', return_value=mock_client):
             result = await umami.new_page_view_async('Home', '/')
-        assert result is None
+        assert result == {}
         mock_client.post.assert_not_called()
 
     def test_validation_still_runs_when_disabled(self):
@@ -49,6 +49,6 @@ class TestTrackingDisabled:
         umami.disable()
         with patch('umami.impl.default_website_id', None), patch('umami.impl.default_hostname', None):
             with patch('umami.impl.httpx.post', make_sync_mock()) as mock_post:
-                with pytest.raises(Exception):
+                with pytest.raises(umami.errors.ValidationError):
                     umami.new_event(event_name='e')
         mock_post.assert_not_called()

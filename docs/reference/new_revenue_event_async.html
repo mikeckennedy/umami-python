@@ -519,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L707-L807" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L707-L806" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">new_revenue_event_async</span>(</span>
@@ -619,15 +619,11 @@ if tracking is disabled.
 <dl>
 <dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
 <dd>
-<p>If revenue is not a number, revenue is negative, currency is empty, or distinct_id is an invalid type.</p>
+<p>If revenue is not a number, revenue is negative, currency is empty, distinct_id is an invalid type, or hostname or website_id is not set (here or via set_hostname()/set_website_id()).</p>
 </dd>
 <dt><code> <span class="doc-parameter-annotation">OperationNotAllowedError</span></code></dt>
 <dd>
 <p>If neither set_url_base() nor set_cloud_api_key() has been called.</p>
-</dd>
-<dt><code> <span class="doc-parameter-annotation">Exception</span></code></dt>
-<dd>
-<p>If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().</p>
 </dd>
 <dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
 <dd>

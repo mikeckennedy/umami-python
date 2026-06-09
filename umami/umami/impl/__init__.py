@@ -531,10 +531,9 @@ async def new_event_async(
     Raises:
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        ValidationError: If distinct_id is a bool or any type other than str
-            or int.
-        Exception: If hostname or website_id is not set, either as an argument
-            or via set_hostname()/set_website_id().
+        ValidationError: If hostname or website_id is not set (here or via
+            set_hostname()/set_website_id()), or if distinct_id is a bool or
+            any type other than str or int.
         httpx.HTTPStatusError: If Umami returns a non-2xx response (only when
             tracking is enabled).
 
@@ -605,7 +604,7 @@ def new_event(
     screen: str = '1920x1080',
     ip_address: Optional[str] = None,
     distinct_id: Optional[Union[str, int]] = None,
-):
+) -> dict:
     """
     Create a new custom event in Umami for the given website_id and hostname
     (both fall back to the defaults set via set_website_id() and set_hostname()
@@ -615,7 +614,7 @@ def new_event(
     a website_id and hostname.
 
     If tracking has been turned off with disable(), the inputs are still
-    validated but no HTTP request is made and the function returns immediately.
+    validated but no HTTP request is made and an empty dict is returned.
 
     Args:
         event_name: The name of your custom event (e.g. 'Purchase-Course').
@@ -639,16 +638,15 @@ def new_event(
             whitespace-only values are ignored (no id is sent).
 
     Returns:
-        None. The async twin, new_event_async(), returns the parsed JSON
-        response dict instead.
+        The JSON response from the Umami API as a dict, or an empty dict if
+        tracking is disabled.
 
     Raises:
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        ValidationError: If distinct_id is a bool or any type other than str
-            or int.
-        Exception: If hostname or website_id is not set, either as an argument
-            or via set_hostname()/set_website_id().
+        ValidationError: If hostname or website_id is not set (here or via
+            set_hostname()/set_website_id()), or if distinct_id is a bool or
+            any type other than str or int.
         httpx.HTTPStatusError: If Umami returns a non-2xx response (only when
             tracking is enabled).
 
@@ -675,7 +673,7 @@ def new_event(
 
     # Early return if tracking is disabled
     if not tracking_enabled:
-        return
+        return {}
 
     api_url = _send_url()
     headers = _send_headers()
@@ -702,6 +700,8 @@ def new_event(
 
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
+
+    return resp.json()
 
 
 async def new_revenue_event_async(
@@ -761,11 +761,10 @@ async def new_revenue_event_async(
 
     Raises:
         ValidationError: If revenue is not a number, revenue is negative,
-            currency is empty, or distinct_id is an invalid type.
+            currency is empty, distinct_id is an invalid type, or hostname or
+            website_id is not set (here or via set_hostname()/set_website_id()).
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        Exception: If hostname or website_id is not set, either as an argument
-            or via set_hostname()/set_website_id().
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
@@ -821,7 +820,7 @@ def new_revenue_event(
     screen: str = '1920x1080',
     ip_address: Optional[str] = None,
     distinct_id: Optional[Union[str, int]] = None,
-):
+) -> dict:
     """
     Create a new revenue event in Umami. This is a convenience wrapper around
     new_event() that automatically includes the revenue and currency
@@ -831,7 +830,7 @@ def new_revenue_event(
     website_id and hostname, either set globally via
     set_website_id()/set_hostname() or passed here. Login is not required to
     send events. If tracking has been turned off with disable(), the inputs are
-    still validated but no HTTP request is made.
+    still validated but no HTTP request is made and an empty dict is returned.
 
     Args:
         revenue: The monetary amount of the transaction. Must be a number
@@ -859,16 +858,15 @@ def new_revenue_event(
             whitespace-only values are ignored (no id is sent).
 
     Returns:
-        None. The async twin, new_revenue_event_async(), returns the parsed
-        JSON response dict instead.
+        The parsed JSON response from the Umami API as a dict, or an empty dict
+        if tracking is disabled.
 
     Raises:
         ValidationError: If revenue is not a number, revenue is negative,
-            currency is empty, or distinct_id is an invalid type.
+            currency is empty, distinct_id is an invalid type, or hostname or
+            website_id is not set (here or via set_hostname()/set_website_id()).
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        Exception: If hostname or website_id is not set, either as an argument
-            or via set_hostname()/set_website_id().
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
@@ -921,7 +919,7 @@ async def new_page_view_async(
     ua: str = event_user_agent,
     ip_address: Optional[str] = None,
     distinct_id: Optional[Union[str, int]] = None,
-):
+) -> dict:
     """
     Create a new page view event in Umami for the given website_id and hostname
     (both fall back to the defaults set via set_website_id() and set_hostname()
@@ -932,7 +930,7 @@ async def new_page_view_async(
     website_id and hostname, either set globally via
     set_website_id()/set_hostname() or passed here. Login is not required to
     send page views. If tracking has been turned off with disable(), the input
-    is validated but no HTTP request is made.
+    is validated but no HTTP request is made and an empty dict is returned.
 
     Args:
         page_title: The title of the page view to record (required).
@@ -955,15 +953,15 @@ async def new_page_view_async(
             whitespace-only values are ignored (no id is sent).
 
     Returns:
-        None.
+        The JSON response from the Umami API as a dict, or an empty dict if
+        tracking is disabled.
 
     Raises:
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        ValidationError: If distinct_id is a bool or any type other than str
-            or int.
-        Exception: If hostname or website_id is not set, either as an argument
-            or via set_hostname()/set_website_id().
+        ValidationError: If hostname or website_id is not set (here or via
+            set_hostname()/set_website_id()), or if distinct_id is a bool or
+            any type other than str or int.
         httpx.HTTPStatusError: If Umami returns a non-2xx response (only when
             tracking is enabled).
 
@@ -984,7 +982,7 @@ async def new_page_view_async(
 
     # Early return if tracking is disabled
     if not tracking_enabled:
-        return
+        return {}
 
     api_url = _send_url()
     headers = _send_headers(ua=ua)
@@ -1011,6 +1009,8 @@ async def new_page_view_async(
         resp = await client.post(api_url, json=event_data, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
+    return resp.json()
+
 
 def new_page_view(
     page_title: str,
@@ -1023,7 +1023,7 @@ def new_page_view(
     ua: str = event_user_agent,
     ip_address: Optional[str] = None,
     distinct_id: Optional[Union[str, int]] = None,
-):
+) -> dict:
     """
     Create a new page view event in Umami for the given website_id and hostname
     (both fall back to the defaults set via set_website_id() and set_hostname()
@@ -1034,7 +1034,7 @@ def new_page_view(
     website_id and hostname, either set globally via
     set_website_id()/set_hostname() or passed here. Login is not required to
     send page views. If tracking has been turned off with disable(), the input
-    is validated but no HTTP request is made.
+    is validated but no HTTP request is made and an empty dict is returned.
 
     Args:
         page_title: The title of the page view to record (required).
@@ -1057,15 +1057,15 @@ def new_page_view(
             whitespace-only values are ignored (no id is sent).
 
     Returns:
-        None.
+        The JSON response from the Umami API as a dict, or an empty dict if
+        tracking is disabled.
 
     Raises:
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        ValidationError: If distinct_id is a bool or any type other than str
-            or int.
-        Exception: If hostname or website_id is not set, either as an argument
-            or via set_hostname()/set_website_id().
+        ValidationError: If hostname or website_id is not set (here or via
+            set_hostname()/set_website_id()), or if distinct_id is a bool or
+            any type other than str or int.
         httpx.HTTPStatusError: If Umami returns a non-2xx response (only when
             tracking is enabled).
 
@@ -1086,7 +1086,7 @@ def new_page_view(
 
     # Early return if tracking is disabled
     if not tracking_enabled:
-        return
+        return {}
 
     api_url = _send_url()
     headers = _send_headers(ua=ua)
@@ -1112,17 +1112,19 @@ def new_page_view(
     resp = httpx.post(api_url, json=event_data, headers=headers, follow_redirects=True)
     resp.raise_for_status()
 
+    return resp.json()
+
 
 def validate_event_data(event_name: str, hostname: Optional[str], website_id: Optional[str]):
     """
     Internal use only.
     """
     if not hostname:
-        raise Exception('The hostname must be set, either as a parameter here or via set_hostname().')
+        raise ValidationError('The hostname must be set, either as a parameter here or via set_hostname().')
     if not website_id:
-        raise Exception('The website_id must be set, either as a parameter here or via set_website_id().')
-    if not event_name and not event_name.strip():
-        raise Exception('The event_name is required.')
+        raise ValidationError('The website_id must be set, either as a parameter here or via set_website_id().')
+    if not event_name or not event_name.strip():
+        raise ValidationError('The event_name is required.')
 
 
 async def verify_token_async(check_server: bool = True) -> bool:

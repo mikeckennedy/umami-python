@@ -32,6 +32,29 @@ class TestSendPayloadParity:
         assert sync_body == async_body
 
 
+class TestSendReturnParity:
+    # The sync send functions now return the parsed JSON response dict, matching their async twins
+    # (and {} when tracking is disabled). Guards against the old asymmetry where sync returned None.
+    @pytest.mark.parametrize(
+        'sync_fn, async_fn, kwargs',
+        [
+            ('new_event', 'new_event_async', dict(event_name='e', url='/x')),
+            ('new_page_view', 'new_page_view_async', dict(page_title='T', url='/x')),
+            ('new_revenue_event', 'new_revenue_event_async', dict(revenue=5.0, url='/x')),
+        ],
+    )
+    async def test_send_return_parity(self, sync_fn, async_fn, kwargs):
+        payload = {'sent': True}
+        with patch('umami.impl.httpx.post', make_sync_mock(payload)):
+            sync_result = getattr(umami, sync_fn)(**kwargs)
+
+        client = make_async_client(payload)
+        with patch('umami.impl.httpx.AsyncClient', return_value=client):
+            async_result = await getattr(umami, async_fn)(**kwargs)
+
+        assert sync_result == async_result == payload
+
+
 class TestQueryRequestParity:
     async def test_website_stats_parity(self):
         kwargs = dict(start_at=START, end_at=END, url='/p', host='h.com')
