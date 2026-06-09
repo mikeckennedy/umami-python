@@ -1,0 +1,211 @@
+{
+  "build_time": "2026-06-09T05:59:31Z",
+  "total_seconds": 16.83,
+  "pages": [
+    {
+      "page": "reference/is_logged_in.qmd",
+      "seconds": 6.07,
+      "frozen": false
+    },
+    {
+      "page": "index.qmd",
+      "seconds": 1.487,
+      "frozen": false
+    },
+    {
+      "page": "reference/new_event_async.qmd",
+      "seconds": 0.273,
+      "frozen": false
+    },
+    {
+      "page": "reference/website_stats_async.qmd",
+      "seconds": 0.273,
+      "frozen": false
+    },
+    {
+      "page": "changelog.qmd",
+      "seconds": 0.268,
+      "frozen": false
+    },
+    {
+      "page": "reference/index.qmd",
+      "seconds": 0.266,
+      "frozen": false
+    },
+    {
+      "page": "reference/verify_token.qmd",
+      "seconds": 0.263,
+      "frozen": false
+    },
+    {
+      "page": "reference/new_revenue_event.qmd",
+      "seconds": 0.259,
+      "frozen": false
+    },
+    {
+      "page": "reference/new_page_view.qmd",
+      "seconds": 0.259,
+      "frozen": false
+    },
+    {
+      "page": "reference/new_revenue_event_async.qmd",
+      "seconds": 0.257,
+      "frozen": false
+    },
+    {
+      "page": "reference/new_event.qmd",
+      "seconds": 0.256,
+      "frozen": false
+    },
+    {
+      "page": "reference/website_stats.qmd",
+      "seconds": 0.254,
+      "frozen": false
+    },
+    {
+      "page": "reference/new_page_view_async.qmd",
+      "seconds": 0.252,
+      "frozen": false
+    },
+    {
+      "page": "reference/active_users_async.qmd",
+      "seconds": 0.249,
+      "frozen": false
+    },
+    {
+      "page": "reference/set_url_base.qmd",
+      "seconds": 0.246,
+      "frozen": false
+    },
+    {
+      "page": "reference/set_cloud_api_key.qmd",
+      "seconds": 0.242,
+      "frozen": false
+    },
+    {
+      "page": "reference/set_hostname.qmd",
+      "seconds": 0.239,
+      "frozen": false
+    },
+    {
+      "page": "reference/disable.qmd",
+      "seconds": 0.232,
+      "frozen": false
+    },
+    {
+      "page": "reference/login_async.qmd",
+      "seconds": 0.232,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.User.qmd",
+      "seconds": 0.232,
+      "frozen": false
+    },
+    {
+      "page": "reference/verify_token_async.qmd",
+      "seconds": 0.231,
+      "frozen": false
+    },
+    {
+      "page": "reference/clear_cloud_api_key.qmd",
+      "seconds": 0.23,
+      "frozen": false
+    },
+    {
+      "page": "reference/enable.qmd",
+      "seconds": 0.23,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.WebsiteStatsCmp.qmd",
+      "seconds": 0.23,
+      "frozen": false
+    },
+    {
+      "page": "reference/set_website_id.qmd",
+      "seconds": 0.23,
+      "frozen": false
+    },
+    {
+      "page": "reference/errors.OperationNotAllowedError.qmd",
+      "seconds": 0.23,
+      "frozen": false
+    },
+    {
+      "page": "reference/websites.qmd",
+      "seconds": 0.229,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.LoginResponse.qmd",
+      "seconds": 0.229,
+      "frozen": false
+    },
+    {
+      "page": "reference/heartbeat.qmd",
+      "seconds": 0.229,
+      "frozen": false
+    },
+    {
+      "page": "reference/login.qmd",
+      "seconds": 0.228,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.WebsiteUser.qmd",
+      "seconds": 0.228,
+      "frozen": false
+    },
+    {
+      "page": "reference/active_users.qmd",
+      "seconds": 0.227,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.Website.qmd",
+      "seconds": 0.227,
+      "frozen": false
+    },
+    {
+      "page": "reference/heartbeat_async.qmd",
+      "seconds": 0.227,
+      "frozen": false
+    },
+    {
+      "page": "reference/websites_async.qmd",
+      "seconds": 0.224,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.WebsitesResponse.qmd",
+      "seconds": 0.224,
+      "frozen": false
+    },
+    {
+      "page": "reference/errors.ValidationError.qmd",
+      "seconds": 0.224,
+      "frozen": false
+    },
+    {
+      "page": "skills.qmd",
+      "seconds": 0.22,
+      "frozen": false
+    },
+    {
+      "page": "reference/models.WebsiteStats.qmd",
+      "seconds": 0.218,
+      "frozen": false
+    },
+    {
+      "page": "skill.md",
+      "seconds": 0.216,
+      "frozen": false
+    },
+    {
+      "page": "license.qmd",
+      "seconds": 0.19,
+      "frozen": false
+    }
+  ]
+}

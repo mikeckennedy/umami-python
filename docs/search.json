@@ -1,0 +1,657 @@
+[
+  {
+    "objectID": "reference/is_logged_in.html",
+    "href": "reference/is_logged_in.html",
+    "title": "is_logged_in()",
+    "section": "",
+    "text": "Whether a credential is currently set locally.\n\n\nUsage\nSource\n\n\nis_logged_in()\n\n\nReturns\n\n\n bool\n\nTrue if a self-hosted login token or an Umami Cloud API key has been set, False otherwise.\nThis only reflects that a credential exists in this process, not that it is still valid on\nthe server — use verify_token() to confirm validity.",
+    "crumbs": [
+      "API Reference",
+      "Authentication",
+      "[is_logged_in()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/models.LoginResponse.html",
+    "href": "reference/models.LoginResponse.html",
+    "title": "models.LoginResponse",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.LoginResponse()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.LoginResponse]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/active_users_async.html",
+    "href": "reference/active_users_async.html",
+    "title": "active_users_async()",
+    "section": "",
+    "text": "Retrieves the active users for a specific website.\n\n\nUsage\nSource\n\n\nactive_users_async(website_id=None)\n\n\nParameters\n\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\n\n\n\n\nReturns\n\n\n int\n\nThe number of active users.",
+    "crumbs": [
+      "API Reference",
+      "Querying stats",
+      "[active_users_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/errors.OperationNotAllowedError.html",
+    "href": "reference/errors.OperationNotAllowedError.html",
+    "title": "errors.OperationNotAllowedError",
+    "section": "",
+    "text": "Usage\nSource\n\n\nerrors.OperationNotAllowedError()",
+    "crumbs": [
+      "API Reference",
+      "Errors",
+      "[errors.OperationNotAllowedError]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/new_page_view_async.html",
+    "href": "reference/new_page_view_async.html",
+    "title": "new_page_view_async()",
+    "section": "",
+    "text": "Creates a new page view event in Umami for the given website_id and hostname (both use the default\n\n\nUsage\nSource\n\n\nnew_page_view_async(\n    page_title,\n    url,\n    hostname=None,\n    website_id=None,\n    referrer=\"\",\n    language=\"en-US\",\n    screen=\"1920x1080\",\n    ua=event_user_agent,\n    ip_address=None,\n    distinct_id=None\n)\n\n\nif you have set them with the other functions such as set_hostname()). This is equivalent to what happens when a visit views a page and the JS library records it.\n\n\nParameters\n\n\npage_title: str\n\nThe title of the page view to record (required).\n\nurl: str\n\nThe simulated URL for the custom event (e.g. if it’s account creation, maybe /account/new)\n\nhostname: Optional[str] = None\n\nOPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\nreferrer: str = \"\"\n\nOPTIONAL: The referrer of the client if there is any (what location lead them to this event)\n\nlanguage: str = \"en-US\"\n\nOPTIONAL: The language of the event / client.\n\nscreen: str = \"1920x1080\"\n\nOPTIONAL: The screen resolution of the client.\n\nua: str = event_user_agent\n\nOPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.\n\nip_address: Optional[str] = None\n\nOPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.\n\ndistinct_id: Optional[Union[str, int]] = None\n\nOPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.",
+    "crumbs": [
+      "API Reference",
+      "Sending events",
+      "[new_page_view_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/models.WebsiteStatsCmp.html",
+    "href": "reference/models.WebsiteStatsCmp.html",
+    "title": "models.WebsiteStatsCmp",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.WebsiteStatsCmp()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.WebsiteStatsCmp]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/models.User.html",
+    "href": "reference/models.User.html",
+    "title": "models.User",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.User()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.User]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/set_cloud_api_key.html",
+    "href": "reference/set_cloud_api_key.html",
+    "title": "set_cloud_api_key()",
+    "section": "",
+    "text": "Authenticate against Umami Cloud with an API key instead of login().\n\n\nUsage\nSource\n\n\nset_cloud_api_key(key, region=None)\n\n\nEnables “Cloud mode”: data/management calls are routed to https://api.umami.is/v1 and authenticated with the x-umami-api-key header, and events are sent to https://cloud.umami.is/api/send. You do NOT need to call set_url_base() or login() in this mode.\n\n\nParameters\n\n\nkey: str\n\nYour Umami Cloud API key.\n\nregion: Optional[str] = None\n\nOptional ‘us’ or ‘eu’ to pin the data region. Defaults to the region of the account that owns the key.",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[set_cloud_api_key()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/verify_token.html",
+    "href": "reference/verify_token.html",
+    "title": "verify_token()",
+    "section": "",
+    "text": "Verifies that the token set when you called login() is still valid. Umami says this token will expire,\n\n\nUsage\nSource\n\n\nverify_token(check_server=True)\n\n\nbut I’m not sure if that’s minutes, hours, or years.\n\n\nParameters\n\n\ncheck_server: bool = True\n\nIf true, we will contact the server and verify that the token is valid. If false, this only checks that an auth token has been stored from a previous successful login.\n\n\n\n\n\nReturns\n\n\n bool\n\nTrue if the token is still valid, False otherwise.",
+    "crumbs": [
+      "API Reference",
+      "Authentication",
+      "[verify_token()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/verify_token_async.html",
+    "href": "reference/verify_token_async.html",
+    "title": "verify_token_async()",
+    "section": "",
+    "text": "Verifies that the token set when you called login() is still valid. Umami says this token will expire,\n\n\nUsage\nSource\n\n\nverify_token_async(check_server=True)\n\n\nbut I’m not sure if that’s minutes, hours, or years.\n\n\nParameters\n\n\ncheck_server: bool = True\n\nIf true, we will contact the server and verify that the token is valid. If false, this only checks that an auth token has been stored from a previous successful login.\n\n\n\n\n\nReturns\n\n\n bool\n\nTrue if the token is still valid, False otherwise.",
+    "crumbs": [
+      "API Reference",
+      "Authentication",
+      "[verify_token_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/set_hostname.html",
+    "href": "reference/set_hostname.html",
+    "title": "set_hostname()",
+    "section": "",
+    "text": "The default hostname for sending events (can be overriden in the new_event() function).\n\n\nUsage\nSource\n\n\nset_hostname(hostname)\n\n\nArgs: hostname: Hostname to use when one is not specified, e.g. ‘talkpython.fm’",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[set_hostname()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/index.html",
+    "href": "reference/index.html",
+    "title": "API Reference",
+    "section": "",
+    "text": "The public umami-analytics surface: configuration, authentication, sending events, and querying stats. Every network operation has a synchronous function and an identically-signed _async twin.\n\n\nConfiguration\n\nOne-time setup. set_url_base() is required before any operation; Cloud users call set_cloud_api_key() instead.\n\n\nset_url_base()\n\nEach Umami instance lives somewhere. This is where yours lives.\n\nset_website_id()\n\nYour Umami instance might have many websites registered for various domains you use.\n\nset_hostname()\n\nThe default hostname for sending events (can be overriden in the new_event() function).\n\nset_cloud_api_key()\n\nAuthenticate against Umami Cloud with an API key instead of login().\n\nclear_cloud_api_key()\n\nExit Cloud mode and return to token/self-hosted behavior.\n\nenable()\n\nEnable event and page view tracking.\n\ndisable()\n\nDisable event and page view tracking.\n\n\n\n\nAuthentication\n\nRequired for the query endpoints and verify_token. Not needed to send events.\n\n\nlogin()\n\nLogs into Umami and retrieves a temporary auth token. If the token is expired,\n\nlogin_async()\n\nLogs into Umami and retrieves a temporary auth token. If the token is expired,\n\nis_logged_in()\n\nWhether a credential is currently set locally.\n\nverify_token()\n\nVerifies that the token set when you called login() is still valid. Umami says this token will expire,\n\nverify_token_async()\n\nVerifies that the token set when you called login() is still valid. Umami says this token will expire,\n\n\n\n\nSending events\n\nSend custom events, revenue, and page views. No login required — only a URL base and a website id/hostname.\n\n\nnew_event()\n\nCreates a new custom event in Umami for the given website_id and hostname (both use the default\n\nnew_event_async()\n\nCreates a new custom event in Umami for the given website_id and hostname (both use the default\n\nnew_revenue_event()\n\nCreates a new revenue event in Umami. This is a convenience wrapper around new_event()\n\nnew_revenue_event_async()\n\nCreates a new revenue event in Umami. This is a convenience wrapper around new_event_async()\n\nnew_page_view()\n\nCreates a new page view event in Umami for the given website_id and hostname (both use the default\n\nnew_page_view_async()\n\nCreates a new page view event in Umami for the given website_id and hostname (both use the default\n\n\n\n\nQuerying stats\n\nRead analytics back out. Requires login (or a Cloud API key).\n\n\nwebsites()\n\nAll the websites that are registered in your Umami instance.\n\nwebsites_async()\n\nAll the websites that are registered in your Umami instance.\n\nwebsite_stats()\n\nRetrieves the statistics for a specific website.\n\nwebsite_stats_async()\n\nRetrieves the statistics for a specific website.\n\nactive_users()\n\nRetrieves the active users for a specific website.\n\nactive_users_async()\n\nRetrieves the active users for a specific website.\n\n\n\n\nHealth\n\nCheck Umami server connectivity.\n\n\nheartbeat()\n\nVerifies that the server is reachable via the internet and is healthy.\n\nheartbeat_async()\n\nVerifies that the server is reachable via the internet and is healthy.\n\n\n\n\nResponse models\n\nPydantic models returned by the query functions.\n\n\nmodels.WebsitesResponse\n\n\n\nmodels.Website\n\n\n\nmodels.WebsiteStats\n\n\n\nmodels.WebsiteStatsCmp\n\n\n\nmodels.LoginResponse\n\n\n\nmodels.User\n\n\n\nmodels.WebsiteUser\n\n\n\n\n\n\nErrors\n\nException hierarchy. ValidationError is the base; OperationNotAllowedError is raised when required state (url_base, login) is missing.\n\n\nerrors.ValidationError\n\n\n\nerrors.OperationNotAllowedError",
+    "crumbs": [
+      "API Reference",
+      "API Index"
+    ]
+  },
+  {
+    "objectID": "reference/website_stats.html",
+    "href": "reference/website_stats.html",
+    "title": "website_stats()",
+    "section": "",
+    "text": "Retrieves the statistics for a specific website.\n\n\nUsage\nSource\n\n\nwebsite_stats(\n    start_at,\n    end_at,\n    website_id=None,\n    url=None,\n    referrer=None,\n    title=None,\n    query=None,\n    event=None,\n    host=None,\n    os=None,\n    browser=None,\n    device=None,\n    country=None,\n    region=None,\n    city=None\n)\n\n\nParameters\n\n\nstart_at: datetime\n\nStarting date as a datetime object.\n\nend_at: datetime\n\nEnd date as a datetime object.\n\nurl: Optional[str] = None\n\nOPTIONAL: Name of URL.\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\nreferrer: Optional[str] = None\n\nOPTIONAL: Name of referrer.\n\ntitle: Optional[str] = None\n\n(OPTIONAL: Name of page title.\n\nquery: Optional[str] = None\n\nOPTIONAL: Name of query.\n\nevent: Optional[str] = None\n\nOPTIONAL: Name of event.\n\nhost: Optional[str] = None\n\nOPTIONAL: Name of hostname.\n\nos: Optional[str] = None\n\nOPTIONAL: Name of operating system.\n\nbrowser: Optional[str] = None\n\nOPTIONAL: Name of browser.\n\ndevice: Optional[str] = None\n\nOPTIONAL: Name of device (ex. Mobile)\n\ncountry: Optional[str] = None\n\nOPTIONAL: Name of country.\n\nregion: Optional[str] = None\n\nOPTIONAL: Name of region/state/province.\n\ncity: Optional[str] = None\n\nOPTIONAL: Name of city.\n\n\n\n\n\nReturns\n\n\n models.WebsiteStats\n\nA WebsiteStatsResponse model containing the website statistics data.",
+    "crumbs": [
+      "API Reference",
+      "Querying stats",
+      "[website_stats()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/new_revenue_event_async.html",
+    "href": "reference/new_revenue_event_async.html",
+    "title": "new_revenue_event_async()",
+    "section": "",
+    "text": "Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()\n\n\nUsage\nSource\n\n\nnew_revenue_event_async(\n    revenue,\n    currency=\"USD\",\n    event_name=\"revenue\",\n    hostname=None,\n    url=\"/\",\n    website_id=None,\n    title=None,\n    custom_data=None,\n    referrer=\"\",\n    language=\"en-US\",\n    screen=\"1920x1080\",\n    ip_address=None,\n    distinct_id=None\n)\n\n\nthat automatically includes the revenue and currency properties required by Umami’s revenue tracking.\n\n\nParameters\n\n\nrevenue: float\n\nThe monetary amount of the transaction (must be &gt;= 0).\n\ncurrency: str = \"USD\"\n\nISO 4217 currency code (e.g. ‘USD’, ‘EUR’). Defaults to ‘USD’.\n\nevent_name: str = \"revenue\"\n\nThe name of your custom event. Defaults to ‘revenue’.\n\nhostname: Optional[str] = None\n\nOPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.\n\nurl: str = \"/\"\n\nThe simulated URL for the custom event.\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).\n\ntitle: Optional[str] = None\n\nThe title of the custom event, defaults to event_name if empty.\n\ncustom_data: Optional[Dict[str, Any]] = None\n\nAny additional data to send along with the event. Revenue and currency keys will be overwritten.\n\nreferrer: str = \"\"\n\nThe referrer of the client if there is any.\n\nlanguage: str = \"en-US\"\n\nThe language of the event / client.\n\nscreen: str = \"1920x1080\"\n\nThe screen resolution of the client.\n\nip_address: Optional[str] = None\n\nOPTIONAL: The true IP address of the user.\n\ndistinct_id: Optional[Union[str, int]] = None\n\nOPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.\n\n\n\n\n\nReturns\n\n\n dict\n\nThe data returned from the Umami API.",
+    "crumbs": [
+      "API Reference",
+      "Sending events",
+      "[new_revenue_event_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/new_revenue_event.html",
+    "href": "reference/new_revenue_event.html",
+    "title": "new_revenue_event()",
+    "section": "",
+    "text": "Creates a new revenue event in Umami. This is a convenience wrapper around new_event()\n\n\nUsage\nSource\n\n\nnew_revenue_event(\n    revenue,\n    currency=\"USD\",\n    event_name=\"revenue\",\n    hostname=None,\n    url=\"/\",\n    website_id=None,\n    title=None,\n    custom_data=None,\n    referrer=\"\",\n    language=\"en-US\",\n    screen=\"1920x1080\",\n    ip_address=None,\n    distinct_id=None\n)\n\n\nthat automatically includes the revenue and currency properties required by Umami’s revenue tracking.\n\n\nParameters\n\n\nrevenue: float\n\nThe monetary amount of the transaction (must be &gt;= 0).\n\ncurrency: str = \"USD\"\n\nISO 4217 currency code (e.g. ‘USD’, ‘EUR’). Defaults to ‘USD’.\n\nevent_name: str = \"revenue\"\n\nThe name of your custom event. Defaults to ‘revenue’.\n\nhostname: Optional[str] = None\n\nOPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.\n\nurl: str = \"/\"\n\nThe simulated URL for the custom event.\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).\n\ntitle: Optional[str] = None\n\nThe title of the custom event, defaults to event_name if empty.\n\ncustom_data: Optional[Dict[str, Any]] = None\n\nAny additional data to send along with the event. Revenue and currency keys will be overwritten.\n\nreferrer: str = \"\"\n\nThe referrer of the client if there is any.\n\nlanguage: str = \"en-US\"\n\nThe language of the event / client.\n\nscreen: str = \"1920x1080\"\n\nThe screen resolution of the client.\n\nip_address: Optional[str] = None\n\nOPTIONAL: The true IP address of the user.\n\ndistinct_id: Optional[Union[str, int]] = None\n\nOPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.",
+    "crumbs": [
+      "API Reference",
+      "Sending events",
+      "[new_revenue_event()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/active_users.html",
+    "href": "reference/active_users.html",
+    "title": "active_users()",
+    "section": "",
+    "text": "Retrieves the active users for a specific website.\n\n\nUsage\nSource\n\n\nactive_users(website_id=None)\n\n\nParameters\n\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\n\n\n\n\nReturns\n\n\n int\n\nThe number of active users.",
+    "crumbs": [
+      "API Reference",
+      "Querying stats",
+      "[active_users()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/website_stats_async.html",
+    "href": "reference/website_stats_async.html",
+    "title": "website_stats_async()",
+    "section": "",
+    "text": "Retrieves the statistics for a specific website.\n\n\nUsage\nSource\n\n\nwebsite_stats_async(\n    start_at,\n    end_at,\n    website_id=None,\n    url=None,\n    referrer=None,\n    title=None,\n    query=None,\n    event=None,\n    host=None,\n    os=None,\n    browser=None,\n    device=None,\n    country=None,\n    region=None,\n    city=None\n)\n\n\nParameters\n\n\nstart_at: datetime\n\nStarting date as a datetime object.\n\nend_at: datetime\n\nEnd date as a datetime object.\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\nurl: Optional[str] = None\n\nOPTIONAL: Name of URL.\n\nreferrer: Optional[str] = None\n\nOPTIONAL: Name of referrer.\n\ntitle: Optional[str] = None\n\nOPTIONAL: Name of page title.\n\nquery: Optional[str] = None\n\nOPTIONAL: Name of query.\n\nevent: Optional[str] = None\n\nOPTIONAL: Name of event.\n\nhost: Optional[str] = None\n\nOPTIONAL: Name of hostname.\n\nos: Optional[str] = None\n\nOPTIONAL: Name of operating system.\n\nbrowser: Optional[str] = None\n\nOPTIONAL: Name of browser.\n\ndevice: Optional[str] = None\n\nOPTIONAL: Name of device (ex. Mobile)\n\ncountry: Optional[str] = None\n\nOPTIONAL: Name of country.\n\nregion: Optional[str] = None\n\nOPTIONAL: Name of region/state/province.\n\ncity: Optional[str] = None\n\nOPTIONAL: Name of city.\n\n\n\n\n\nReturns\n\n\n models.WebsiteStats\n\nA WebsiteStatsResponse model containing the website statistics data.",
+    "crumbs": [
+      "API Reference",
+      "Querying stats",
+      "[website_stats_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/disable.html",
+    "href": "reference/disable.html",
+    "title": "disable()",
+    "section": "",
+    "text": "Disable event and page view tracking.\n\n\nUsage\nSource\n\n\ndisable()\n\n\nWhen disabled, new_event() and new_page_view() functions will return immediately without sending data to Umami. This is useful for development and testing environments.",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[disable()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "license.html",
+    "href": "license.html",
+    "title": "License",
+    "section": "",
+    "text": "▶\n    License features — MIT License\n\n\n\n\n\nPermissions\n\nCommercial use\nModification\nDistribution\nPrivate use\n\n\nConditions\n\nLicense and copyright notice\n\n\nLimitations\n\nLiability\nWarranty\n\n\n\n\nThe MIT License (MIT)\n\nCopyright (c) 2024 Michael Kennedy\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE."
+  },
+  {
+    "objectID": "skill.html",
+    "href": "skill.html",
+    "title": "Umami Analytics",
+    "section": "",
+    "text": "Umami Analytics Client for Python"
+  },
+  {
+    "objectID": "skill.html#configuration",
+    "href": "skill.html#configuration",
+    "title": "Umami Analytics",
+    "section": "Configuration",
+    "text": "Configuration\nOne-time setup. set_url_base() is required before any operation; Cloud users call set_cloud_api_key() instead.\n\nset_url_base: Each Umami instance lives somewhere. This is where yours lives\nset_website_id: Your Umami instance might have many websites registered for various domains you use\nset_hostname: The default hostname for sending events (can be overriden in the new_event() function)\nset_cloud_api_key: Authenticate against Umami Cloud with an API key instead of login()\nclear_cloud_api_key: Exit Cloud mode and return to token/self-hosted behavior\nenable: Enable event and page view tracking\ndisable: Disable event and page view tracking"
+  },
+  {
+    "objectID": "skill.html#authentication",
+    "href": "skill.html#authentication",
+    "title": "Umami Analytics",
+    "section": "Authentication",
+    "text": "Authentication\nRequired for the query endpoints and verify_token. Not needed to send events.\n\nlogin: Logs into Umami and retrieves a temporary auth token. If the token is expired,\nlogin_async: Logs into Umami and retrieves a temporary auth token. If the token is expired,\nis_logged_in: Whether a credential is currently set locally\nverify_token: Verifies that the token set when you called login() is still valid. Umami says this token will expire,\nverify_token_async: Verifies that the token set when you called login() is still valid. Umami says this token will expire,"
+  },
+  {
+    "objectID": "skill.html#sending-events",
+    "href": "skill.html#sending-events",
+    "title": "Umami Analytics",
+    "section": "Sending events",
+    "text": "Sending events\nSend custom events, revenue, and page views. No login required — only a URL base and a website id/hostname.\n\nnew_event: Creates a new custom event in Umami for the given website_id and hostname (both use the default\nnew_event_async: Creates a new custom event in Umami for the given website_id and hostname (both use the default\nnew_revenue_event: Creates a new revenue event in Umami. This is a convenience wrapper around new_event()\nnew_revenue_event_async: Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()\nnew_page_view: Creates a new page view event in Umami for the given website_id and hostname (both use the default\nnew_page_view_async: Creates a new page view event in Umami for the given website_id and hostname (both use the default"
+  },
+  {
+    "objectID": "skill.html#querying-stats",
+    "href": "skill.html#querying-stats",
+    "title": "Umami Analytics",
+    "section": "Querying stats",
+    "text": "Querying stats\nRead analytics back out. Requires login (or a Cloud API key).\n\nwebsites: All the websites that are registered in your Umami instance\nwebsites_async: All the websites that are registered in your Umami instance\nwebsite_stats: Retrieves the statistics for a specific website\nwebsite_stats_async: Retrieves the statistics for a specific website\nactive_users: Retrieves the active users for a specific website\nactive_users_async: Retrieves the active users for a specific website"
+  },
+  {
+    "objectID": "skill.html#health",
+    "href": "skill.html#health",
+    "title": "Umami Analytics",
+    "section": "Health",
+    "text": "Health\nCheck Umami server connectivity.\n\nheartbeat: Verifies that the server is reachable via the internet and is healthy\nheartbeat_async: Verifies that the server is reachable via the internet and is healthy"
+  },
+  {
+    "objectID": "skill.html#response-models",
+    "href": "skill.html#response-models",
+    "title": "Umami Analytics",
+    "section": "Response models",
+    "text": "Response models\nPydantic models returned by the query functions.\n\nmodels.WebsitesResponse\nmodels.Website\nmodels.WebsiteStats\nmodels.WebsiteStatsCmp\nmodels.LoginResponse\nmodels.User\nmodels.WebsiteUser"
+  },
+  {
+    "objectID": "skill.html#errors",
+    "href": "skill.html#errors",
+    "title": "Umami Analytics",
+    "section": "Errors",
+    "text": "Errors\nException hierarchy. ValidationError is the base; OperationNotAllowedError is raised when required state (url_base, login) is missing.\n\nerrors.ValidationError\nerrors.OperationNotAllowedError"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Umami Analytics Client for Python",
+    "section": "",
+    "text": "View on PyPI Tracker Source\n\n\n\nSkills llms.txt llms-full.txt\n\n\n\n\n\n\nMichael Kennedy\n\n\n\nAuthor\n\n \n\n\n\n\nFull license MIT\n\n\n\nRequires: Python &gt;=3.10 Provides-Extra: dev"
+  },
+  {
+    "objectID": "index.html#focused-on-what-you-need-not-what-is-offered",
+    "href": "index.html#focused-on-what-you-need-not-what-is-offered",
+    "title": "Umami Analytics Client for Python",
+    "section": "Focused on what you need, not what is offered",
+    "text": "Focused on what you need, not what is offered\nThe Umami API is extensive and much of that is intended for their frontend code to be able to function. You probably don’t want or need that. umami-analytics only covers the subset that most developers will need for common SaaS actions such as adding custom events. That said, PRs are welcome."
+  },
+  {
+    "objectID": "index.html#core-features",
+    "href": "index.html#core-features",
+    "title": "Umami Analytics Client for Python",
+    "section": "Core Features",
+    "text": "Core Features\n\n➕ Add a custom event to your Umami analytics dashboard.\n💰 Track revenue with dedicated revenue event support.\n📄 Add a page view to your Umami analytics dashboard.\n🆔 Attach a per-user distinct_id to events, page views, and revenue (sent as the Umami payload id).\n🌐 List all websites with details that you have registered at Umami.\n📊 Get website statistics including page views, visitors, visits, and bounce counts.\n👥 Get active users count for real-time monitoring.\n💓 Heartbeat check to verify Umami server connectivity.\n🔀 Both sync and async programming models.\n⚒️ Structured data with Pydantic models for API responses.\n👩‍💻 Login / authenticate for either a self-hosted or SaaS hosted instance of Umami.\n☁️ Authenticate against Umami Cloud with an API key via set_cloud_api_key() — no login() needed.\n🥇Set a default website for a simplified API going forward.\n🔧 Enable/disable tracking for development and testing environments."
+  },
+  {
+    "objectID": "index.html#development-and-testing-support",
+    "href": "index.html#development-and-testing-support",
+    "title": "Umami Analytics Client for Python",
+    "section": "Development and Testing Support",
+    "text": "Development and Testing Support\n🔧 Disable tracking in development: Use umami.disable() to disable all event and page view tracking without changing your code. Perfect for development and testing environments where you don’t want to pollute your analytics with test data.\nimport umami\n\n## Configure as usual\numami.set_url_base(\"https://umami.hostedbyyouorthem.com\")\numami.set_website_id('cc726914-8e68-4d1a-4be0-af4ca8933456')\numami.set_hostname('somedomain.com')\n\n## Disable tracking for development/testing\numami.disable()\n\n## These calls will return immediately without sending data to Umami\numami.new_event('test-event')  # No HTTP request made\numami.new_page_view('Test Page', '/test')  # No HTTP request made\n\n## Re-enable when needed (default state is enabled)\numami.enable()\nWhen tracking is disabled: - ✅ No HTTP requests are made to your Umami server - ✅ API calls still validate parameters (helps catch configuration issues) - ✅ All other functions work normally (login, websites, stats, etc.) - ✅ Functions return appropriate values for compatibility\nSee the usage example below for the Python API around these features."
+  },
+  {
+    "objectID": "index.html#async-or-sync-api-you-choose",
+    "href": "index.html#async-or-sync-api-you-choose",
+    "title": "Umami Analytics Client for Python",
+    "section": "Async or sync API? You choose",
+    "text": "Async or sync API? You choose\n🔀 Async is supported but not required for your Python code. For functions that access the network, there is a func() and func_async() variant that works with Python’s async and await."
+  },
+  {
+    "objectID": "index.html#installation",
+    "href": "index.html#installation",
+    "title": "Umami Analytics Client for Python",
+    "section": "Installation",
+    "text": "Installation\nJust uv pip install umami-analytics"
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "Umami Analytics Client for Python",
+    "section": "Usage",
+    "text": "Usage\n\nimport umami\n\numami.set_url_base(\"https://umami.hostedbyyouorthem.com\")\n\n## Auth is NOT required to send events, but is for other features.\nlogin = umami.login(username, password)\n\n## Skip the need to pass the target website in subsequent calls.\numami.set_website_id('cc726914-8e68-4d1a-4be0-af4ca8933456')\numami.set_hostname('somedomain.com')\n\n## Optional: Disable tracking for development/testing\n## umami.disable()  # Uncomment to disable tracking\n\n## List your websites\nwebsites = umami.websites()\n\n## Create a new event in the events section of the dashboards.\nevent_resp = umami.new_event(\n    website_id='a7cd-5d1a-2b33', # Only send if overriding default above\n    event_name='Umami-Test',\n    title='Umami-Test', # Defaults to event_name if omitted.\n    hostname='somedomain.com', # Only send if overriding default above.\n    url='/users/actions',\n    custom_data={'client': 'umami-tester-v1'},\n    distinct_id='user-123',  # OPTIONAL: stable per-user id, sent as payload id\n    referrer='https://some_url')\n\n## Create a new page view in the pages section of the dashboards.\npage_view_resp = umami.new_page_view(\n    website_id='a7cd-5d1a-2b33', # Only send if overriding default above\n    page_title='Umami-Test', # Required: the page title to record.\n    hostname='somedomain.com', # Only send if overriding default above.\n    url='/users/actions',\n    distinct_id='user-123',  # OPTIONAL: stable per-user id, sent as payload id\n    referrer='https://some_url')\n\n## Track revenue for a transaction\nrevenue_resp = umami.new_revenue_event(\n    revenue=19.99,  # Monetary amount (required)\n    currency='USD',  # ISO 4217 currency code, defaults to 'USD'\n    event_name='checkout-cart',  # Defaults to 'revenue' if omitted\n    url='/checkout',\n    distinct_id='user-123',  # OPTIONAL: stable per-user id, sent as payload id\n    custom_data={'product': 'widget', 'quantity': 2})\n\n## Get website statistics for a date range\nfrom datetime import datetime, timedelta\n\nend_date = datetime.now()\nstart_date = end_date - timedelta(days=7)  # Last 7 days\n\nstats = umami.website_stats(\n    start_at=start_date,\n    end_at=end_date,\n    website_id='a7cd-5d1a-2b33'  # Only send if overriding default above\n)\nprint(f\"Page views: {stats.pageviews}\")\nprint(f\"Unique visitors: {stats.visitors}\")\nprint(f\"Bounces: {stats.bounces}\")\n\n## Get current active users count\nactive_count = umami.active_users(\n    website_id='a7cd-5d1a-2b33'  # Only send if overriding default above\n)\nprint(f\"Currently active users: {active_count}\")\n\n## Check if Umami server is accessible\nserver_ok = umami.heartbeat()\nprint(f\"Umami server is {'accessible' if server_ok else 'not accessible'}\")\n\n## Call after logging in to make sure the auth token is still valid.\numami.verify_token()\nThis code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the example client in the repo."
+  },
+  {
+    "objectID": "index.html#umami-cloud",
+    "href": "index.html#umami-cloud",
+    "title": "Umami Analytics Client for Python",
+    "section": "Umami Cloud",
+    "text": "Umami Cloud\nUsing Umami Cloud instead of a self-hosted instance? Authenticate with an API key rather than login(). Create one in Umami Cloud under Settings → API keys.\nIn Cloud mode you do not call set_url_base() or login() — set_cloud_api_key() takes care of both the host routing and the authentication header for you:\nimport umami\nfrom datetime import datetime, timedelta\n\n## Authenticate with your Cloud API key. region is optional ('us' or 'eu');\n## omit it to use the region of the account that owns the key.\numami.set_cloud_api_key(\"your-cloud-api-key\", region=\"eu\")\numami.set_website_id(\"your-website-id\")\n\n## Data/management calls go to https://api.umami.is/v1[/region]/...\n## and send the x-umami-api-key header automatically.\nactive_count = umami.active_users()\n\nend = datetime.now()\nstats = umami.website_stats(start_at=end - timedelta(days=7), end_at=end)\nprint(f\"Visitors (last 7 days): {stats.visitors}\")\n\n## Events are sent to https://cloud.umami.is/api/send automatically.\numami.new_event(event_name=\"purchase\", url=\"/checkout\", hostname=\"example.com\")\n\n## Return to self-hosted / token behavior at any time:\n## umami.clear_cloud_api_key()\n\nRouting is handled for you: data and management calls go to https://api.umami.is/v1 (authenticated with the x-umami-api-key header), while events are sent to https://cloud.umami.is/api/send. Note that the Umami Cloud API is rate-limited to 50 calls / 15 seconds.\n\nThe self-hosted (login()) usage shown above is unchanged — Cloud mode is simply a labeled alternative, and existing code keeps working exactly as before."
+  },
+  {
+    "objectID": "index.html#want-to-contribute",
+    "href": "index.html#want-to-contribute",
+    "title": "Umami Analytics Client for Python",
+    "section": "Want to contribute?",
+    "text": "Want to contribute?\nSee the API documentation for the remaining endpoints to be added. PRs are welcome. But please open an issue first to see if the proposed feature fits with the direction of this library.\nEnjoy."
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "This changelog is generated automatically from GitHub Releases."
+  },
+  {
+    "objectID": "changelog.html#section",
+    "href": "changelog.html#section",
+    "title": "Changelog",
+    "section": "[0.6.25] - 2026-06-07",
+    "text": "[0.6.25] - 2026-06-07\n\nAdded\n\ndistinct_id support in new_event, new_page_view, and new_revenue_event payloads (sync and async), sent to Umami as payload field id\nUmami Cloud API-key authentication via set_cloud_api_key(key, region=None) and clear_cloud_api_key(). In Cloud mode, data/management calls route to https://api.umami.is/v1[/region] with an x-umami-api-key header, and events are sent to https://cloud.umami.is/api/send — no set_url_base() or login() required. Existing self-hosted (login() + token) usage is byte-for-byte unchanged. Added urls.me for Cloud key validation in verify_token/verify_token_async. In Cloud mode, heartbeat() / heartbeat_async() check liveness via the authenticated /me endpoint (Cloud has no /api/heartbeat), and login() / login_async() raise OperationNotAllowedError to fail fast (the API key is the credential — there is no username/password login on Cloud).\n\n\n\nChanged\n\nvalidate_state error messages now mention set_cloud_api_key() alongside set_url_base() / login(). Same exception type (OperationNotAllowedError) and trigger conditions; text only.\nResponse models are more tolerant of variant/partial responses: WebsiteStats.comparison and Website.user are now optional, and Website accepts createUser (returned by team-website listings, where userId is null). Successful responses today are unaffected.\nInternal: expanded the unit test suite (now 128 tests) following a suite review — added behavioral coverage for set_url_base validation, the validate_state guards, the login/login_async happy path and response-model deserialization (LoginResponse, WebsitesResponse), websites/websites_async, the disable() no-op (asserting no HTTP request is made), ip_address payload inclusion/omission, explicit-arg-overrides-defaults precedence, heartbeat_async self-hosted, and the verify_token/heartbeat failure branches. Added a sync/async parity harness and consolidated the per-file HTTP mock builders into a shared tests/_mocks.py (net ~210 fewer lines). No production behavior changed.\n\n\n\nFixed\n\nwebsite_stats_async() sent its date range as snake_case start_at/end_at query params, which the Umami API ignores — it silently returned all-time stats regardless of the requested window. Now sends camelCase startAt/endAt, matching the sync website_stats(). (#18)\nactive_users() and active_users_async() read the active-visitor count from a non-existent x key, so they always returned 0. They now read Umami’s current visitors key (falling back to the legacy x key for compatibility). (#19)\nwebsite_stats() / website_stats_async() sent their url and host filters under the old query-param names, which Umami renamed on 2025-10-07 (url → path, host → hostname) — so filtering stats by URL or hostname was a silent no-op. The public url/host keyword arguments are unchanged; they now map to the current path/hostname wire names. (#20)\nheartbeat() / heartbeat_async() issued a POST to /api/heartbeat, which current Umami answers with 405 Method Not Allowed; the broad exception handler swallowed the error so the call always returned False even against a healthy server. They now issue a GET (the endpoint returns {\"ok\": true}).\nnew_event() and new_revenue_event() (sync) defaulted url to '/event-api-endpoint' while their async twins used '/'. All four now default to '/', so the sync/async twins agree and no placeholder path appears in dashboards."
+  },
+  {
+    "objectID": "changelog.html#section-1",
+    "href": "changelog.html#section-1",
+    "title": "Changelog",
+    "section": "[0.5.24] - 2026-06-04",
+    "text": "[0.5.24] - 2026-06-04\n\nChanged\n\nMigrated HTTP backend from httpx to httpx2, imported as import httpx2 as httpx so all call sites remain unchanged\nFiles: umami/umami/impl/__init__.py, umami/requirements.txt, umami/pyproject.toml, pyrefly.toml, README.md, umami/README.md"
+  },
+  {
+    "objectID": "changelog.html#section-2",
+    "href": "changelog.html#section-2",
+    "title": "Changelog",
+    "section": "[0.4.23]",
+    "text": "[0.4.23]\n\nAdded\n\nnew_revenue_event() and new_revenue_event_async() for tracking revenue with Umami’s new revenue feature\nRevenue events automatically inject revenue (float) and currency (ISO 4217 string) into event custom data\nInput validation: revenue must be a number &gt;= 0, currency must be a non-empty string\nDefaults to event_name='revenue' and currency='USD' for simple usage\n15 new tests covering sync/async revenue events, validation, and edge cases"
+  },
+  {
+    "objectID": "changelog.html#section-3",
+    "href": "changelog.html#section-3",
+    "title": "Changelog",
+    "section": "[0.3.22] - 2026-02-02",
+    "text": "[0.3.22] - 2026-02-02\n\nFixed\n\nnew_event_async crashed with binascii.Error due to erroneous base64.b64decode / json.loads calls on the plain-JSON API response; now returns resp.json() directly, matching the other event and page-view methods"
+  },
+  {
+    "objectID": "changelog.html#new-features",
+    "href": "changelog.html#new-features",
+    "title": "Changelog",
+    "section": "🚀 New Features",
+    "text": "🚀 New Features\n\nDevelopment and Testing Tracking: Added options to disable tracking for development and testing environments. This allows users to control data collection based on their needs.\n\nWhen tracking is disabled: - ✅ No HTTP requests are made to your Umami server - ✅ API calls still validate parameters (helps catch configuration issues) - ✅ All other functions work normally (login, websites, stats, etc.) - ✅ Functions return appropriate values for compatibility"
+  },
+  {
+    "objectID": "changelog.html#documentation",
+    "href": "changelog.html#documentation",
+    "title": "Changelog",
+    "section": "📚 Documentation",
+    "text": "📚 Documentation\n\nDocumented the heartbeat check feature for monitoring system health.\nAdded documentation for new methods in the Umami API: get_heartbeat and enabled/disable."
+  },
+  {
+    "objectID": "changelog.html#maintenance",
+    "href": "changelog.html#maintenance",
+    "title": "Changelog",
+    "section": "🧹 Maintenance",
+    "text": "🧹 Maintenance\n\nSorted some imports in various files to improve code organization and readability.\nFixed a minor typo in the documentation, ensuring consistency across the project."
+  },
+  {
+    "objectID": "changelog.html#new-features-1",
+    "href": "changelog.html#new-features-1",
+    "title": "Changelog",
+    "section": "🚀 New Features",
+    "text": "🚀 New Features\n\nHeartbeat Functions: Added asynchronous (heartbeat_async) and synchronous (heartbeat) versions of the existing heartbeat function for improved import flexibility.\nAdded website stats and active users functions (website_stats, active_users) Thanks @orangethewell"
+  },
+  {
+    "objectID": "changelog.html#bug-fixes",
+    "href": "changelog.html#bug-fixes",
+    "title": "Changelog",
+    "section": "🐛 Bug Fixes",
+    "text": "🐛 Bug Fixes\n\nLogin Fix: Corrected the API data handling from data to json in the login process. Originally, this was not a problem with the server, but it has started failing. If you have encountered login errors, this may fix it."
+  },
+  {
+    "objectID": "changelog.html#performance",
+    "href": "changelog.html#performance",
+    "title": "Changelog",
+    "section": "⚡ Performance",
+    "text": "⚡ Performance\n\nHeartbeat Function Optimization: Improved the performance of the heartbeat function by optimizing its execution flow."
+  },
+  {
+    "objectID": "changelog.html#new-features-2",
+    "href": "changelog.html#new-features-2",
+    "title": "Changelog",
+    "section": "🚀 New Features",
+    "text": "🚀 New Features\n\nPython Version Update: Upgraded to Python 3.13 and 3.14, providing better support for modern applications."
+  },
+  {
+    "objectID": "changelog.html#bug-fixes-1",
+    "href": "changelog.html#bug-fixes-1",
+    "title": "Changelog",
+    "section": "🐛 Bug Fixes",
+    "text": "🐛 Bug Fixes\n\nAPI Call Method Fix: Corrected the use of data instead of json in login API calls, ensuring proper data transmission.\n\nOriginally, this was not a problem with the server, but it has started failing. If you have encountered login errors, this may fix it."
+  },
+  {
+    "objectID": "skills.html",
+    "href": "skills.html",
+    "title": "Skills",
+    "section": "",
+    "text": "A skill is a package of structured files that teaches an AI coding agent how to work with a specific tool or framework. The skill below was generated by Great Docs from this project’s documentation. Install it in your agent and it will be able to run commands, edit configuration, write content, and troubleshoot problems without step-by-step guidance from you.\n\n  \n    ▶    Install this skill\n  \n  \n    \n      \nAny agent — install with npx:\nnpx skills add https://mkennedy.codes/docs/umami-python/\nCodex / OpenCode\nTell the agent:Fetch the skill file at https://mkennedy.codes/docs/umami-python/skill.md and follow the instructions.\nManual — download the skill file:\ncurl -O https://mkennedy.codes/docs/umami-python/skill.md\nOr browse the SKILL.md file.\n      \n    \n  \n\n\nSKILL.md\n---\nname: umami\ndescription: &gt;\n  Umami Analytics Client for Python. Use when writing Python code that uses the umami package.\nlicense: MIT\ncompatibility: Requires Python &gt;=3.10.\n---\n\n# Umami Analytics\n\nUmami Analytics Client for Python\n\n## Installation\n\n```bash\npip install umami\n```\n\n## API overview\n\n### Configuration\n\nOne-time setup. `set_url_base()` is required before any operation; Cloud users call `set_cloud_api_key()` instead.\n\n- `set_url_base`: Each Umami instance lives somewhere. This is where yours lives\n- `set_website_id`: Your Umami instance might have many websites registered for various domains you use\n- `set_hostname`: The default hostname for sending events (can be overriden in the new_event() function)\n- `set_cloud_api_key`: Authenticate against Umami Cloud with an API key instead of login()\n- `clear_cloud_api_key`: Exit Cloud mode and return to token/self-hosted behavior\n- `enable`: Enable event and page view tracking\n- `disable`: Disable event and page view tracking\n\n### Authentication\n\nRequired for the query endpoints and `verify_token`. Not needed to send events.\n\n- `login`: Logs into Umami and retrieves a temporary auth token. If the token is expired,\n- `login_async`: Logs into Umami and retrieves a temporary auth token. If the token is expired,\n- `is_logged_in`: Whether a credential is currently set locally\n- `verify_token`: Verifies that the token set when you called login() is still valid. Umami says this token will expire,\n- `verify_token_async`: Verifies that the token set when you called login() is still valid. Umami says this token will expire,\n\n### Sending events\n\nSend custom events, revenue, and page views. No login required — only a URL base and a website id/hostname.\n\n- `new_event`: Creates a new custom event in Umami for the given website_id and hostname (both use the default\n- `new_event_async`: Creates a new custom event in Umami for the given website_id and hostname (both use the default\n- `new_revenue_event`: Creates a new revenue event in Umami. This is a convenience wrapper around new_event()\n- `new_revenue_event_async`: Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()\n- `new_page_view`: Creates a new page view event in Umami for the given website_id and hostname (both use the default\n- `new_page_view_async`: Creates a new page view event in Umami for the given website_id and hostname (both use the default\n\n### Querying stats\n\nRead analytics back out. Requires login (or a Cloud API key).\n\n- `websites`: All the websites that are registered in your Umami instance\n- `websites_async`: All the websites that are registered in your Umami instance\n- `website_stats`: Retrieves the statistics for a specific website\n- `website_stats_async`: Retrieves the statistics for a specific website\n- `active_users`: Retrieves the active users for a specific website\n- `active_users_async`: Retrieves the active users for a specific website\n\n### Health\n\nCheck Umami server connectivity.\n\n- `heartbeat`: Verifies that the server is reachable via the internet and is healthy\n- `heartbeat_async`: Verifies that the server is reachable via the internet and is healthy\n\n### Response models\n\nPydantic models returned by the query functions.\n\n- `models.WebsitesResponse`\n- `models.Website`\n- `models.WebsiteStats`\n- `models.WebsiteStatsCmp`\n- `models.LoginResponse`\n- `models.User`\n- `models.WebsiteUser`\n\n### Errors\n\nException hierarchy. `ValidationError` is the base; `OperationNotAllowedError` is raised when required state (url_base, login) is missing.\n\n- `errors.ValidationError`\n- `errors.OperationNotAllowedError`\n\n## Resources\n\n- [Full documentation](https://mkennedy.codes/docs/umami-python/)\n- [llms.txt](llms.txt) — Indexed API reference for LLMs\n- [llms-full.txt](llms-full.txt) — Comprehensive documentation for LLMs\n- [Source code](https://github.com/mikeckennedy/umami-python)"
+  },
+  {
+    "objectID": "reference/new_event_async.html",
+    "href": "reference/new_event_async.html",
+    "title": "new_event_async()",
+    "section": "",
+    "text": "Creates a new custom event in Umami for the given website_id and hostname (both use the default\n\n\nUsage\nSource\n\n\nnew_event_async(\n    event_name,\n    hostname=None,\n    url=\"/\",\n    website_id=None,\n    title=None,\n    custom_data=None,\n    referrer=\"\",\n    language=\"en-US\",\n    screen=\"1920x1080\",\n    ip_address=None,\n    distinct_id=None\n)\n\n\nif you have set them with the other functions such as set_hostname()). These events will both appear in the traffic related to the specified url and in the events section at the bottom of your Umami website page. Login is not required for this method.\n\n\nParameters\n\n\nevent_name: str\n\nThe name of your custom event (e.g. Purchase-Course)\n\nhostname: Optional[str] = None\n\nOPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.\n\nurl: str = \"/\"\n\nThe simulated URL for the custom event (e.g. if it’s account creation, maybe /account/new)\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\ntitle: Optional[str] = None\n\nThe title of the custom event (not sure how this is different from the name), defaults to event_name if empty.\n\ncustom_data: Optional[Dict[str, Any]] = None\n\nAny additional data to send along with the event. Not visible in the UI but is in the API.\n\nreferrer: str = \"\"\n\nThe referrer of the client if there is any (what location lead them to this event)\n\nlanguage: str = \"en-US\"\n\nThe language of the event / client.\n\nscreen: str = \"1920x1080\"\n\nThe screen resolution of the client.\n\nip_address: Optional[str] = None\n\nOPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.\n\ndistinct_id: Optional[Union[str, int]] = None\n\nOPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.\n\n\n\n\n\nReturns\n\n\n dict\n\nThe data returned from the Umami API.",
+    "crumbs": [
+      "API Reference",
+      "Sending events",
+      "[new_event_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/websites_async.html",
+    "href": "reference/websites_async.html",
+    "title": "websites_async()",
+    "section": "",
+    "text": "All the websites that are registered in your Umami instance.\n\n\nUsage\nSource\n\n\nwebsites_async()\n\n\nReturns: A list of Website Pydantic models.",
+    "crumbs": [
+      "API Reference",
+      "Querying stats",
+      "[websites_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/clear_cloud_api_key.html",
+    "href": "reference/clear_cloud_api_key.html",
+    "title": "clear_cloud_api_key()",
+    "section": "",
+    "text": "Exit Cloud mode and return to token/self-hosted behavior.\n\n\nUsage\nSource\n\n\nclear_cloud_api_key()",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[clear_cloud_api_key()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/login.html",
+    "href": "reference/login.html",
+    "title": "login()",
+    "section": "",
+    "text": "Logs into Umami and retrieves a temporary auth token. If the token is expired,\n\n\nUsage\nSource\n\n\nlogin(username, password)\n\n\nyou’ll need to log in again. This can be checked with verify_token(). Args: username: Your Umami username password: Your Umami password\n\n\nReturns\n\n\n models.LoginResponse\n\nLoginResponse object which your token and user details (no need to save this).",
+    "crumbs": [
+      "API Reference",
+      "Authentication",
+      "[login()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/models.Website.html",
+    "href": "reference/models.Website.html",
+    "title": "models.Website",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.Website()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.Website]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/enable.html",
+    "href": "reference/enable.html",
+    "title": "enable()",
+    "section": "",
+    "text": "Enable event and page view tracking.\n\n\nUsage\nSource\n\n\nenable()\n\n\nWhen enabled, new_event() and new_page_view() functions will send data to Umami normally. This is the default state.",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[enable()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/new_event.html",
+    "href": "reference/new_event.html",
+    "title": "new_event()",
+    "section": "",
+    "text": "Creates a new custom event in Umami for the given website_id and hostname (both use the default\n\n\nUsage\nSource\n\n\nnew_event(\n    event_name,\n    hostname=None,\n    url=\"/\",\n    website_id=None,\n    title=None,\n    custom_data=None,\n    referrer=\"\",\n    language=\"en-US\",\n    screen=\"1920x1080\",\n    ip_address=None,\n    distinct_id=None\n)\n\n\nif you have set them with the other functions such as set_hostname()). These events will both appear in the traffic related to the specified url and in the events section at the bottom of your Umami website page. Login is not required for this method.\n\n\nParameters\n\n\nevent_name: str\n\nThe name of your custom event (e.g. Purchase-Course)\n\nhostname: Optional[str] = None\n\nOPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.\n\nurl: str = \"/\"\n\nThe simulated URL for the custom event (e.g. if it’s account creation, maybe /account/new)\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\ntitle: Optional[str] = None\n\nThe title of the custom event (not sure how this is different from the name), defaults to event_name if empty.\n\ncustom_data: Optional[Dict[str, Any]] = None\n\nAny additional data to send along with the event. Not visible in the UI but is in the API.\n\nreferrer: str = \"\"\n\nThe referrer of the client if there is any (what location lead them to this event)\n\nlanguage: str = \"en-US\"\n\nThe language of the event / client.\n\nscreen: str = \"1920x1080\"\n\nThe screen resolution of the client.\n\nip_address: Optional[str] = None\n\nOPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.\n\ndistinct_id: Optional[Union[str, int]] = None\n\nOPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.",
+    "crumbs": [
+      "API Reference",
+      "Sending events",
+      "[new_event()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/websites.html",
+    "href": "reference/websites.html",
+    "title": "websites()",
+    "section": "",
+    "text": "All the websites that are registered in your Umami instance.\n\n\nUsage\nSource\n\n\nwebsites()\n\n\nReturns: A list of Website Pydantic models.",
+    "crumbs": [
+      "API Reference",
+      "Querying stats",
+      "[websites()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/models.WebsitesResponse.html",
+    "href": "reference/models.WebsitesResponse.html",
+    "title": "models.WebsitesResponse",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.WebsitesResponse()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.WebsitesResponse]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/errors.ValidationError.html",
+    "href": "reference/errors.ValidationError.html",
+    "title": "errors.ValidationError",
+    "section": "",
+    "text": "Usage\nSource\n\n\nerrors.ValidationError()",
+    "crumbs": [
+      "API Reference",
+      "Errors",
+      "[errors.ValidationError]{.doc-object-name .doc-class .doc-label .doc-label-exception}"
+    ]
+  },
+  {
+    "objectID": "reference/set_url_base.html",
+    "href": "reference/set_url_base.html",
+    "title": "set_url_base()",
+    "section": "",
+    "text": "Each Umami instance lives somewhere. This is where yours lives.\n\n\nUsage\nSource\n\n\nset_url_base(url)\n\n\nFor example, https://somedomain.tech/umami. Args: url: The base URL of your instance without /api.",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[set_url_base()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/login_async.html",
+    "href": "reference/login_async.html",
+    "title": "login_async()",
+    "section": "",
+    "text": "Logs into Umami and retrieves a temporary auth token. If the token is expired,\n\n\nUsage\nSource\n\n\nlogin_async(username, password)\n\n\nyou’ll need to log in again. This can be checked with verify_token(). Args: username: Your Umami username password: Your Umami password\n\n\nReturns\n\n\n models.LoginResponse\n\nLoginResponse object which your token and user details (no need to save this).",
+    "crumbs": [
+      "API Reference",
+      "Authentication",
+      "[login_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/models.WebsiteStats.html",
+    "href": "reference/models.WebsiteStats.html",
+    "title": "models.WebsiteStats",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.WebsiteStats()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.WebsiteStats]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/models.WebsiteUser.html",
+    "href": "reference/models.WebsiteUser.html",
+    "title": "models.WebsiteUser",
+    "section": "",
+    "text": "Usage\nSource\n\n\nmodels.WebsiteUser()",
+    "crumbs": [
+      "API Reference",
+      "Response models",
+      "[models.WebsiteUser]{.doc-object-name .doc-class .doc-label .doc-label-class}"
+    ]
+  },
+  {
+    "objectID": "reference/set_website_id.html",
+    "href": "reference/set_website_id.html",
+    "title": "set_website_id()",
+    "section": "",
+    "text": "Your Umami instance might have many websites registered for various domains you use.\n\n\nUsage\nSource\n\n\nset_website_id(website_id)\n\n\nCall this function to set which website you’re working with. Args: website_id: The ID from Umami for your registered site (e.g. 978435e2-7ba1-4337-9860-ec31ece2db60)",
+    "crumbs": [
+      "API Reference",
+      "Configuration",
+      "[set_website_id()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/new_page_view.html",
+    "href": "reference/new_page_view.html",
+    "title": "new_page_view()",
+    "section": "",
+    "text": "Creates a new page view event in Umami for the given website_id and hostname (both use the default\n\n\nUsage\nSource\n\n\nnew_page_view(\n    page_title,\n    url,\n    hostname=None,\n    website_id=None,\n    referrer=\"\",\n    language=\"en-US\",\n    screen=\"1920x1080\",\n    ua=event_user_agent,\n    ip_address=None,\n    distinct_id=None\n)\n\n\nif you have set them with the other functions such as set_hostname()). This is equivalent to what happens when a visit views a page and the JS library records it.\n\n\nParameters\n\n\npage_title: str\n\nThe title of the page view to record (required).\n\nurl: str\n\nThe simulated URL for the custom event (e.g. if it’s account creation, maybe /account/new)\n\nhostname: Optional[str] = None\n\nOPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.\n\nwebsite_id: Optional[str] = None\n\nOPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).\n\nreferrer: str = \"\"\n\nOPTIONAL: The referrer of the client if there is any (what location lead them to this event)\n\nlanguage: str = \"en-US\"\n\nOPTIONAL: The language of the event / client.\n\nscreen: str = \"1920x1080\"\n\nOPTIONAL: The screen resolution of the client.\n\nua: str = event_user_agent\n\nOPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.\n\nip_address: Optional[str] = None\n\nOPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.\n\ndistinct_id: Optional[Union[str, int]] = None\n\nOPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.",
+    "crumbs": [
+      "API Reference",
+      "Sending events",
+      "[new_page_view()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  },
+  {
+    "objectID": "reference/heartbeat_async.html",
+    "href": "reference/heartbeat_async.html",
+    "title": "heartbeat_async()",
+    "section": "",
+    "text": "Verifies that the server is reachable via the internet and is healthy.\n\n\nUsage\nSource\n\n\nheartbeat_async()\n\n\nReturns\n\n\n bool\n\nTrue if the server is healthy and accessible.",
+    "crumbs": [
+      "API Reference",
+      "Health",
+      "[heartbeat_async()]{.doc-object-name .doc-function .doc-label .doc-label-async}"
+    ]
+  },
+  {
+    "objectID": "reference/heartbeat.html",
+    "href": "reference/heartbeat.html",
+    "title": "heartbeat()",
+    "section": "",
+    "text": "Verifies that the server is reachable via the internet and is healthy.\n\n\nUsage\nSource\n\n\nheartbeat()\n\n\nReturns\n\n\n bool\n\nTrue if the server is healthy and accessible.",
+    "crumbs": [
+      "API Reference",
+      "Health",
+      "[heartbeat()]{.doc-object-name .doc-function .doc-label .doc-label-function}"
+    ]
+  }
+]

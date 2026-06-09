@@ -7,10 +7,10 @@
   "tasks": [
     {
       "label": "Build Docs",
-      "detail": "great-docs build -> umami/great-docs/_site/",
+      "detail": "great-docs build, then mirror the site into the committed repo-root docs/",
       "type": "shell",
-      "command": "./venv/bin/great-docs",
-      "args": ["build"],
+      "command": "./venv/bin/python",
+      "args": ["scripts/build_docs.py"],
       "options": { "cwd": "${workspaceFolder}/umami" },
       "group": { "kind": "build", "isDefault": true },
       "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },

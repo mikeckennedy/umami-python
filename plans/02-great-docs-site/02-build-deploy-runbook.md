@@ -75,8 +75,9 @@ The docs site for `umami-analytics` is built with [Great Docs](https://posit-dev
 and published at **https://mkennedy.codes/docs/umami-python/**.
 
 - Config: `umami/great-docs.yml` (committed). Build output: `umami/great-docs/_site/` (ephemeral,
-  gitignored). Landing page: `umami/README.md`. API reference: auto-generated from `umami.__all__`.
-- Deployment is **manual**: build locally, `rsync` the `_site/` to the server, nginx serves it.
+  gitignored) is mirrored into the committed repo-root **`docs/`** by `scripts/build_docs.py`.
+  Landing page: `umami/README.md`. API reference: auto-generated from `umami.__all__`.
+- Deployment is **git-based**: commit `docs/`, push, and `git pull` on the server; nginx serves `docs/`.
 
 ## Prerequisites (once)
 
@@ -91,37 +92,39 @@ in a venv where `import umami` works (the editable install above).
 
 ## Build
 
+The "Build Docs" VSCode task (or the script directly) builds **and** mirrors the site into the
+committed `docs/` folder:
+
 ```bash
-cd umami
-great-docs build          # -> umami/great-docs/_site/
+python umami/scripts/build_docs.py    # great-docs build -> umami/great-docs/_site -> docs/
 ```
 
 ## Verify (subpath-aware)
 
-Asset links are **relative** (subpath-safe), so serve under the real path and check status codes —
-don't grep for a path prefix:
+Asset links are **relative** (subpath-safe). Use the "Preview Docs (subpath)" config, or:
 
 ```bash
-mkdir -p /tmp/docpreview/docs && ln -snf "$(pwd)/great-docs/_site" /tmp/docpreview/docs/umami-python
-( cd /tmp/docpreview && python -m http.server 8099 --bind 127.0.0.1 ) &
-B=http://127.0.0.1:8099/docs/umami-python
-for u in "/" "/reference/" "/reference/new_event.html" "/search.json"; do
-  printf "%-30s " "$u"; curl -s -o /dev/null -w "%{http_code}\n" "$B$u"; done   # all 200
-pkill -f "http.server 8099"
-# open http://localhost:8099/docs/umami-python/ in a browser for a visual check
+python umami/scripts/serve_docs.py    # serves committed docs/ at http://127.0.0.1:8099/docs/umami-python/
 ```
 
-## Publish (transfer to the server)
+All page URLs and linked `site_libs/…` assets should return `200`.
+
+## Publish (commit, push, pull on the server)
+
+The build mirrors the site into the committed repo-root `docs/`, so publishing is a normal git push
+— no file transfer:
 
 ```bash
-# trailing slash on the SOURCE copies the contents of _site/ into the target dir
-rsync -avz --delete umami/great-docs/_site/ <user>@<host>:<docroot>/docs/umami-python/
+git add docs && git commit -m "docs: rebuild site" && git push
 ```
 
-`--delete` keeps the server in exact sync (removes files dropped from the build). Drop it if other
-content lives under that directory.
+On the server, pull the repo (or a deploy checkout) on each release:
 
-## nginx (serve the static site at the subpath)
+```bash
+git -C <repo-on-server> pull --ff-only
+```
+
+## nginx (serve the committed docs/ at the subpath)
 
 ```nginx
 # inside the mkennedy.codes `server { }` block
@@ -129,20 +132,20 @@ location = /docs/umami-python {
     return 301 /docs/umami-python/;        # enforce trailing slash so base paths resolve
 }
 location /docs/umami-python/ {
-    alias <docroot>/docs/umami-python/;    # dir holding the _site contents
+    alias <repo-on-server>/docs/;          # the committed docs/ folder (mirror of _site)
     index index.html;
     try_files $uri $uri/ $uri.html =404;   # Quarto clean URLs + directory indexes
 }
 ```
 
-`alias` strips the `/docs/umami-python/` URL prefix and serves from the target dir, so the
-prefixed asset links (`/docs/umami-python/site_libs/…`) resolve to `<docroot>/docs/umami-python/site_libs/…`.
+`alias` strips the `/docs/umami-python/` URL prefix and serves from `docs/`, so the relative asset
+links resolve correctly under the subpath.
 
 ## Re-publishing after changes
 
 ```bash
-cd umami && great-docs build && \
-rsync -avz --delete great-docs/_site/ <user>@<host>:<docroot>/docs/umami-python/
+python umami/scripts/build_docs.py    # rebuild + refresh docs/
+git add docs && git commit -m "docs: rebuild site" && git push
 ```
 ````
 

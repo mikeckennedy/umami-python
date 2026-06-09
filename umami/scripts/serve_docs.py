@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Serve the built docs under the production subpath for a faithful local check.
+"""Serve the committed docs under the production subpath for a faithful local check.
 
-`great-docs preview` serves at the server root (http://localhost:3000/), which works
-because the site uses relative asset paths. This helper instead mounts the built
-`great-docs/_site/` under the *real* deployed subpath, so what you see locally matches
-production exactly:
+`great-docs preview` serves at the server root (http://localhost:3000/). This helper instead
+mounts the committed **`docs/`** folder (what actually gets deployed) under the *real* subpath,
+so what you see locally matches production exactly:
 
     http://127.0.0.1:8099/docs/umami-python/   ==   https://mkennedy.codes/docs/umami-python/
 
-Run the "Build Docs" config (or `great-docs build`) first to produce `great-docs/_site/`.
+Run the "Build Docs" config (or `python umami/scripts/build_docs.py`) first to populate `docs/`.
 """
 
 from __future__ import annotations
@@ -20,7 +19,8 @@ from pathlib import Path
 
 PREFIX = '/docs/umami-python'
 PORT = 8099
-ROOT = Path(__file__).resolve().parent.parent / 'great-docs' / '_site'
+# repo-root docs/ (this file lives at umami/scripts/serve_docs.py)
+ROOT = Path(__file__).resolve().parent.parent.parent / 'docs'
 
 
 class SubpathHandler(http.server.SimpleHTTPRequestHandler):
@@ -47,7 +47,7 @@ class Server(socketserver.TCPServer):
 
 def main() -> None:
     if not ROOT.is_dir():
-        raise SystemExit(f"Build output not found: {ROOT}\nRun the 'Build Docs' config (great-docs build) first.")
+        raise SystemExit(f"Docs not found: {ROOT}\nRun the 'Build Docs' config (build_docs.py) first.")
     handler = functools.partial(SubpathHandler, directory=str(ROOT))
     with Server(('127.0.0.1', PORT), handler) as httpd:
         print(f'Serving {ROOT}')
