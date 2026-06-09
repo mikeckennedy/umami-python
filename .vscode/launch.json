@@ -10,7 +10,7 @@
       "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/umami/scripts/build_docs.py",
-      "python": "${workspaceFolder}/umami/venv/bin/python",
+      "python": "${workspaceFolder}/venv/bin/python",
       "cwd": "${workspaceFolder}/umami",
       "console": "integratedTerminal",
       "justMyCode": false
@@ -19,9 +19,9 @@
       "name": "Preview Docs",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/umami/venv/bin/great-docs",
+      "program": "${workspaceFolder}/venv/bin/great-docs",
       "args": ["preview"],
-      "python": "${workspaceFolder}/umami/venv/bin/python",
+      "python": "${workspaceFolder}/venv/bin/python",
       "cwd": "${workspaceFolder}/umami",
       "console": "integratedTerminal",
       "justMyCode": false
