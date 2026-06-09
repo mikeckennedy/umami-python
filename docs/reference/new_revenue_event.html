@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Creates a new revenue event in Umami. This is a convenience wrapper around new_event()">
+  <meta name="description" content="Create a new revenue event in Umami. This is a convenience wrapper around">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="new_revenue_event() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Creates a new revenue event in Umami. This is a convenience wrapper around new_event()">
+  <meta property="og:description" content="Create a new revenue event in Umami. This is a convenience wrapper around">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/new_revenue_event.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="new_revenue_event() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Creates a new revenue event in Umami. This is a convenience wrapper around new_event()">
+  <meta name="twitter:description" content="Create a new revenue event in Umami. This is a convenience wrapper around">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -486,6 +486,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -512,11 +515,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Creates a new revenue event in Umami. This is a convenience wrapper around new_event()</p>
+<p>Create a new revenue event in Umami. This is a convenience wrapper around</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L528-L585" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L810-L910" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">new_revenue_event</span>(</span>
@@ -536,7 +539,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>that automatically includes the revenue and currency properties required by Umami’s revenue tracking.</p>
+<p>new_event() that automatically includes the revenue and currency properties required by Umami’s revenue tracking.</p>
+<p>Requires set_url_base() (or set_cloud_api_key() for Cloud mode) and a website_id and hostname, either set globally via set_website_id()/set_hostname() or passed here. Login is not required to send events. If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
@@ -544,11 +548,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code><span class="doc-parameter-name">revenue</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">float</span></code></dt>
 <dd>
-<p>The monetary amount of the transaction (must be &gt;= 0).</p>
+<p>The monetary amount of the transaction. Must be a number (int or float) &gt;= 0.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">currency</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"USD"</span></span></code></dt>
 <dd>
-<p>ISO 4217 currency code (e.g.&nbsp;‘USD’, ‘EUR’). Defaults to ‘USD’.</p>
+<p>ISO 4217 currency code (e.g.&nbsp;‘USD’, ‘EUR’). Must be non-empty. Defaults to ‘USD’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">event_name</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"revenue"</span></span></code></dt>
 <dd>
@@ -556,46 +560,86 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </dd>
 <dt><code><span class="doc-parameter-name">hostname</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.</p>
+<p>Optional hostname identifying the client (e.g.&nbsp;‘example.com’); overrides the set_hostname() value.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">url</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"/"</span></span></code></dt>
 <dd>
-<p>The simulated URL for the custom event.</p>
+<p>The URL associated with the event (e.g.&nbsp;‘/checkout’). Defaults to ‘/’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">website_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).</p>
+<p>Optional Umami website ID; overrides the set_website_id() value.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">title</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>The title of the custom event, defaults to event_name if empty.</p>
+<p>The display title of the event. Defaults to event_name when omitted.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">custom_data</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[Dict[str, Any]]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Any additional data to send along with the event. Revenue and currency keys will be overwritten.</p>
+<p>Additional key/value data sent with the event. The ‘revenue’ and ‘currency’ keys are overwritten by the values above.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">referrer</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">""</span></span></code></dt>
 <dd>
-<p>The referrer of the client if there is any.</p>
+<p>The referrer of the client, if any. Defaults to ’’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">language</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"en-US"</span></span></code></dt>
 <dd>
-<p>The language of the event / client.</p>
+<p>The language of the event/client. Defaults to ‘en-US’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">screen</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"1920x1080"</span></span></code></dt>
 <dd>
-<p>The screen resolution of the client.</p>
+<p>The screen resolution of the client. Defaults to ‘1920x1080’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">ip_address</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The true IP address of the user.</p>
+<p>Optional true IP address of the user, useful when sending events from server-side request handlers.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">distinct_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[Union[str, int]]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+Optional Umami distinct ID for the user, as a string or integer, sent to the API as the payload field ‘id’. Blank or whitespace-only values are ignored (no id is sent).
 </dd>
 </dl>
 </div>
+</section>
+<section id="returns" class="level2 doc-returns">
+<h2 class="doc-returns">Returns</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code></code></dt>
+<dd>
+<p>None. The async twin, new_revenue_event_async(), returns the parsed</p>
+JSON response dict instead.
+</dd>
+</dl>
+</div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
+<dd>
+<p>If revenue is not a number, revenue is negative, currency is empty, or distinct_id is an invalid type.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">OperationNotAllowedError</span></code></dt>
+<dd>
+<p>If neither set_url_base() nor set_cloud_api_key() has been called.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">Exception</span></code></dt>
+<dd>
+<p>If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
+<dd>
+If the Umami API returns a non-2xx response.
+</dd>
+</dl>
+</div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import umami</p>
+<p>umami.set_url_base(‘https://umami.example.com’) umami.set_website_id(‘978435e2-7ba1-4337-9860-ec31ece2db60’) umami.set_hostname(‘example.com’) umami.new_revenue_event( revenue=19.99, currency=‘USD’, event_name=‘checkout-cart’, url=‘/checkout’, )</p>
 
 
 </section>

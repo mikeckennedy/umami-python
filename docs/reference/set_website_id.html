@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Your Umami instance might have many websites registered for various domains you use.">
+  <meta name="description" content="Set the default website ID used for subsequent calls.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="set_website_id() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Your Umami instance might have many websites registered for various domains you use.">
+  <meta property="og:description" content="Set the default website ID used for subsequent calls.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/set_website_id.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="set_website_id() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Your Umami instance might have many websites registered for various domains you use.">
+  <meta name="twitter:description" content="Set the default website ID used for subsequent calls.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -480,8 +480,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -506,20 +512,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Your Umami instance might have many websites registered for various domains you use.</p>
+<p>Set the default website ID used for subsequent calls.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L79-L87" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L118-L132" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">set_website_id</span>(<span class="va">website_id</span>)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>Call this function to set which website you’re working with. Args: website_id: The ID from Umami for your registered site (e.g.&nbsp;978435e2-7ba1-4337-9860-ec31ece2db60)</p>
+<p>An Umami instance can have many registered websites. Call this once to choose which website later calls (new_event(), new_page_view(), website_stats(), active_users()) target by default. Individual calls can override it via their website_id parameter.</p>
+</div>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters">Parameters</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">website_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+The website ID from Umami for your registered site (e.g.&nbsp;‘978435e2-7ba1-4337-9860-ec31ece2db60’).
+</dd>
+</dl>
 </div>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

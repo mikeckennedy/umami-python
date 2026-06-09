@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Verifies that the server is reachable via the internet and is healthy.">
+  <meta name="description" content="Check whether the configured Umami server is reachable and healthy.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="heartbeat() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Verifies that the server is reachable via the internet and is healthy.">
+  <meta property="og:description" content="Check whether the configured Umami server is reachable and healthy.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/heartbeat.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="heartbeat() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Verifies that the server is reachable via the internet and is healthy.">
+  <meta name="twitter:description" content="Check whether the configured Umami server is reachable and healthy.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -486,6 +486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#returns" id="toc-returns" class="nav-link active" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -512,14 +513,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Verifies that the server is reachable via the internet and is healthy.</p>
+<p>Check whether the configured Umami server is reachable and healthy.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L848-L876" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L1286-L1333" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">heartbeat</span>()</span></code></pre></div>
+</div>
+<div class="doc-text">
+<p>In self-hosted mode this issues a GET to {url_base}/api/heartbeat. In Cloud mode (after set_cloud_api_key()), Umami Cloud has no /api/heartbeat endpoint, so this performs an authenticated GET on the /me endpoint as a liveness check instead.</p>
+<p>Requires set_url_base() (self-hosted) or set_cloud_api_key() (Cloud) to have been called first; login() is not required. This function never raises: any failure (missing configuration, connection error, or a non-2xx response) is caught and reported as False.</p>
 </div>
 <section id="returns" class="level2 doc-returns">
 <h2 class="doc-returns">Returns</h2>
@@ -527,10 +532,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code> <span class="doc-parameter-annotation">bool</span></code></dt>
 <dd>
-True if the server is healthy and accessible.
+<p>True if the server is reachable and responded successfully; False on</p>
+<p>any error, including when no url_base or Cloud API key has been</p>
+configured.
 </dd>
 </dl>
 </div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import umami</p>
+<p>umami.set_url_base(‘https://umami.example.com’) if not umami.heartbeat(): print(‘Umami is unavailable’)</p>
 
 
 </section>

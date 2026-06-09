@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README now points to the new documentation site at https://mkennedy.codes/docs/umami-python/
   (added status badges, a documentation pointer near the top, and a "Documentation" section linking
   the full API reference). Docs-only change — no code or packaging changes.
+- Docstrings across the public API were expanded and corrected for the generated documentation
+  site (Great Docs renders them verbatim, and they feed `llms.txt`). Added `Raises:` sections to
+  every raising function; fixed `website_stats()` / `website_stats_async()` to document their real
+  return type (`models.WebsiteStats`, not the nonexistent `WebsiteStatsResponse`); removed
+  unprofessional/inaccurate prose from `verify_token` (the "minutes, hours, or years" hedge) and
+  `new_event` (the "not sure how this is different" aside); corrected `new_page_view` wording
+  (visitor; the `ua` user-agent string); clarified that `disable()` still validates before skipping
+  the HTTP request and that both affect only the send functions; documented all response models and
+  exception classes; added a package module docstring; and added runnable usage examples.
+  Docstring-only — no code or behavior changes.
 
 ### Deprecated
 

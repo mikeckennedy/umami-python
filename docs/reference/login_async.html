@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Logs into Umami and retrieves a temporary auth token. If the token is expired,">
+  <meta name="description" content="Log into a self-hosted Umami instance and retrieve a temporary auth token.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="login_async() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Logs into Umami and retrieves a temporary auth token. If the token is expired,">
+  <meta property="og:description" content="Log into a self-hosted Umami instance and retrieve a temporary auth token.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/login_async.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="login_async() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Logs into Umami and retrieves a temporary auth token. If the token is expired,">
+  <meta name="twitter:description" content="Log into a self-hosted Umami instance and retrieve a temporary auth token.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -485,7 +485,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h3 id="toc-title">On this page</h3>
    
   <ul class="collapse">
-  <li><a href="#returns" id="toc-returns" class="nav-link active" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -512,11 +515,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Logs into Umami and retrieves a temporary auth token. If the token is expired,</p>
+<p>Log into a self-hosted Umami instance and retrieve a temporary auth token.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L183-L215" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L252-L309" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">login_async</span>(
@@ -525,18 +528,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 )</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>you’ll need to log in again. This can be checked with verify_token(). Args: username: Your Umami username password: Your Umami password</p>
+<p>On success, the returned token is stored internally and used to authenticate subsequent data calls (websites_async(), website_stats_async(), active_users_async(), verify_token_async()). Tokens expire, so you may need to log in again; check validity with verify_token_async().</p>
+<p>Requires set_url_base() to have been called first. This is the self-hosted/token authentication path and is not used in Cloud mode; in Cloud mode call set_cloud_api_key() instead.</p>
 </div>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters">Parameters</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">username</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+<p>Your Umami username.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">password</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+Your Umami password.
+</dd>
+</dl>
+</div>
+</section>
 <section id="returns" class="level2 doc-returns">
 <h2 class="doc-returns">Returns</h2>
 <div class="doc-definition-items">
 <dl>
 <dt><code> <span class="doc-parameter-annotation">models.LoginResponse</span></code></dt>
 <dd>
-LoginResponse object which your token and user details (no need to save this).
+<p>A models.LoginResponse containing the auth token and the logged-in</p>
+<p>user’s details. You do not need to store this yourself; the token is</p>
+retained internally.
 </dd>
 </dl>
 </div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">OperationNotAllowedError</span></code></dt>
+<dd>
+<p>If Cloud mode is active (set_cloud_api_key() was called), or if set_url_base() has not been called.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
+<dd>
+<p>If username or password is empty.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
+<dd>
+If the server returns a non-2xx response, e.g. on invalid credentials.
+</dd>
+</dl>
+</div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import umami</p>
+<p>umami.set_url_base(‘https://umami.example.com’) login = await umami.login_async(‘admin’, ‘super-secret’)</p>
 
 
 </section>

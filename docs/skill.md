@@ -22,11 +22,11 @@ pip install umami
 
 One-time setup. `set_url_base()` is required before any operation; Cloud users call `set_cloud_api_key()` instead.
 
-- `set_url_base`: Each Umami instance lives somewhere. This is where yours lives
-- `set_website_id`: Your Umami instance might have many websites registered for various domains you use
-- `set_hostname`: The default hostname for sending events (can be overriden in the new_event() function)
+- `set_url_base`: Set the base URL of your self-hosted Umami instance
+- `set_website_id`: Set the default website ID used for subsequent calls
+- `set_hostname`: Set the default hostname used when sending events and page views
 - `set_cloud_api_key`: Authenticate against Umami Cloud with an API key instead of login()
-- `clear_cloud_api_key`: Exit Cloud mode and return to token/self-hosted behavior
+- `clear_cloud_api_key`: Exit Cloud mode and return to self-hosted/token behavior
 - `enable`: Enable event and page view tracking
 - `disable`: Disable event and page view tracking
 
@@ -34,22 +34,22 @@ One-time setup. `set_url_base()` is required before any operation; Cloud users c
 
 Required for the query endpoints and `verify_token`. Not needed to send events.
 
-- `login`: Logs into Umami and retrieves a temporary auth token. If the token is expired,
-- `login_async`: Logs into Umami and retrieves a temporary auth token. If the token is expired,
+- `login`: Log into a self-hosted Umami instance and retrieve a temporary auth token
+- `login_async`: Log into a self-hosted Umami instance and retrieve a temporary auth token
 - `is_logged_in`: Whether a credential is currently set locally
-- `verify_token`: Verifies that the token set when you called login() is still valid. Umami says this token will expire,
-- `verify_token_async`: Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+- `verify_token`: Verify that the currently stored credential is still valid
+- `verify_token_async`: Verify that the currently stored credential is still valid
 
 ### Sending events
 
 Send custom events, revenue, and page views. No login required — only a URL base and a website id/hostname.
 
-- `new_event`: Creates a new custom event in Umami for the given website_id and hostname (both use the default
-- `new_event_async`: Creates a new custom event in Umami for the given website_id and hostname (both use the default
-- `new_revenue_event`: Creates a new revenue event in Umami. This is a convenience wrapper around new_event()
-- `new_revenue_event_async`: Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()
-- `new_page_view`: Creates a new page view event in Umami for the given website_id and hostname (both use the default
-- `new_page_view_async`: Creates a new page view event in Umami for the given website_id and hostname (both use the default
+- `new_event`: Create a new custom event in Umami for the given website_id and hostname
+- `new_event_async`: Create a new custom event in Umami for the given website_id and hostname
+- `new_revenue_event`: Create a new revenue event in Umami. This is a convenience wrapper around
+- `new_revenue_event_async`: Create a new revenue event in Umami. This is a convenience wrapper around
+- `new_page_view`: Create a new page view event in Umami for the given website_id and hostname
+- `new_page_view_async`: Create a new page view event in Umami for the given website_id and hostname
 
 ### Querying stats
 
@@ -57,17 +57,17 @@ Read analytics back out. Requires login (or a Cloud API key).
 
 - `websites`: All the websites that are registered in your Umami instance
 - `websites_async`: All the websites that are registered in your Umami instance
-- `website_stats`: Retrieves the statistics for a specific website
-- `website_stats_async`: Retrieves the statistics for a specific website
-- `active_users`: Retrieves the active users for a specific website
-- `active_users_async`: Retrieves the active users for a specific website
+- `website_stats`: Retrieves the statistics for a specific website over a date range
+- `website_stats_async`: Retrieves the statistics for a specific website over a date range
+- `active_users`: Retrieves the number of currently-active visitors for a specific website
+- `active_users_async`: Retrieves the number of currently-active visitors for a specific website
 
 ### Health
 
 Check Umami server connectivity.
 
-- `heartbeat`: Verifies that the server is reachable via the internet and is healthy
-- `heartbeat_async`: Verifies that the server is reachable via the internet and is healthy
+- `heartbeat`: Check whether the configured Umami server is reachable and healthy
+- `heartbeat_async`: Check whether the configured Umami server is reachable and healthy
 
 ### Response models
 

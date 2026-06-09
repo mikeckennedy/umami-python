@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Umami Analytics Client for Python">
+  <meta name="description" content="A minimal reference to the user who owns or created a website.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="models.WebsiteUser – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Umami Analytics Client for Python">
+  <meta property="og:description" content="A minimal reference to the user who owns or created a website.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/models.WebsiteUser.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="models.WebsiteUser – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Umami Analytics Client for Python">
+  <meta name="twitter:description" content="A minimal reference to the user who owns or created a website.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -480,8 +480,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#attributes" id="toc-attributes" class="nav-link active" data-scroll-target="#attributes">Attributes</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -506,17 +512,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-
+<p>A minimal reference to the user who owns or created a website.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/models/__init__.py#L19-L21" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/models/__init__.py#L48-L62" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.CLASS">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-class">models</span><span class="op">.</span><span class="sig-name">WebsiteUser</span>()</span></code></pre></div>
 </div>
+<div class="doc-text">
+<p>Appears as the user attribute (and, for team-website listings, the createUser attribute) of a Website returned by websites() / websites_async().</p>
+</div>
+<section id="attributes" class="level2 doc-attributes">
+<h2 class="doc-attributes">Attributes</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">username</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+<p>The referenced user’s login username.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+The referenced user’s unique identifier.
+</dd>
+</dl>
+</div>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

@@ -15,8 +15,10 @@ is_logged_in()
 
 
 `bool`  
-True if a self-hosted login token or an Umami Cloud API key has been set, False otherwise.
+True if a self-hosted login token (set by login()) or an Umami Cloud
 
-This only reflects that a credential exists in this process, not that it is still valid on
+API key (set by set_cloud_api_key()) is present, False otherwise. This
 
-the server -- use verify_token() to confirm validity.
+only reflects that a credential exists in this process, not that it is
+
+still valid on the server -- use verify_token() to confirm validity.

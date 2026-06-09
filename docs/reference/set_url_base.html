@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Each Umami instance lives somewhere. This is where yours lives.">
+  <meta name="description" content="Set the base URL of your self-hosted Umami instance.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="set_url_base() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Each Umami instance lives somewhere. This is where yours lives.">
+  <meta property="og:description" content="Set the base URL of your self-hosted Umami instance.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/set_url_base.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="set_url_base() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Each Umami instance lives somewhere. This is where yours lives.">
+  <meta name="twitter:description" content="Set the base URL of your self-hosted Umami instance.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -480,8 +480,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -506,20 +513,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Each Umami instance lives somewhere. This is where yours lives.</p>
+<p>Set the base URL of your self-hosted Umami instance.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L57-L76" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L84-L115" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">set_url_base</span>(<span class="va">url</span>)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>For example, https://somedomain.tech/umami. Args: url: The base URL of your instance without /api.</p>
+<p>Required before any self-hosted operation (login, sending events, or querying stats). Provide the root URL of your instance without the trailing ‘/api’, for example ‘https://analytics.example.com’. A trailing slash is stripped automatically. Use this together with login() for self-hosted/token mode; do not combine it with set_cloud_api_key(), which selects Umami Cloud mode instead.</p>
+</div>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters">Parameters</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">url</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+The base URL of your instance, without ‘/api’. Must start with ‘http://’ or ‘https://’.
+</dd>
+</dl>
+</div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
+<dd>
+If url is empty or whitespace-only, or if it does not start with ‘http://’ or ‘https://’.
+</dd>
+</dl>
 </div>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

@@ -481,15 +481,15 @@ ul.task-list li input[type="checkbox"] {
 <dl>
 <dt><a href="../reference/set_url_base.html#umami.set_url_base" class="doc-function doc-label doc-label-function">set_url_base()</a></dt>
 <dd>
-<p>Each Umami instance lives somewhere. This is where yours lives.</p>
+<p>Set the base URL of your self-hosted Umami instance.</p>
 </dd>
 <dt><a href="../reference/set_website_id.html#umami.set_website_id" class="doc-function doc-label doc-label-function">set_website_id()</a></dt>
 <dd>
-<p>Your Umami instance might have many websites registered for various domains you use.</p>
+<p>Set the default website ID used for subsequent calls.</p>
 </dd>
 <dt><a href="../reference/set_hostname.html#umami.set_hostname" class="doc-function doc-label doc-label-function">set_hostname()</a></dt>
 <dd>
-<p>The default hostname for sending events (can be overriden in the new_event() function).</p>
+<p>Set the default hostname used when sending events and page views.</p>
 </dd>
 <dt><a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="doc-function doc-label doc-label-function">set_cloud_api_key()</a></dt>
 <dd>
@@ -497,7 +497,7 @@ ul.task-list li input[type="checkbox"] {
 </dd>
 <dt><a href="../reference/clear_cloud_api_key.html#umami.clear_cloud_api_key" class="doc-function doc-label doc-label-function">clear_cloud_api_key()</a></dt>
 <dd>
-<p>Exit Cloud mode and return to token/self-hosted behavior.</p>
+<p>Exit Cloud mode and return to self-hosted/token behavior.</p>
 </dd>
 <dt><a href="../reference/enable.html#umami.enable" class="doc-function doc-label doc-label-function">enable()</a></dt>
 <dd>
@@ -517,11 +517,11 @@ ul.task-list li input[type="checkbox"] {
 <dl>
 <dt><a href="../reference/login.html#umami.login" class="doc-function doc-label doc-label-function">login()</a></dt>
 <dd>
-<p>Logs into Umami and retrieves a temporary auth token. If the token is expired,</p>
+<p>Log into a self-hosted Umami instance and retrieve a temporary auth token.</p>
 </dd>
 <dt><a href="../reference/login_async.html#umami.login_async" class="doc-function doc-label doc-label-async">login_async()</a></dt>
 <dd>
-<p>Logs into Umami and retrieves a temporary auth token. If the token is expired,</p>
+<p>Log into a self-hosted Umami instance and retrieve a temporary auth token.</p>
 </dd>
 <dt><a href="../reference/is_logged_in.html#umami.is_logged_in" class="doc-function doc-label doc-label-function">is_logged_in()</a></dt>
 <dd>
@@ -529,11 +529,11 @@ ul.task-list li input[type="checkbox"] {
 </dd>
 <dt><a href="../reference/verify_token.html#umami.verify_token" class="doc-function doc-label doc-label-function">verify_token()</a></dt>
 <dd>
-<p>Verifies that the token set when you called login() is still valid. Umami says this token will expire,</p>
+<p>Verify that the currently stored credential is still valid.</p>
 </dd>
 <dt><a href="../reference/verify_token_async.html#umami.verify_token_async" class="doc-function doc-label doc-label-async">verify_token_async()</a></dt>
 <dd>
-<p>Verifies that the token set when you called login() is still valid. Umami says this token will expire,</p>
+<p>Verify that the currently stored credential is still valid.</p>
 </dd>
 </dl>
 </section>
@@ -545,27 +545,27 @@ ul.task-list li input[type="checkbox"] {
 <dl>
 <dt><a href="../reference/new_event.html#umami.new_event" class="doc-function doc-label doc-label-function">new_event()</a></dt>
 <dd>
-<p>Creates a new custom event in Umami for the given website_id and hostname (both use the default</p>
+<p>Create a new custom event in Umami for the given website_id and hostname</p>
 </dd>
 <dt><a href="../reference/new_event_async.html#umami.new_event_async" class="doc-function doc-label doc-label-async">new_event_async()</a></dt>
 <dd>
-<p>Creates a new custom event in Umami for the given website_id and hostname (both use the default</p>
+<p>Create a new custom event in Umami for the given website_id and hostname</p>
 </dd>
 <dt><a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="doc-function doc-label doc-label-function">new_revenue_event()</a></dt>
 <dd>
-<p>Creates a new revenue event in Umami. This is a convenience wrapper around new_event()</p>
+<p>Create a new revenue event in Umami. This is a convenience wrapper around</p>
 </dd>
 <dt><a href="../reference/new_revenue_event_async.html#umami.new_revenue_event_async" class="doc-function doc-label doc-label-async">new_revenue_event_async()</a></dt>
 <dd>
-<p>Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()</p>
+<p>Create a new revenue event in Umami. This is a convenience wrapper around</p>
 </dd>
 <dt><a href="../reference/new_page_view.html#umami.new_page_view" class="doc-function doc-label doc-label-function">new_page_view()</a></dt>
 <dd>
-<p>Creates a new page view event in Umami for the given website_id and hostname (both use the default</p>
+<p>Create a new page view event in Umami for the given website_id and hostname</p>
 </dd>
 <dt><a href="../reference/new_page_view_async.html#umami.new_page_view_async" class="doc-function doc-label doc-label-async">new_page_view_async()</a></dt>
 <dd>
-<p>Creates a new page view event in Umami for the given website_id and hostname (both use the default</p>
+<p>Create a new page view event in Umami for the given website_id and hostname</p>
 </dd>
 </dl>
 </section>
@@ -585,19 +585,19 @@ ul.task-list li input[type="checkbox"] {
 </dd>
 <dt><a href="../reference/website_stats.html#umami.website_stats" class="doc-function doc-label doc-label-function">website_stats()</a></dt>
 <dd>
-<p>Retrieves the statistics for a specific website.</p>
+<p>Retrieves the statistics for a specific website over a date range.</p>
 </dd>
 <dt><a href="../reference/website_stats_async.html#umami.website_stats_async" class="doc-function doc-label doc-label-async">website_stats_async()</a></dt>
 <dd>
-<p>Retrieves the statistics for a specific website.</p>
+<p>Retrieves the statistics for a specific website over a date range.</p>
 </dd>
 <dt><a href="../reference/active_users.html#umami.active_users" class="doc-function doc-label doc-label-function">active_users()</a></dt>
 <dd>
-<p>Retrieves the active users for a specific website.</p>
+<p>Retrieves the number of currently-active visitors for a specific website.</p>
 </dd>
 <dt><a href="../reference/active_users_async.html#umami.active_users_async" class="doc-function doc-label doc-label-async">active_users_async()</a></dt>
 <dd>
-<p>Retrieves the active users for a specific website.</p>
+<p>Retrieves the number of currently-active visitors for a specific website.</p>
 </dd>
 </dl>
 </section>
@@ -609,11 +609,11 @@ ul.task-list li input[type="checkbox"] {
 <dl>
 <dt><a href="../reference/heartbeat.html#umami.heartbeat" class="doc-function doc-label doc-label-function">heartbeat()</a></dt>
 <dd>
-<p>Verifies that the server is reachable via the internet and is healthy.</p>
+<p>Check whether the configured Umami server is reachable and healthy.</p>
 </dd>
 <dt><a href="../reference/heartbeat_async.html#umami.heartbeat_async" class="doc-function doc-label doc-label-async">heartbeat_async()</a></dt>
 <dd>
-<p>Verifies that the server is reachable via the internet and is healthy.</p>
+<p>Check whether the configured Umami server is reachable and healthy.</p>
 </dd>
 </dl>
 </section>
@@ -625,31 +625,31 @@ ul.task-list li input[type="checkbox"] {
 <dl>
 <dt><a href="../reference/models.WebsitesResponse.html#umami.models.WebsitesResponse" class="doc-class doc-label doc-label-class">models.WebsitesResponse</a></dt>
 <dd>
-
+<p>The paged envelope returned by the Umami /api/websites endpoint.</p>
 </dd>
 <dt><a href="../reference/models.Website.html#umami.models.Website" class="doc-class doc-label doc-label-class">models.Website</a></dt>
 <dd>
-
+<p>A website registered in your Umami instance.</p>
 </dd>
 <dt><a href="../reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="doc-class doc-label doc-label-class">models.WebsiteStats</a></dt>
 <dd>
-
+<p>Aggregate traffic statistics for a website over a time range.</p>
 </dd>
 <dt><a href="../reference/models.WebsiteStatsCmp.html#umami.models.WebsiteStatsCmp" class="doc-class doc-label doc-label-class">models.WebsiteStatsCmp</a></dt>
 <dd>
-
+<p>Prior-period comparison totals for a website’s statistics.</p>
 </dd>
 <dt><a href="../reference/models.LoginResponse.html#umami.models.LoginResponse" class="doc-class doc-label doc-label-class">models.LoginResponse</a></dt>
 <dd>
-
+<p>The result of authenticating against a self-hosted Umami instance.</p>
 </dd>
 <dt><a href="../reference/models.User.html#umami.models.User" class="doc-class doc-label doc-label-class">models.User</a></dt>
 <dd>
-
+<p>An authenticated Umami user account.</p>
 </dd>
 <dt><a href="../reference/models.WebsiteUser.html#umami.models.WebsiteUser" class="doc-class doc-label doc-label-class">models.WebsiteUser</a></dt>
 <dd>
-
+<p>A minimal reference to the user who owns or created a website.</p>
 </dd>
 </dl>
 </section>
@@ -661,11 +661,11 @@ ul.task-list li input[type="checkbox"] {
 <dl>
 <dt><a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="doc-class doc-label doc-label-exception">errors.ValidationError</a></dt>
 <dd>
-
+<p>Base exception raised when an input or argument fails validation.</p>
 </dd>
 <dt><a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="doc-class doc-label doc-label-class">errors.OperationNotAllowedError</a></dt>
 <dd>
-
+<p>Raised when the SDK is missing required state for an operation.</p>
 </dd>
 </dl>
 

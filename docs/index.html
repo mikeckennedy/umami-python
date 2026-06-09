@@ -229,6 +229,8 @@ section.level2:first-of-type > h2:first-child,
 </section>
 </div></div><section id="umami-analytics-client-for-python" class="level1">
 <h1>Umami Analytics Client for Python</h1>
+<p><a href="https://pypi.org/project/umami-analytics/"><img src="https://img.shields.io/pypi/v/umami-analytics.svg" class="img-fluid" alt="PyPI - Version"></a> <a href="https://pypi.org/project/umami-analytics/"><img src="https://img.shields.io/pypi/pyversions/umami-analytics.svg" class="img-fluid" alt="PyPI - Python Version"></a> <a href="https://mkennedy.codes/docs/umami-python/"><img src="https://img.shields.io/badge/docs-mkennedy.codes-blue.svg" class="img-fluid" alt="Documentation"></a> <a href="https://github.com/mikeckennedy/umami-python/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" class="img-fluid" alt="License: MIT"></a></p>
+<p>📚 <strong>Documentation:</strong> <a href="https://mkennedy.codes/docs/umami-python/">mkennedy.codes/docs/umami-python</a></p>
 <p>Client for privacy-preserving, open source <a href="https://umami.is">Umami analytics platform</a> based on <code>httpx2</code> and <code>pydantic</code>.</p>
 <p><code>umami-analytics</code> is intended for adding custom data to your Umami instance (self-hosted or SaaS). Many umami events can be supplied directly from HTML via their <code>data-*</code> attributes. However, some cannot. For example, if you have an event that is triggered in your app but doesn’t have a clear HTML action you can add custom events. These will appear at the bottom of your Umami analytics page for a website.</p>
 <p>One example is a <strong>purchase-course</strong> event that happens deep inside the Python code rather than in HTML at <a href="https://training.talkpython.fm">Talk Python Training</a>. This is what our events section looks like for a typical weekend day (US Pacific Time):</p>
@@ -285,6 +287,11 @@ section.level2:first-of-type > h2:first-child,
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <p>Just <code>uv pip install umami-analytics</code></p>
+</section>
+<section id="documentation" class="level2">
+<h2 class="anchored" data-anchor-id="documentation">📚 Documentation</h2>
+<p>Full documentation lives at <strong><a href="https://mkennedy.codes/docs/umami-python/">mkennedy.codes/docs/umami-python</a></strong>. It covers installation, configuration, the complete <a href="https://mkennedy.codes/docs/umami-python/reference/">API reference</a> — every public function with its sync and async twin — plus Umami Cloud setup and runnable examples.</p>
+<p>The quick tour below gets you started; the docs site is the complete, searchable reference. There’s also an <a href="https://mkennedy.codes/docs/umami-python/llms.txt"><code>llms.txt</code></a> if you’d like to point an AI assistant at the library.</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>

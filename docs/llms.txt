@@ -9,48 +9,48 @@
 #### Configuration
 > One-time setup. `set_url_base()` is required before any operation; Cloud users call `set_cloud_api_key()` instead.
 
-- [set_url_base](https://mkennedy.codes/docs/umami-python/reference/set_url_base.html): Each Umami instance lives somewhere. This is where yours lives
-- [set_website_id](https://mkennedy.codes/docs/umami-python/reference/set_website_id.html): Your Umami instance might have many websites registered for various domains you use
-- [set_hostname](https://mkennedy.codes/docs/umami-python/reference/set_hostname.html): The default hostname for sending events (can be overriden in the new_event() function)
+- [set_url_base](https://mkennedy.codes/docs/umami-python/reference/set_url_base.html): Set the base URL of your self-hosted Umami instance
+- [set_website_id](https://mkennedy.codes/docs/umami-python/reference/set_website_id.html): Set the default website ID used for subsequent calls
+- [set_hostname](https://mkennedy.codes/docs/umami-python/reference/set_hostname.html): Set the default hostname used when sending events and page views
 - [set_cloud_api_key](https://mkennedy.codes/docs/umami-python/reference/set_cloud_api_key.html): Authenticate against Umami Cloud with an API key instead of login()
-- [clear_cloud_api_key](https://mkennedy.codes/docs/umami-python/reference/clear_cloud_api_key.html): Exit Cloud mode and return to token/self-hosted behavior
+- [clear_cloud_api_key](https://mkennedy.codes/docs/umami-python/reference/clear_cloud_api_key.html): Exit Cloud mode and return to self-hosted/token behavior
 - [enable](https://mkennedy.codes/docs/umami-python/reference/enable.html): Enable event and page view tracking
 - [disable](https://mkennedy.codes/docs/umami-python/reference/disable.html): Disable event and page view tracking
 
 #### Authentication
 > Required for the query endpoints and `verify_token`. Not needed to send events.
 
-- [login](https://mkennedy.codes/docs/umami-python/reference/login.html): Logs into Umami and retrieves a temporary auth token. If the token is expired,
-- [login_async](https://mkennedy.codes/docs/umami-python/reference/login_async.html): Logs into Umami and retrieves a temporary auth token. If the token is expired,
+- [login](https://mkennedy.codes/docs/umami-python/reference/login.html): Log into a self-hosted Umami instance and retrieve a temporary auth token
+- [login_async](https://mkennedy.codes/docs/umami-python/reference/login_async.html): Log into a self-hosted Umami instance and retrieve a temporary auth token
 - [is_logged_in](https://mkennedy.codes/docs/umami-python/reference/is_logged_in.html): Whether a credential is currently set locally
-- [verify_token](https://mkennedy.codes/docs/umami-python/reference/verify_token.html): Verifies that the token set when you called login() is still valid. Umami says this token will expire,
-- [verify_token_async](https://mkennedy.codes/docs/umami-python/reference/verify_token_async.html): Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+- [verify_token](https://mkennedy.codes/docs/umami-python/reference/verify_token.html): Verify that the currently stored credential is still valid
+- [verify_token_async](https://mkennedy.codes/docs/umami-python/reference/verify_token_async.html): Verify that the currently stored credential is still valid
 
 #### Sending events
 > Send custom events, revenue, and page views. No login required — only a URL base and a website id/hostname.
 
-- [new_event](https://mkennedy.codes/docs/umami-python/reference/new_event.html): Creates a new custom event in Umami for the given website_id and hostname (both use the default
-- [new_event_async](https://mkennedy.codes/docs/umami-python/reference/new_event_async.html): Creates a new custom event in Umami for the given website_id and hostname (both use the default
-- [new_revenue_event](https://mkennedy.codes/docs/umami-python/reference/new_revenue_event.html): Creates a new revenue event in Umami. This is a convenience wrapper around new_event()
-- [new_revenue_event_async](https://mkennedy.codes/docs/umami-python/reference/new_revenue_event_async.html): Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()
-- [new_page_view](https://mkennedy.codes/docs/umami-python/reference/new_page_view.html): Creates a new page view event in Umami for the given website_id and hostname (both use the default
-- [new_page_view_async](https://mkennedy.codes/docs/umami-python/reference/new_page_view_async.html): Creates a new page view event in Umami for the given website_id and hostname (both use the default
+- [new_event](https://mkennedy.codes/docs/umami-python/reference/new_event.html): Create a new custom event in Umami for the given website_id and hostname
+- [new_event_async](https://mkennedy.codes/docs/umami-python/reference/new_event_async.html): Create a new custom event in Umami for the given website_id and hostname
+- [new_revenue_event](https://mkennedy.codes/docs/umami-python/reference/new_revenue_event.html): Create a new revenue event in Umami. This is a convenience wrapper around
+- [new_revenue_event_async](https://mkennedy.codes/docs/umami-python/reference/new_revenue_event_async.html): Create a new revenue event in Umami. This is a convenience wrapper around
+- [new_page_view](https://mkennedy.codes/docs/umami-python/reference/new_page_view.html): Create a new page view event in Umami for the given website_id and hostname
+- [new_page_view_async](https://mkennedy.codes/docs/umami-python/reference/new_page_view_async.html): Create a new page view event in Umami for the given website_id and hostname
 
 #### Querying stats
 > Read analytics back out. Requires login (or a Cloud API key).
 
 - [websites](https://mkennedy.codes/docs/umami-python/reference/websites.html): All the websites that are registered in your Umami instance
 - [websites_async](https://mkennedy.codes/docs/umami-python/reference/websites_async.html): All the websites that are registered in your Umami instance
-- [website_stats](https://mkennedy.codes/docs/umami-python/reference/website_stats.html): Retrieves the statistics for a specific website
-- [website_stats_async](https://mkennedy.codes/docs/umami-python/reference/website_stats_async.html): Retrieves the statistics for a specific website
-- [active_users](https://mkennedy.codes/docs/umami-python/reference/active_users.html): Retrieves the active users for a specific website
-- [active_users_async](https://mkennedy.codes/docs/umami-python/reference/active_users_async.html): Retrieves the active users for a specific website
+- [website_stats](https://mkennedy.codes/docs/umami-python/reference/website_stats.html): Retrieves the statistics for a specific website over a date range
+- [website_stats_async](https://mkennedy.codes/docs/umami-python/reference/website_stats_async.html): Retrieves the statistics for a specific website over a date range
+- [active_users](https://mkennedy.codes/docs/umami-python/reference/active_users.html): Retrieves the number of currently-active visitors for a specific website
+- [active_users_async](https://mkennedy.codes/docs/umami-python/reference/active_users_async.html): Retrieves the number of currently-active visitors for a specific website
 
 #### Health
 > Check Umami server connectivity.
 
-- [heartbeat](https://mkennedy.codes/docs/umami-python/reference/heartbeat.html): Verifies that the server is reachable via the internet and is healthy
-- [heartbeat_async](https://mkennedy.codes/docs/umami-python/reference/heartbeat_async.html): Verifies that the server is reachable via the internet and is healthy
+- [heartbeat](https://mkennedy.codes/docs/umami-python/reference/heartbeat.html): Check whether the configured Umami server is reachable and healthy
+- [heartbeat_async](https://mkennedy.codes/docs/umami-python/reference/heartbeat_async.html): Check whether the configured Umami server is reachable and healthy
 
 #### Response models
 > Pydantic models returned by the query functions.

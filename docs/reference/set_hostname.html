@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="The default hostname for sending events (can be overriden in the new_event() function).">
+  <meta name="description" content="Set the default hostname used when sending events and page views.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="set_hostname() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="The default hostname for sending events (can be overriden in the new_event() function).">
+  <meta property="og:description" content="Set the default hostname used when sending events and page views.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/set_hostname.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="set_hostname() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="The default hostname for sending events (can be overriden in the new_event() function).">
+  <meta name="twitter:description" content="Set the default hostname used when sending events and page views.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -480,8 +480,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -506,28 +512,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>The default hostname for sending events (can be overriden in the new_event() function).</p>
+<p>Set the default hostname used when sending events and page views.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L90-L97" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L135-L148" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">set_hostname</span>(<span class="va">hostname</span>)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<section id="parameters" class="level2 doc-section doc-section-parameters">
-<h2 class="doc-section doc-section-parameters">Parameters</h2>
+<p>Used as the hostname for new_event(), new_revenue_event(), and new_page_view() when one is not passed explicitly. Individual calls can override it via their hostname parameter.</p>
+</div>
+<section id="parameters" class="level2 doc-parameters">
+<h2 class="doc-parameters">Parameters</h2>
+<div class="doc-definition-items">
 <dl>
-<dt><code><span class="parameter-name"><strong>hostname</strong></span></code></dt>
+<dt><code><span class="doc-parameter-name">hostname</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
 <dd>
-<p>Hostname to use when one is not specified, e.g.&nbsp;‘talkpython.fm’</p>
+The hostname to use when one is not specified (e.g.&nbsp;‘talkpython.fm’).
 </dd>
 </dl>
-</section>
 </div>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

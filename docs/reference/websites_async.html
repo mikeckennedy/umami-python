@@ -480,8 +480,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#returns" id="toc-returns" class="nav-link active" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -510,19 +518,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L253-L270" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L371-L407" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">websites_async</span>()</span></code></pre></div>
 </div>
 <div class="doc-text">
-<section id="returns" class="level2 doc-section doc-section-returns">
-<h2 class="doc-section doc-section-returns">Returns</h2>
-<p>A list of Website Pydantic models.</p>
-</section>
+<p>Requires authentication: call login() (self-hosted) or set_cloud_api_key() (Umami Cloud) first. In self-hosted mode you must also have called set_url_base().</p>
 </div>
+<section id="returns" class="level2 doc-returns">
+<h2 class="doc-returns">Returns</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">list[models.Website]</span></code></dt>
+<dd>
+A list of models.Website models, unwrapped from the paged API response.
+</dd>
+</dl>
+</div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">OperationNotAllowedError</span></code></dt>
+<dd>
+<p>If set_url_base() has not been called (and no Cloud API key is set), or if no credential is present (neither a login token nor a Cloud API key).</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
+<dd>
+If the Umami API returns a non-2xx response.
+</dd>
+</dl>
+</div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import umami</p>
+<p>umami.set_url_base(‘https://umami.example.com’) await umami.login_async(username, password) for site in await umami.websites_async(): print(site.name, site.domain)</p>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Retrieves the statistics for a specific website.">
+  <meta name="description" content="Retrieves the statistics for a specific website over a date range.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="website_stats() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Retrieves the statistics for a specific website.">
+  <meta property="og:description" content="Retrieves the statistics for a specific website over a date range.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/website_stats.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="website_stats() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Retrieves the statistics for a specific website.">
+  <meta name="twitter:description" content="Retrieves the statistics for a specific website over a date range.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -487,6 +487,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -513,11 +515,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Retrieves the statistics for a specific website.</p>
+<p>Retrieves the statistics for a specific website over a date range.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L1014-L1084" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L1513-L1607" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">website_stats</span>(</span>
@@ -538,69 +540,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="va">city</span><span class="op">=</span><span class="cn-none">None</span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </div>
+<div class="doc-text">
+<p>Requires authentication: call login() (self-hosted) or set_cloud_api_key() (Umami Cloud) first. start_at and end_at are converted to epoch milliseconds for the API.</p>
+</div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
 <dt><code><span class="doc-parameter-name">start_at</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">datetime</span></code></dt>
 <dd>
-<p>Starting date as a datetime object.</p>
+<p>Start of the date range as a datetime object.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">end_at</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">datetime</span></code></dt>
 <dd>
-<p>End date as a datetime object.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">url</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>OPTIONAL: Name of URL.</p>
+<p>End of the date range as a datetime object.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">website_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).</p>
+<p>OPTIONAL: The value of your website_id in Umami (overrides the set_website_id() value).</p>
+</dd>
+<dt><code><span class="doc-parameter-name">url</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dd>
+<p>OPTIONAL: Filter by URL path.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">referrer</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of referrer.</p>
+<p>OPTIONAL: Filter by referrer.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">title</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>(OPTIONAL: Name of page title.</p>
+<p>OPTIONAL: Filter by page title.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">query</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of query.</p>
+<p>OPTIONAL: Filter by query string.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">event</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of event.</p>
+<p>OPTIONAL: Filter by event name.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">host</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of hostname.</p>
+<p>OPTIONAL: Filter by hostname.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">os</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of operating system.</p>
+<p>OPTIONAL: Filter by operating system.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">browser</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of browser.</p>
+<p>OPTIONAL: Filter by browser.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">device</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of device (ex. Mobile)</p>
+<p>OPTIONAL: Filter by device (e.g.&nbsp;‘Mobile’).</p>
 </dd>
 <dt><code><span class="doc-parameter-name">country</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of country.</p>
+<p>OPTIONAL: Filter by country.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">region</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: Name of region/state/province.</p>
+<p>OPTIONAL: Filter by region/state/province.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">city</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-OPTIONAL: Name of city.
+OPTIONAL: Filter by city.
 </dd>
 </dl>
 </div>
@@ -611,10 +616,31 @@ OPTIONAL: Name of city.
 <dl>
 <dt><code> <span class="doc-parameter-annotation">models.WebsiteStats</span></code></dt>
 <dd>
-A WebsiteStatsResponse model containing the website statistics data.
+<p>A models.WebsiteStats with the aggregated pageviews, visitors, visits,</p>
+bounces, and totaltime for the range, plus an optional comparison.
 </dd>
 </dl>
 </div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">OperationNotAllowedError</span></code></dt>
+<dd>
+<p>If set_url_base() has not been called (and no Cloud API key is set), or if no credential is present (neither a login token nor a Cloud API key).</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
+<dd>
+If the Umami API returns a non-2xx response.
+</dd>
+</dl>
+</div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import datetime import umami</p>
+<p>umami.set_url_base(‘https://umami.example.com’) umami.login(username, password) stats = umami.website_stats( start_at=datetime.datetime.now() - datetime.timedelta(days=7), end_at=datetime.datetime.now(), ) print(stats.pageviews, stats.visitors)</p>
 
 
 </section>

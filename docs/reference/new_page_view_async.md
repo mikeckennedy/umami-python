@@ -1,7 +1,7 @@
 ## new_page_view_async()
 
 
-Creates a new page view event in Umami for the given website_id and hostname (both use the default
+Create a new page view event in Umami for the given website_id and hostname
 
 
 Usage
@@ -22,7 +22,9 @@ new_page_view_async(
 ```
 
 
-if you have set them with the other functions such as set_hostname()). This is equivalent to what happens when a visit views a page and the JS library records it.
+(both fall back to the defaults set via set_website_id() and set_hostname() when omitted). This is equivalent to what happens when a visitor views a page and the JS library records it.
+
+Requires set_url_base() (or set_cloud_api_key() for Cloud mode) and a website_id and hostname, either set globally via set_website_id()/set_hostname() or passed here. Login is not required to send page views. If tracking has been turned off with disable(), the input is validated but no HTTP request is made.
 
 
 ## Parameters
@@ -32,28 +34,57 @@ if you have set them with the other functions such as set_hostname()). This is e
 The title of the page view to record (required).
 
 `url: str`  
-The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+The URL of the page view to record (e.g. '/account/new').
 
 `hostname: Optional[str] = None`  
-OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+Optional hostname identifying the client (e.g. 'example.com'); overrides the set_hostname() value.
 
 `website_id: Optional[str] = None`  
-OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+Optional Umami website ID; overrides the set_website_id() value.
 
 `referrer: str = ``""`  
-OPTIONAL: The referrer of the client if there is any (what location lead them to this event)
+Optional referrer of the client, if any (the location that led them to this page). Defaults to ''.
 
 `language: str = ``"en-US"`  
-OPTIONAL: The language of the event / client.
+Optional language of the event/client. Defaults to 'en-US'.
 
 `screen: str = ``"1920x1080"`  
-OPTIONAL: The screen resolution of the client.
+Optional screen resolution of the client. Defaults to '1920x1080'.
 
 `ua: str = event_user_agent`    
-OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
+Optional user-agent string of the client. Defaults to a browser user-agent because Umami blocks non-browser user agents by default.
 
 `ip_address: Optional[str] = None`  
-OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+Optional true IP address of the user, useful when sending page views from server-side request handlers.
 
 `distinct_id: Optional[Union[str, int]] = None`  
-OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+Optional Umami distinct ID for the user, as a string or integer, sent to the API as the payload field 'id'. Blank or whitespace-only values are ignored (no id is sent).
+
+
+## Returns
+
+
+None.
+
+
+## Raises
+
+
+`OperationNotAllowedError`  
+If neither set_url_base() nor set_cloud_api_key() has been called.
+
+`ValidationError`  
+If distinct_id is a bool or any type other than str or int.
+
+`Exception`  
+If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().
+
+`httpx.HTTPStatusError`  
+If Umami returns a non-2xx response (only when tracking is enabled).
+
+
+## Example
+
+import umami
+
+umami.set_url_base('https://umami.example.com') umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60') umami.set_hostname('example.com') await umami.new_page_view_async(page_title='Home', url='/')

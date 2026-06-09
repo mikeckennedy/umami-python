@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Umami Analytics Client for Python">
+  <meta name="description" content="Prior-period comparison totals for a website’s statistics.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="models.WebsiteStatsCmp – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Umami Analytics Client for Python">
+  <meta property="og:description" content="Prior-period comparison totals for a website’s statistics.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/models.WebsiteStatsCmp.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="models.WebsiteStatsCmp – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Umami Analytics Client for Python">
+  <meta name="twitter:description" content="Prior-period comparison totals for a website’s statistics.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -480,8 +480,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#attributes" id="toc-attributes" class="nav-link active" data-scroll-target="#attributes">Attributes</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -506,17 +512,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-
+<p>Prior-period comparison totals for a website’s statistics.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/models/__init__.py#L40-L45" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/models/__init__.py#L109-L129" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.CLASS">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-class">models</span><span class="op">.</span><span class="sig-name">WebsiteStatsCmp</span>()</span></code></pre></div>
 </div>
+<div class="doc-text">
+<p>Appears as the optional comparison attribute of WebsiteStats (returned by website_stats() / website_stats_async()), holding the same totals for the preceding period so they can be compared against the current period.</p>
+</div>
+<section id="attributes" class="level2 doc-attributes">
+<h2 class="doc-attributes">Attributes</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">pageviews</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span></code></dt>
+<dd>
+<p>Number of page views in the comparison period.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">visitors</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span></code></dt>
+<dd>
+<p>Number of unique visitors in the comparison period.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">visits</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span></code></dt>
+<dd>
+<p>Number of sessions in the comparison period.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">bounces</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span></code></dt>
+<dd>
+<p>Number of single-page sessions in the comparison period.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">totaltime</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span></code></dt>
+<dd>
+Total engagement time in seconds for the comparison period.
+</dd>
+</dl>
+</div>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

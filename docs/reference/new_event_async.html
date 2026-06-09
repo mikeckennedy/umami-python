@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Creates a new custom event in Umami for the given website_id and hostname (both use the default">
+  <meta name="description" content="Create a new custom event in Umami for the given website_id and hostname">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="new_event_async() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Creates a new custom event in Umami for the given website_id and hostname (both use the default">
+  <meta property="og:description" content="Create a new custom event in Umami for the given website_id and hostname">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/new_event_async.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="new_event_async() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Creates a new custom event in Umami for the given website_id and hostname (both use the default">
+  <meta name="twitter:description" content="Create a new custom event in Umami for the given website_id and hostname">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -487,6 +487,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -513,11 +515,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Creates a new custom event in Umami for the given website_id and hostname (both use the default</p>
+<p>Create a new custom event in Umami for the given website_id and hostname</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L315-L390" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L482-L593" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">new_event_async</span>(</span>
@@ -535,7 +537,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>if you have set them with the other functions such as set_hostname()). These events will both appear in the traffic related to the specified url and in the events section at the bottom of your Umami website page. Login is not required for this method.</p>
+<p>(both fall back to the defaults set via set_website_id() and set_hostname() when omitted). The event appears in the traffic for the given url and in the events section of your Umami website page. Login is not required; you only need set_url_base() (self-hosted) or set_cloud_api_key() (Cloud), plus a website_id and hostname.</p>
+<p>If tracking has been turned off with disable(), the inputs are still validated but no HTTP request is made and an empty dict is returned.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
@@ -543,47 +546,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code><span class="doc-parameter-name">event_name</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
 <dd>
-<p>The name of your custom event (e.g.&nbsp;Purchase-Course)</p>
+<p>The name of your custom event (e.g.&nbsp;‘Purchase-Course’).</p>
 </dd>
 <dt><code><span class="doc-parameter-name">hostname</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The value of your hostname simulating the client (e.g.&nbsp;test_domain.com), overrides set_hostname() value.</p>
+<p>Optional hostname identifying the client (e.g.&nbsp;‘test_domain.com’); overrides the set_hostname() value.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">url</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"/"</span></span></code></dt>
 <dd>
-<p>The simulated URL for the custom event (e.g.&nbsp;if it’s account creation, maybe /account/new)</p>
+<p>The URL associated with the event (e.g.&nbsp;‘/account/new’). Defaults to ‘/’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">website_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).</p>
+<p>Optional Umami website ID; overrides the set_website_id() value.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">title</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.</p>
+<p>The display title of the event. Defaults to event_name when omitted.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">custom_data</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[Dict[str, Any]]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>Any additional data to send along with the event. Not visible in the UI but is in the API.</p>
+<p>Additional key/value data sent with the event. Not shown in the UI but available through the API. Defaults to an empty dict.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">referrer</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">""</span></span></code></dt>
 <dd>
-<p>The referrer of the client if there is any (what location lead them to this event)</p>
+<p>The referrer of the client, if any. Defaults to ’’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">language</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"en-US"</span></span></code></dt>
 <dd>
-<p>The language of the event / client.</p>
+<p>The language of the event/client. Defaults to ‘en-US’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">screen</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="st">"1920x1080"</span></span></code></dt>
 <dd>
-<p>The screen resolution of the client.</p>
+<p>The screen resolution of the client. Defaults to ‘1920x1080’.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">ip_address</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[str]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-<p>OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.</p>
+<p>Optional true IP address of the user, useful when sending events from server-side request handlers.</p>
 </dd>
 <dt><code><span class="doc-parameter-name">distinct_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Optional[Union[str, int]]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
 <dd>
-OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+Optional Umami distinct ID for the user, as a string or integer, sent to the API as the payload field ‘id’. Blank or whitespace-only values are ignored (no id is sent).
 </dd>
 </dl>
 </div>
@@ -594,10 +597,39 @@ OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the
 <dl>
 <dt><code> <span class="doc-parameter-annotation">dict</span></code></dt>
 <dd>
-The data returned from the Umami API.
+<p>The JSON response from the Umami API as a dict, or an empty dict if</p>
+tracking is disabled.
 </dd>
 </dl>
 </div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">OperationNotAllowedError</span></code></dt>
+<dd>
+<p>If neither set_url_base() nor set_cloud_api_key() has been called.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
+<dd>
+<p>If distinct_id is a bool or any type other than str or int.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">Exception</span></code></dt>
+<dd>
+<p>If hostname or website_id is not set, either as an argument or via set_hostname()/set_website_id().</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">httpx.HTTPStatusError</span></code></dt>
+<dd>
+If Umami returns a non-2xx response (only when tracking is enabled).
+</dd>
+</dl>
+</div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import umami</p>
+<p>umami.set_url_base(‘https://umami.example.com’) umami.set_website_id(‘978435e2-7ba1-4337-9860-ec31ece2db60’) umami.set_hostname(‘example.com’) await umami.new_event_async( event_name=‘Purchase-Course’, url=‘/checkout’, custom_data={‘plan’: ‘pro’}, )</p>
 
 
 </section>

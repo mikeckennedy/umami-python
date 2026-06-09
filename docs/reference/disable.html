@@ -510,13 +510,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L303-L312" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L464-L479" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">disable</span>()</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>When disabled, new_event() and new_page_view() functions will return immediately without sending data to Umami. This is useful for development and testing environments.</p>
+<p>When disabled, the send functions new_event(), new_revenue_event(), and new_page_view() still validate their arguments but then return without making any HTTP request to Umami. This is useful for development and testing environments.</p>
+<p>Only the send functions are affected; query and authentication functions (such as login(), websites(), website_stats(), active_users(), verify_token(), and heartbeat()) always run regardless of this setting. Call enable() to turn tracking back on (the default).</p>
 </div>
 
 

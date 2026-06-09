@@ -486,6 +486,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -516,7 +518,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L100-L120" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L151-L183" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">set_cloud_api_key</span>(
@@ -525,7 +527,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 )</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>Enables “Cloud mode”: data/management calls are routed to https://api.umami.is/v1 and authenticated with the <code>x-umami-api-key</code> header, and events are sent to https://cloud.umami.is/api/send. You do NOT need to call set_url_base() or login() in this mode.</p>
+<p>Enables “Cloud mode”: data and management calls are routed to https://api.umami.is/v1 and authenticated with the ‘x-umami-api-key’ header, and events are sent to https://cloud.umami.is/api/send. You do not need to call set_url_base() or login() in this mode; Cloud mode and self-hosted/token mode are mutually exclusive. Call clear_cloud_api_key() to exit Cloud mode and return to self-hosted/token behavior.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
@@ -541,6 +543,22 @@ Optional ‘us’ or ‘eu’ to pin the data region. Defaults to the region of 
 </dd>
 </dl>
 </div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">ValidationError</span></code></dt>
+<dd>
+If key is empty or whitespace-only, or if region is provided but is not ‘us’ or ‘eu’.
+</dd>
+</dl>
+</div>
+</section>
+<section id="example" class="level2 doc-example">
+<h2 class="doc-example">Example</h2>
+<p>import umami</p>
+<p>umami.set_cloud_api_key(‘your-cloud-api-key’, region=‘us’) umami.set_website_id(‘978435e2-7ba1-4337-9860-ec31ece2db60’)</p>
 
 
 </section>

@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Umami Analytics Client for Python">
+  <meta name="description" content="A website registered in your Umami instance.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="models.Website – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Umami Analytics Client for Python">
+  <meta property="og:description" content="A website registered in your Umami instance.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/models.Website.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="models.Website – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Umami Analytics Client for Python">
+  <meta name="twitter:description" content="A website registered in your Umami instance.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -480,8 +480,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h3 id="toc-title">On this page</h3>
+   
+  <ul class="collapse">
+  <li><a href="#note" id="toc-note" class="nav-link active" data-scroll-target="#note">Note</a></li>
+  <li><a href="#attributes" id="toc-attributes" class="nav-link" data-scroll-target="#attributes">Attributes</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -506,17 +513,79 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-
+<p>A website registered in your Umami instance.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/models/__init__.py#L24-L37" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/models/__init__.py#L65-L106" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.CLASS">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-class">models</span><span class="op">.</span><span class="sig-name">Website</span>()</span></code></pre></div>
 </div>
+<div class="doc-text">
+<p>Returned as the elements of the list from websites() / websites_async(). Many fields are optional or may be null depending on the endpoint and the website’s configuration.</p>
+</div>
+<section id="note" class="level2 doc-note">
+<h2 class="doc-note">Note</h2>
+<p>The personal websites listing populates user and userId. The team-website listing (GET /api/teams/:id/websites) instead populates createUser and leaves userId null.</p>
+</section>
+<section id="attributes" class="level2 doc-attributes">
+<h2 class="doc-attributes">Attributes</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code><span class="doc-parameter-name">id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+<p>The website’s unique identifier (use this as the website_id elsewhere).</p>
+</dd>
+<dt><code><span class="doc-parameter-name">name</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Optional[str]</span></code></dt>
+<dd>
+<p>The display name of the website, if set.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">domain</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+<p>The website’s domain (e.g.&nbsp;‘talkpython.fm’).</p>
+</dd>
+<dt><code><span class="doc-parameter-name">shareId</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Any</span></code></dt>
+<dd>
+<p>The public share identifier, or null when sharing is disabled.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">resetAt</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Any</span></code></dt>
+<dd>
+<p>Timestamp of the last stats reset, or null.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">userId</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Optional[str]</span></code></dt>
+<dd>
+<p>The owning user’s id; null for team-website listings.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">createdAt</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+<p>ISO 8601 timestamp of when the website was created.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">updatedAt</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dd>
+<p>ISO 8601 timestamp of the last update.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">deletedAt</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Any</span></code></dt>
+<dd>
+<p>Soft-delete timestamp, or null if not deleted.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">teamId</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Optional[str]</span></code></dt>
+<dd>
+<p>The owning team’s id, if the website belongs to a team.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">user</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Optional[WebsiteUser]</span></code></dt>
+<dd>
+<p>The owning user, populated for personal website listings.</p>
+</dd>
+<dt><code><span class="doc-parameter-name">createUser</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">typing.Optional[WebsiteUser]</span></code></dt>
+<dd>
+The creating user, populated for team-website listings.
+</dd>
+</dl>
+</div>
 
 
+</section>
 
 </main>
 <hr style="padding: 0; margin: 0;">

@@ -1,3 +1,41 @@
+"""
+Python client SDK for Umami, the open-source, privacy-preserving web analytics
+platform.
+
+This package lets a Python backend send custom events, page views, and revenue
+transactions to a self-hosted or Umami Cloud instance, and query basic stats.
+It is useful for tracking business-logic events (such as a course purchase)
+that have no natural front-end HTML trigger.
+
+The API is a set of module-level functions called as umami.func(...); there is
+no client class. Configuration (URL base, website id, hostname, credentials,
+and the Cloud API key) is stored as module-global state and set via the set_*,
+login, enable, and disable functions.
+
+Two modes are supported:
+
+- Self-hosted: call set_url_base() then login() to obtain a Bearer token.
+- Umami Cloud: call set_cloud_api_key() to authenticate with an API key.
+
+Most network operations provide both a synchronous function and an _async twin
+with an identical signature (for example new_event and new_event_async).
+
+Example:
+    import umami
+
+    umami.set_url_base('https://umami.example.com')
+    umami.login(username, password)
+    umami.set_website_id(website_id)
+    umami.set_hostname('example.com')
+
+    umami.new_event(
+        event_name='checkout-completed',
+        title='Checkout',
+        url='/checkout',
+        custom_data={'plan': 'pro'},
+    )
+"""
+
 from . import impl  # type: ignore
 from . import errors  # type: ignore noqa: F401, E402,
 from . import models  # type: ignore noqa: F401, E402

@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Verifies that the token set when you called login() is still valid. Umami says this token will expire,">
+  <meta name="description" content="Verify that the currently stored credential is still valid.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="verify_token_async() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Verifies that the token set when you called login() is still valid. Umami says this token will expire,">
+  <meta property="og:description" content="Verify that the currently stored credential is still valid.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/verify_token_async.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="verify_token_async() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Verifies that the token set when you called login() is still valid. Umami says this token will expire,">
+  <meta name="twitter:description" content="Verify that the currently stored credential is still valid.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -513,17 +513,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Verifies that the token set when you called login() is still valid. Umami says this token will expire,</p>
+<p>Verify that the currently stored credential is still valid.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L731-L771" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L1128-L1179" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">verify_token_async</span>(<span class="va">check_server</span><span class="op">=</span><span class="cn-bool">True</span>)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<p>but I’m not sure if that’s minutes, hours, or years.</p>
+<p>In self-hosted/token mode this checks the auth token obtained from login(); in Cloud mode it checks the API key set via set_cloud_api_key(). Tokens issued by login() are temporary and eventually expire, after which you must log in again.</p>
+<p>This function never raises: any error (network failure, missing credential, expired or rejected token, non-2xx response) results in a return value of False.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
@@ -531,7 +532,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code><span class="doc-parameter-name">check_server</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">bool</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="va">True</span></span></code></dt>
 <dd>
-If true, we will contact the server and verify that the token is valid. If false, this only checks that an auth token has been stored from a previous successful login.
+If True (default), contact the server to confirm the credential is valid — self-hosted posts to /api/auth/verify, while Cloud mode fetches /api/me. If False, perform only a local check (equivalent to is_logged_in()) with no network request.
 </dd>
 </dl>
 </div>
@@ -542,7 +543,8 @@ If true, we will contact the server and verify that the token is valid. If false
 <dl>
 <dt><code> <span class="doc-parameter-annotation">bool</span></code></dt>
 <dd>
-True if the token is still valid, False otherwise.
+<p>True if the credential is valid (or, when check_server is False, simply</p>
+present), False otherwise.
 </dd>
 </dl>
 </div>

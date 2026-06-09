@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Umami Analytics Client for Python">
+  <meta name="description" content="Raised when the SDK is missing required state for an operation.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="errors.OperationNotAllowedError – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Umami Analytics Client for Python">
+  <meta property="og:description" content="Raised when the SDK is missing required state for an operation.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/errors.OperationNotAllowedError.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="errors.OperationNotAllowedError – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Umami Analytics Client for Python">
+  <meta name="twitter:description" content="Raised when the SDK is missing required state for an operation.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -506,14 +506,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-
+<p>Raised when the SDK is missing required state for an operation.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/errors/__init__.py#L5-L6" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/errors/__init__.py#L18-L32" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.CLASS">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-class">errors</span><span class="op">.</span><span class="sig-name">OperationNotAllowedError</span>()</span></code></pre></div>
+</div>
+<div class="doc-text">
+<p>A subclass of ValidationError. It signals that prerequisite configuration has not been completed, for example calling an operation before set_url_base() in self-hosted mode, querying data before login(), or calling login() while a Cloud API key is configured (login() is not used in Cloud mode).</p>
+<p>Resolve it by calling the appropriate setup function first: set_url_base() and login() for self-hosted mode, or set_cloud_api_key() for Umami Cloud.</p>
 </div>
 
 

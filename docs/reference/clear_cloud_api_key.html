@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <meta name="description" content="Exit Cloud mode and return to token/self-hosted behavior.">
+  <meta name="description" content="Exit Cloud mode and return to self-hosted/token behavior.">
   <script type="application/ld+json">
 [
   {
@@ -140,12 +140,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="clear_cloud_api_key() – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Exit Cloud mode and return to token/self-hosted behavior.">
+  <meta property="og:description" content="Exit Cloud mode and return to self-hosted/token behavior.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/reference/clear_cloud_api_key.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="clear_cloud_api_key() – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Exit Cloud mode and return to token/self-hosted behavior.">
+  <meta name="twitter:description" content="Exit Cloud mode and return to self-hosted/token behavior.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -506,14 +506,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Exit Cloud mode and return to token/self-hosted behavior.</p>
+<p>Exit Cloud mode and return to self-hosted/token behavior.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L123-L127" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L186-L195" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">clear_cloud_api_key</span>()</span></code></pre></div>
+</div>
+<div class="doc-text">
+<p>Clears the API key and region set by set_cloud_api_key(). After calling this, self-hosted operations again require set_url_base() and login().</p>
 </div>
 
 

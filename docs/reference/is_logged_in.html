@@ -516,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L171-L180" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L239-L249" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">is_logged_in</span>()</span></code></pre></div>
@@ -527,9 +527,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dl>
 <dt><code> <span class="doc-parameter-annotation">bool</span></code></dt>
 <dd>
-<p>True if a self-hosted login token or an Umami Cloud API key has been set, False otherwise.</p>
-<p>This only reflects that a credential exists in this process, not that it is still valid on</p>
-the server — use verify_token() to confirm validity.
+<p>True if a self-hosted login token (set by login()) or an Umami Cloud</p>
+<p>API key (set by set_cloud_api_key()) is present, False otherwise. This</p>
+<p>only reflects that a credential exists in this process, not that it is</p>
+still valid on the server — use verify_token() to confirm validity.
 </dd>
 </dl>
 </div>
