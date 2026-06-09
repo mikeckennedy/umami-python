@@ -1,0 +1,389 @@
+----------------------------------------------------------------------
+This is the API documentation for the umami library.
+----------------------------------------------------------------------
+
+
+## Configuration
+
+One-time setup. `set_url_base()` is required before any operation; Cloud users call `set_cloud_api_key()` instead.
+
+
+set_url_base(url: str) -> None
+
+Each Umami instance lives somewhere. This is where yours lives.
+For example, https://somedomain.tech/umami.
+Args:
+    url: The base URL of your instance without /api.
+
+set_website_id(website_id: str) -> None
+
+Your Umami instance might have many websites registered for various domains you use.
+Call this function to set which website you're working with.
+Args:
+    website_id: The ID from Umami for your registered site (e.g. 978435e2-7ba1-4337-9860-ec31ece2db60)
+
+set_hostname(hostname: str) -> None
+
+The default hostname for sending events (can be overriden in the new_event() function).
+Args:
+    hostname: Hostname to use when one is not specified, e.g. 'talkpython.fm'
+
+set_cloud_api_key(key: str, region: str | None = None) -> None
+
+Authenticate against Umami Cloud with an API key instead of login().
+
+Enables "Cloud mode": data/management calls are routed to
+https://api.umami.is/v1 and authenticated with the `x-umami-api-key`
+header, and events are sent to https://cloud.umami.is/api/send. You do
+NOT need to call set_url_base() or login() in this mode.
+
+Args:
+    key: Your Umami Cloud API key.
+    region: Optional 'us' or 'eu' to pin the data region. Defaults to the
+            region of the account that owns the key.
+
+clear_cloud_api_key() -> None
+
+Exit Cloud mode and return to token/self-hosted behavior.
+
+enable() -> None
+
+Enable event and page view tracking.
+
+When enabled, new_event() and new_page_view() functions will send
+data to Umami normally. This is the default state.
+
+disable() -> None
+
+Disable event and page view tracking.
+
+When disabled, new_event() and new_page_view() functions will return
+immediately without sending data to Umami. This is useful for
+development and testing environments.
+
+
+## Authentication
+
+Required for the query endpoints and `verify_token`. Not needed to send events.
+
+
+login(username: str, password: str) -> umami.models.LoginResponse
+
+Logs into Umami and retrieves a temporary auth token. If the token is expired,
+you'll need to log in again. This can be checked with verify_token().
+Args:
+    username: Your Umami username
+    password: Your Umami password
+
+Returns:
+    LoginResponse object which your token and user details (no need to save this).
+
+login_async(username: str, password: str) -> umami.models.LoginResponse
+
+Logs into Umami and retrieves a temporary auth token. If the token is expired,
+you'll need to log in again. This can be checked with verify_token().
+Args:
+    username: Your Umami username
+    password: Your Umami password
+
+Returns:
+    LoginResponse object which your token and user details (no need to save this).
+
+is_logged_in() -> bool
+
+Whether a credential is currently set locally.
+
+Returns:
+    True if a self-hosted login token or an Umami Cloud API key has been set, False otherwise.
+    This only reflects that a credential exists in this process, not that it is still valid on
+    the server — use verify_token() to confirm validity.
+
+verify_token(check_server: bool = True) -> bool
+
+Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+but I'm not sure if that's minutes, hours, or years.
+
+Args:
+    check_server: If true, we will contact the server and verify that the token is valid.
+                  If false, this only checks that an auth token has been stored from a previous successful login.
+
+Returns:
+    True if the token is still valid, False otherwise.
+
+verify_token_async(check_server: bool = True) -> bool
+
+Verifies that the token set when you called login() is still valid. Umami says this token will expire,
+but I'm not sure if that's minutes, hours, or years.
+
+Args:
+    check_server: If true, we will contact the server and verify that the token is valid.
+                  If false, this only checks that an auth token has been stored from a previous successful login.
+
+Returns:
+    True if the token is still valid, False otherwise.
+
+
+## Sending events
+
+Send custom events, revenue, and page views. No login required — only a URL base and a website id/hostname.
+
+
+new_event(event_name: str, hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None)
+
+Creates a new custom event in Umami for the given website_id and hostname (both use the default
+if you have set them with the other functions such as set_hostname()). These events will both
+appear in the traffic related to the specified url and in the events section at the bottom
+of your Umami website page. Login is not required for this method.
+
+Args:
+    event_name: The name of your custom event (e.g. Purchase-Course)
+    hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+    url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+    title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+    custom_data: Any additional data to send along with the event. Not visible in the UI but is in the API.
+    referrer: The referrer of the client if there is any (what location lead them to this event)
+    language: The language of the event / client.
+    screen: The screen resolution of the client.
+    ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+    distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+
+new_event_async(event_name: str, hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
+
+Creates a new custom event in Umami for the given website_id and hostname (both use the default
+if you have set them with the other functions such as set_hostname()). These events will both
+appear in the traffic related to the specified url and in the events section at the bottom
+of your Umami website page. Login is not required for this method.
+
+Args:
+    event_name: The name of your custom event (e.g. Purchase-Course)
+    hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+    url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+    title: The title of the custom event (not sure how this is different from the name), defaults to event_name if empty.
+    custom_data: Any additional data to send along with the event. Not visible in the UI but is in the API.
+    referrer: The referrer of the client if there is any (what location lead them to this event)
+    language: The language of the event / client.
+    screen: The screen resolution of the client.
+    ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+    distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+
+Returns:
+    The data returned from the Umami API.
+
+new_revenue_event(revenue: float, currency: str = 'USD', event_name: str = 'revenue', hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None)
+
+Creates a new revenue event in Umami. This is a convenience wrapper around new_event()
+that automatically includes the revenue and currency properties required by Umami's revenue tracking.
+
+Args:
+    revenue: The monetary amount of the transaction (must be >= 0).
+    currency: ISO 4217 currency code (e.g. 'USD', 'EUR'). Defaults to 'USD'.
+    event_name: The name of your custom event. Defaults to 'revenue'.
+    hostname: OPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.
+    url: The simulated URL for the custom event.
+    website_id: OPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).
+    title: The title of the custom event, defaults to event_name if empty.
+    custom_data: Any additional data to send along with the event. Revenue and currency keys will be overwritten.
+    referrer: The referrer of the client if there is any.
+    language: The language of the event / client.
+    screen: The screen resolution of the client.
+    ip_address: OPTIONAL: The true IP address of the user.
+    distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+
+new_revenue_event_async(revenue: float, currency: str = 'USD', event_name: str = 'revenue', hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
+
+Creates a new revenue event in Umami. This is a convenience wrapper around new_event_async()
+that automatically includes the revenue and currency properties required by Umami's revenue tracking.
+
+Args:
+    revenue: The monetary amount of the transaction (must be >= 0).
+    currency: ISO 4217 currency code (e.g. 'USD', 'EUR'). Defaults to 'USD'.
+    event_name: The name of your custom event. Defaults to 'revenue'.
+    hostname: OPTIONAL: The value of your hostname simulating the client, overrides set_hostname() value.
+    url: The simulated URL for the custom event.
+    website_id: OPTIONAL: The value of your website_id in Umami (overrides set_website_id() value).
+    title: The title of the custom event, defaults to event_name if empty.
+    custom_data: Any additional data to send along with the event. Revenue and currency keys will be overwritten.
+    referrer: The referrer of the client if there is any.
+    language: The language of the event / client.
+    screen: The screen resolution of the client.
+    ip_address: OPTIONAL: The true IP address of the user.
+    distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+
+Returns:
+    The data returned from the Umami API.
+
+new_page_view(page_title: str, url: str, hostname: str | None = None, website_id: str | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ua: str = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', ip_address: str | None = None, distinct_id: str | int | None = None)
+
+Creates a new page view event in Umami for the given website_id and hostname (both use the default
+if you have set them with the other functions such as set_hostname()). This is equivalent to what
+happens when a visit views a page and the JS library records it.
+
+Args:
+    page_title: The title of the page view to record (required).
+    url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+    hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+    referrer: OPTIONAL: The referrer of the client if there is any (what location lead them to this event)
+    language: OPTIONAL: The language of the event / client.
+    screen: OPTIONAL: The screen resolution of the client.
+    ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
+    ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+    distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+
+new_page_view_async(page_title: str, url: str, hostname: str | None = None, website_id: str | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ua: str = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', ip_address: str | None = None, distinct_id: str | int | None = None)
+
+Creates a new page view event in Umami for the given website_id and hostname (both use the default
+if you have set them with the other functions such as set_hostname()). This is equivalent to what
+happens when a visit views a page and the JS library records it.
+
+Args:
+    page_title: The title of the page view to record (required).
+    url: The simulated URL for the custom event (e.g. if it's account creation, maybe /account/new)
+    hostname: OPTIONAL: The value of your hostname simulating the client (e.g. test_domain.com), overrides set_hostname() value.
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+    referrer: OPTIONAL: The referrer of the client if there is any (what location lead them to this event)
+    language: OPTIONAL: The language of the event / client.
+    screen: OPTIONAL: The screen resolution of the client.
+    ua: OPTIONAL: The UserAgent resolution of the client. Note umami blocks non browsers by default.
+    ip_address: OPTIONAL: The true IP address of the user, used when handling requests in APIs, etc. on the server.
+    distinct_id: OPTIONAL: The Umami distinct ID for the user as a string or integer, sent to the API as payload field id. Blank or whitespace-only values are ignored (no id sent); booleans or other non-string/int types raise a ValidationError.
+
+
+## Querying stats
+
+Read analytics back out. Requires login (or a Cloud API key).
+
+
+websites() -> list[umami.models.Website]
+
+All the websites that are registered in your Umami instance.
+Returns:
+    A list of Website Pydantic models.
+
+websites_async() -> list[umami.models.Website]
+
+All the websites that are registered in your Umami instance.
+Returns:
+    A list of Website Pydantic models.
+
+website_stats(start_at: datetime.datetime, end_at: datetime.datetime, website_id: str | None = None, url: str | None = None, referrer: str | None = None, title: str | None = None, query: str | None = None, event: str | None = None, host: str | None = None, os: str | None = None, browser: str | None = None, device: str | None = None, country: str | None = None, region: str | None = None, city: str | None = None) -> umami.models.WebsiteStats
+
+Retrieves the statistics for a specific website.
+
+Args:
+    start_at: Starting date as a datetime object.
+    end_at: End date as a datetime object.
+    url: OPTIONAL: Name of URL.
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+    referrer: OPTIONAL: Name of referrer.
+    title: (OPTIONAL: Name of page title.
+    query: OPTIONAL: Name of query.
+    event: OPTIONAL: Name of event.
+    host: OPTIONAL: Name of hostname.
+    os: OPTIONAL: Name of operating system.
+    browser: OPTIONAL: Name of browser.
+    device: OPTIONAL: Name of device (ex. Mobile)
+    country: OPTIONAL: Name of country.
+    region: OPTIONAL: Name of region/state/province.
+    city: OPTIONAL: Name of city.
+
+Returns:
+    A WebsiteStatsResponse model containing the website statistics data.
+
+website_stats_async(start_at: datetime.datetime, end_at: datetime.datetime, website_id: str | None = None, url: str | None = None, referrer: str | None = None, title: str | None = None, query: str | None = None, event: str | None = None, host: str | None = None, os: str | None = None, browser: str | None = None, device: str | None = None, country: str | None = None, region: str | None = None, city: str | None = None) -> umami.models.WebsiteStats
+
+Retrieves the statistics for a specific website.
+
+Args:
+    start_at: Starting date as a datetime object.
+    end_at: End date as a datetime object.
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+    url: OPTIONAL: Name of URL.
+    referrer: OPTIONAL: Name of referrer.
+    title: OPTIONAL: Name of page title.
+    query: OPTIONAL: Name of query.
+    event: OPTIONAL: Name of event.
+    host: OPTIONAL: Name of hostname.
+    os: OPTIONAL: Name of operating system.
+    browser: OPTIONAL: Name of browser.
+    device: OPTIONAL: Name of device (ex. Mobile)
+    country: OPTIONAL: Name of country.
+    region: OPTIONAL: Name of region/state/province.
+    city: OPTIONAL: Name of city.
+
+Returns:
+    A WebsiteStatsResponse model containing the website statistics data.
+
+active_users(website_id: str | None = None) -> int
+
+Retrieves the active users for a specific website.
+
+Args:
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+
+
+Returns:
+    The number of active users.
+
+active_users_async(website_id: str | None = None) -> int
+
+Retrieves the active users for a specific website.
+
+Args:
+    website_id: OPTIONAL: The value of your website_id in Umami. (overrides set_website_id() value).
+
+
+Returns:
+    The number of active users.
+
+
+## Health
+
+Check Umami server connectivity.
+
+
+heartbeat() -> bool
+
+Verifies that the server is reachable via the internet and is healthy.
+
+Returns:
+    True if the server is healthy and accessible.
+
+heartbeat_async() -> bool
+
+Verifies that the server is reachable via the internet and is healthy.
+
+Returns:
+    True if the server is healthy and accessible.
+
+
+## Response models
+
+Pydantic models returned by the query functions.
+
+
+WebsitesResponse(*, data: list[umami.models.Website], count: int, page: int, pageSize: int, orderBy: str | None = None) -> None
+
+Website(*, id: str, name: str | None = None, domain: str, shareId: Any, resetAt: Any, userId: str | None = None, createdAt: str, updatedAt: str, deletedAt: Any, teamId: str | None = None, user: umami.models.WebsiteUser | None = None, createUser: umami.models.WebsiteUser | None = None) -> None
+
+WebsiteStats(*, pageviews: int, visitors: int, visits: int, bounces: int, totaltime: int, comparison: umami.models.WebsiteStatsCmp | None = None) -> None
+
+WebsiteStatsCmp(*, pageviews: int, visitors: int, visits: int, bounces: int, totaltime: int) -> None
+
+LoginResponse(*, token: str, user: umami.models.User) -> None
+
+User(*, id: str, username: str, role: str, createdAt: str, isAdmin: bool) -> None
+
+WebsiteUser(*, username: str, id: str) -> None
+
+
+## Errors
+
+Exception hierarchy. `ValidationError` is the base; `OperationNotAllowedError` is raised when required state (url_base, login) is missing.
+
+
+ValidationError
+
+OperationNotAllowedError

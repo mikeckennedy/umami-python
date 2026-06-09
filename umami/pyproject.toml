@@ -35,6 +35,9 @@ dev = [
     "pytest",
     "pytest-asyncio",
     "ruff",
+    # Documentation site generator (Great Docs). Needs Python >= 3.11; the
+    # package itself supports 3.10+, so guard it so `[dev]` still installs on 3.10.
+    "great-docs; python_version >= '3.11'",
 ]
 
 
@@ -42,6 +45,7 @@ dev = [
 Homepage = "https://github.com/mikeckennedy/umami-python"
 Tracker = "https://github.com/mikeckennedy/umami-python/issues"
 Source = "https://github.com/mikeckennedy/umami-python"
+Documentation = "https://mkennedy.codes/docs/umami-python/"
 
 [build-system]
 requires = ["hatchling>=1.21.0", "hatch-vcs>=0.3.0"]
@@ -67,6 +71,7 @@ exclude = [
     "setup.py",
     "settings.json",
     "/tox.ini",
+    "/umami/great-docs"
 ]
 
 [tool.pytest.ini_options]

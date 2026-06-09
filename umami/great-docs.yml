@@ -1,0 +1,128 @@
+# Great Docs configuration — Umami Analytics documentation site
+# https://posit-dev.github.io/great-docs/user-guide/configuration.html
+
+# Importable module name (the PyPI project is `umami-analytics`, imported as `umami`).
+module: umami
+
+# Friendly name shown in the navbar / site title.
+display_name: Umami Analytics
+
+# Docstrings use Google style (Args:/Returns:) — auto-detected, pinned for stability.
+parser: google
+
+# Import-based introspection; accurate for the .impl re-exports. Verified working.
+dynamic: true
+
+# Canonical deployed URL. The site is served at a SUBPATH, so this is required:
+# Great Docs writes it into _quarto.yml as `website.site-url`, and Quarto derives the
+# `/docs/umami-python/` base path from it, fixing CSS/JS/nav/search links. Keep the
+# trailing slash.
+site_url: "https://mkennedy.codes/docs/umami-python/"
+
+# GitHub integration: navbar widget, "source" links on reference pages, version badge.
+repo: https://github.com/mikeckennedy/umami-python
+github_style: widget
+source:
+  enabled: true
+  branch: main
+  placement: usage
+
+# This package lives in a two-tier layout: the git repo root is one level above the
+# pyproject dir (the importable package is at umami/umami/). Great Docs builds source
+# links relative to the pyproject dir, dropping the leading `umami/` segment, so they
+# 404. This pre-render hook reinserts it. See scripts/fix_source_links.py.
+pre_render:
+  - scripts/fix_source_links.py
+
+# "View on PyPI" -> https://pypi.org/project/umami-analytics/
+pypi: true
+
+sidebar_filter:
+  enabled: true
+  min_items: 20
+
+# This package ships no MCP server. Great Docs defaults mcp.enabled to true, which
+# renders an empty "MCP" tab in the API reference, so turn it off explicitly.
+mcp:
+  enabled: false
+
+# Jupyter kernel for any executable code cells in pages.
+jupyter: python3
+
+# Author shown in the landing-page sidebar.
+authors:
+  - name: Michael Kennedy
+    role: Author
+    email: michael@talkpython.fm
+    github: mikeckennedy
+
+# API reference — grouped by task, with each sync function and its `_async` twin together.
+reference:
+  title: "API Reference"
+  desc: >
+    The public umami-analytics surface: configuration, authentication, sending events,
+    and querying stats. Every network operation has a synchronous function and an
+    identically-signed `_async` twin.
+  sections:
+    - title: Configuration
+      desc: "One-time setup. `set_url_base()` is required before any operation; Cloud users call `set_cloud_api_key()` instead."
+      contents:
+        - set_url_base
+        - set_website_id
+        - set_hostname
+        - set_cloud_api_key
+        - clear_cloud_api_key
+        - enable
+        - disable
+
+    - title: Authentication
+      desc: "Required for the query endpoints and `verify_token`. Not needed to send events."
+      contents:
+        - login
+        - login_async
+        - is_logged_in
+        - verify_token
+        - verify_token_async
+
+    - title: Sending events
+      desc: "Send custom events, revenue, and page views. No login required — only a URL base and a website id/hostname."
+      contents:
+        - new_event
+        - new_event_async
+        - new_revenue_event
+        - new_revenue_event_async
+        - new_page_view
+        - new_page_view_async
+
+    - title: Querying stats
+      desc: "Read analytics back out. Requires login (or a Cloud API key)."
+      contents:
+        - websites
+        - websites_async
+        - website_stats
+        - website_stats_async
+        - active_users
+        - active_users_async
+
+    - title: Health
+      desc: "Check Umami server connectivity."
+      contents:
+        - heartbeat
+        - heartbeat_async
+
+    - title: Response models
+      desc: "Pydantic models returned by the query functions."
+      contents:
+        - models.WebsitesResponse
+        - models.Website
+        - models.WebsiteStats
+        - models.WebsiteStatsCmp
+        - models.LoginResponse
+        - models.User
+        - models.WebsiteUser
+
+    - title: Errors
+      desc: "Exception hierarchy. `ValidationError` is the base; `OperationNotAllowedError` is raised when required state (url_base, login) is missing."
+      contents:
+        - errors.ValidationError
+        - errors.OperationNotAllowedError

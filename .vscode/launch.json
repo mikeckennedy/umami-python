@@ -1,0 +1,40 @@
+{
+  // Run and Debug entries for the Great Docs documentation site.
+  // Requires the Python extension (debugpy). Each config runs the great-docs
+  // console script with the umami/ venv interpreter, cwd = umami/ (so it finds
+  // umami/great-docs.yml). Press F5 / the green play button to run.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Build Docs",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/umami/scripts/build_docs.py",
+      "python": "${workspaceFolder}/venv/bin/python",
+      "cwd": "${workspaceFolder}/umami",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Preview Docs",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/venv/bin/great-docs",
+      "args": ["preview"],
+      "python": "${workspaceFolder}/venv/bin/python",
+      "cwd": "${workspaceFolder}/umami",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Preview Docs (subpath)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/umami/scripts/serve_docs.py",
+      "python": "${workspaceFolder}/umami/venv/bin/python",
+      "cwd": "${workspaceFolder}/umami",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

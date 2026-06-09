@@ -34,3 +34,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+# Great Docs ephemeral build output (regenerated each build). The deployable static
+# site is mirrored to the committed repo-root docs/ folder by scripts/build_docs.py.
+/great-docs/

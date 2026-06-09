@@ -1,0 +1,31 @@
+{
+  // Build/preview the Great Docs documentation site.
+  // The `great-docs` CLI lives in the umami/ venv and reads umami/great-docs.yml,
+  // so every task runs with cwd = umami/ and invokes that venv's binary directly
+  // (no interpreter activation needed).
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Docs",
+      "detail": "great-docs build, then mirror the site into the committed repo-root docs/",
+      "type": "shell",
+      "command": "./venv/bin/python",
+      "args": ["scripts/build_docs.py"],
+      "options": { "cwd": "${workspaceFolder}/umami" },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Preview Docs",
+      "detail": "great-docs preview (live-reload server at http://localhost:3000)",
+      "type": "shell",
+      "command": "./venv/bin/great-docs",
+      "args": ["preview"],
+      "options": { "cwd": "${workspaceFolder}/umami" },
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    }
+  ]
+}

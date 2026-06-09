@@ -1,0 +1,11 @@
+{
+  "skills": [
+    {
+      "name": "umami",
+      "description": "Umami Analytics Client for Python. Use when writing Python code that uses the umami package.",
+      "files": [
+        "SKILL.md"
+      ]
+    }
+  ]
+}
