@@ -519,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L1515-L1609" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L1543-L1639" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">website_stats</span>(</span>
@@ -639,8 +639,16 @@ If the Umami API returns a non-2xx response.
 </section>
 <section id="example" class="level2 doc-example">
 <h2 class="doc-example">Example</h2>
-<p>import datetime import umami</p>
-<p>umami.set_url_base(‘https://umami.example.com’) umami.login(username, password) stats = umami.website_stats( start_at=datetime.datetime.now() - datetime.timedelta(days=7), end_at=datetime.datetime.now(), ) print(stats.pageviews, stats.visitors)</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> datetime</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">'https://umami.example.com'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>umami.login(username, password)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> umami.website_stats(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    start_at<span class="op">=</span>datetime.datetime.now() <span class="op">-</span> datetime.timedelta(days<span class="op">=</span><span class="dv">7</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    end_at<span class="op">=</span>datetime.datetime.now(),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stats.pageviews, stats.visitors)</span></code></pre></div>
 
 
 </section>

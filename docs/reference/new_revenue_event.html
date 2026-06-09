@@ -519,7 +519,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L809-L908" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/mikeckennedy/umami-python/blob/main/umami/umami/impl/__init__.py#L825-L926" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">new_revenue_event</span>(</span>
@@ -634,8 +634,17 @@ If the Umami API returns a non-2xx response.
 </section>
 <section id="example" class="level2 doc-example">
 <h2 class="doc-example">Example</h2>
-<p>import umami</p>
-<p>umami.set_url_base(‘https://umami.example.com’) umami.set_website_id(‘978435e2-7ba1-4337-9860-ec31ece2db60’) umami.set_hostname(‘example.com’) umami.new_revenue_event( revenue=19.99, currency=‘USD’, event_name=‘checkout-cart’, url=‘/checkout’, )</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">'https://umami.example.com'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">'978435e2-7ba1-4337-9860-ec31ece2db60'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'example.com'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>umami.new_revenue_event(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    revenue<span class="op">=</span><span class="fl">19.99</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    currency<span class="op">=</span><span class="st">'USD'</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    event_name<span class="op">=</span><span class="st">'checkout-cart'</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/checkout'</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 
 
 </section>

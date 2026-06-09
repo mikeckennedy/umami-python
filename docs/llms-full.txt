@@ -73,10 +73,12 @@ Raises:
         provided but is not 'us' or 'eu'.
 
 Example:
+    ```python
     import umami
 
     umami.set_cloud_api_key('your-cloud-api-key', region='us')
     umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+    ```
 
 clear_cloud_api_key() -> None
 
@@ -147,10 +149,12 @@ Raises:
         on invalid credentials.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     login = umami.login('admin', 'super-secret')
+    ```
 
 login_async(username: str, password: str) -> umami.models.LoginResponse
 
@@ -183,10 +187,12 @@ Raises:
         on invalid credentials.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     login = await umami.login_async('admin', 'super-secret')
+    ```
 
 is_logged_in() -> bool
 
@@ -297,6 +303,7 @@ Raises:
         tracking is enabled).
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
@@ -307,6 +314,7 @@ Example:
         url='/checkout',
         custom_data={'plan': 'pro'},
     )
+    ```
 
 new_event_async(event_name: str, hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
 
@@ -355,6 +363,7 @@ Raises:
         tracking is enabled).
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
@@ -365,6 +374,7 @@ Example:
         url='/checkout',
         custom_data={'plan': 'pro'},
     )
+    ```
 
 new_revenue_event(revenue: float, currency: str = 'USD', event_name: str = 'revenue', hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
 
@@ -416,6 +426,7 @@ Raises:
     httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
@@ -427,6 +438,7 @@ Example:
         event_name='checkout-cart',
         url='/checkout',
     )
+    ```
 
 new_revenue_event_async(revenue: float, currency: str = 'USD', event_name: str = 'revenue', hostname: str | None = None, url: str = '/', website_id: str | None = None, title: str | None = None, custom_data: Dict[str, Any] | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
 
@@ -478,6 +490,7 @@ Raises:
     httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
@@ -489,6 +502,7 @@ Example:
         event_name='checkout-cart',
         url='/checkout',
     )
+    ```
 
 new_page_view(page_title: str, url: str, hostname: str | None = None, website_id: str | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ua: str = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
 
@@ -537,12 +551,14 @@ Raises:
         tracking is enabled).
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
     umami.set_hostname('example.com')
     umami.new_page_view(page_title='Home', url='/')
+    ```
 
 new_page_view_async(page_title: str, url: str, hostname: str | None = None, website_id: str | None = None, referrer: str = '', language: str = 'en-US', screen: str = '1920x1080', ua: str = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', ip_address: str | None = None, distinct_id: str | int | None = None) -> dict
 
@@ -591,12 +607,14 @@ Raises:
         tracking is enabled).
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
     umami.set_hostname('example.com')
     await umami.new_page_view_async(page_title='Home', url='/')
+    ```
 
 
 ## Querying stats
@@ -622,12 +640,14 @@ Raises:
     httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     umami.login(username, password)
     for site in umami.websites():
         print(site.name, site.domain)
+    ```
 
 websites_async() -> list[umami.models.Website]
 
@@ -647,12 +667,14 @@ Raises:
     httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     await umami.login_async(username, password)
     for site in await umami.websites_async():
         print(site.name, site.domain)
+    ```
 
 website_stats(start_at: datetime.datetime, end_at: datetime.datetime, website_id: str | None = None, url: str | None = None, referrer: str | None = None, title: str | None = None, query: str | None = None, event: str | None = None, host: str | None = None, os: str | None = None, browser: str | None = None, device: str | None = None, country: str | None = None, region: str | None = None, city: str | None = None) -> umami.models.WebsiteStats
 
@@ -691,6 +713,7 @@ Raises:
     httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
 Example:
+    ```python
     import datetime
     import umami
 
@@ -701,6 +724,7 @@ Example:
         end_at=datetime.datetime.now(),
     )
     print(stats.pageviews, stats.visitors)
+    ```
 
 website_stats_async(start_at: datetime.datetime, end_at: datetime.datetime, website_id: str | None = None, url: str | None = None, referrer: str | None = None, title: str | None = None, query: str | None = None, event: str | None = None, host: str | None = None, os: str | None = None, browser: str | None = None, device: str | None = None, country: str | None = None, region: str | None = None, city: str | None = None) -> umami.models.WebsiteStats
 
@@ -739,6 +763,7 @@ Raises:
     httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
 Example:
+    ```python
     import datetime
     import umami
 
@@ -749,6 +774,7 @@ Example:
         end_at=datetime.datetime.now(),
     )
     print(stats.pageviews, stats.visitors)
+    ```
 
 active_users(website_id: str | None = None) -> int
 
@@ -816,11 +842,13 @@ Returns:
     configured.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     if not umami.heartbeat():
         print('Umami is unavailable')
+    ```
 
 heartbeat_async() -> bool
 
@@ -842,11 +870,13 @@ Returns:
     configured.
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
     if not await umami.heartbeat_async():
         print('Umami is unavailable')
+    ```
 
 
 ## Response models

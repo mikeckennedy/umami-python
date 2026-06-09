@@ -169,10 +169,12 @@ def set_cloud_api_key(key: str, region: Optional[str] = None) -> None:
             provided but is not 'us' or 'eu'.
 
     Example:
+        ```python
         import umami
 
         umami.set_cloud_api_key('your-cloud-api-key', region='us')
         umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+        ```
     """
     global api_key, cloud_region
     if not key or not key.strip():
@@ -280,10 +282,12 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
             on invalid credentials.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         login = await umami.login_async('admin', 'super-secret')
+        ```
     """
     global auth_token
     if _is_cloud():
@@ -339,10 +343,12 @@ def login(username: str, password: str) -> models.LoginResponse:
             on invalid credentials.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         login = umami.login('admin', 'super-secret')
+        ```
     """
     global auth_token
 
@@ -386,12 +392,14 @@ async def websites_async() -> list[models.Website]:
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         await umami.login_async(username, password)
         for site in await umami.websites_async():
             print(site.name, site.domain)
+        ```
     """
     global auth_token
     validate_state(url=True, user=True)
@@ -425,12 +433,14 @@ def websites() -> list[models.Website]:
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         umami.login(username, password)
         for site in umami.websites():
             print(site.name, site.domain)
+        ```
     """
     global auth_token
     validate_state(url=True, user=True)
@@ -538,6 +548,7 @@ async def new_event_async(
             tracking is enabled).
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
@@ -548,6 +559,7 @@ async def new_event_async(
             url='/checkout',
             custom_data={'plan': 'pro'},
         )
+        ```
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -651,6 +663,7 @@ def new_event(
             tracking is enabled).
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
@@ -661,6 +674,7 @@ def new_event(
             url='/checkout',
             custom_data={'plan': 'pro'},
         )
+        ```
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -768,6 +782,7 @@ async def new_revenue_event_async(
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
@@ -779,6 +794,7 @@ async def new_revenue_event_async(
             event_name='checkout-cart',
             url='/checkout',
         )
+        ```
     """
     if not isinstance(revenue, (int, float)):
         raise ValidationError('Revenue must be a number (int or float).')
@@ -870,6 +886,7 @@ def new_revenue_event(
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
@@ -881,6 +898,7 @@ def new_revenue_event(
             event_name='checkout-cart',
             url='/checkout',
         )
+        ```
     """
     if not isinstance(revenue, (int, float)):
         raise ValidationError('Revenue must be a number (int or float).')
@@ -966,12 +984,14 @@ async def new_page_view_async(
             tracking is enabled).
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
         umami.set_hostname('example.com')
         await umami.new_page_view_async(page_title='Home', url='/')
+        ```
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -1070,12 +1090,14 @@ def new_page_view(
             tracking is enabled).
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
         umami.set_hostname('example.com')
         umami.new_page_view(page_title='Home', url='/')
+        ```
     """
     validate_state(url=True, user=False)
     website_id = website_id or default_website_id
@@ -1253,11 +1275,13 @@ async def heartbeat_async() -> bool:
         configured.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         if not await umami.heartbeat_async():
             print('Umami is unavailable')
+        ```
     """
     # noinspection PyBroadException
     try:
@@ -1305,11 +1329,13 @@ def heartbeat() -> bool:
         configured.
 
     Example:
+        ```python
         import umami
 
         umami.set_url_base('https://umami.example.com')
         if not umami.heartbeat():
             print('Umami is unavailable')
+        ```
     """
     # noinspection PyBroadException
     try:
@@ -1467,6 +1493,7 @@ async def website_stats_async(
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
+        ```python
         import datetime
         import umami
 
@@ -1477,6 +1504,7 @@ async def website_stats_async(
             end_at=datetime.datetime.now(),
         )
         print(stats.pageviews, stats.visitors)
+        ```
     """
     validate_state(url=True, user=True)
 
@@ -1565,6 +1593,7 @@ def website_stats(
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
 
     Example:
+        ```python
         import datetime
         import umami
 
@@ -1575,6 +1604,7 @@ def website_stats(
             end_at=datetime.datetime.now(),
         )
         print(stats.pageviews, stats.visitors)
+        ```
     """
     validate_state(url=True, user=True)
 

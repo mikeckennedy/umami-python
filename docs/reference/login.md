@@ -55,6 +55,9 @@ If the server returns a non-2xx response, e.g. on invalid credentials.
 
 ## Example
 
+``` python
 import umami
 
-umami.set_url_base('https://umami.example.com') login = umami.login('admin', 'super-secret')
+umami.set_url_base('https://umami.example.com')
+login = umami.login('admin', 'super-secret')
+```

@@ -89,6 +89,15 @@ If Umami returns a non-2xx response (only when tracking is enabled).
 
 ## Example
 
+``` python
 import umami
 
-umami.set_url_base('https://umami.example.com') umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60') umami.set_hostname('example.com') umami.new_event( event_name='Purchase-Course', url='/checkout', custom_data={'plan': 'pro'}, )
+umami.set_url_base('https://umami.example.com')
+umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+umami.set_hostname('example.com')
+umami.new_event(
+    event_name='Purchase-Course',
+    url='/checkout',
+    custom_data={'plan': 'pro'},
+)
+```

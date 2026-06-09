@@ -4,7 +4,9 @@
       "Read(//Users/michaelkennedy/.claude/plans/agents/**)",
       "Read(//Users/michaelkennedy/.claude/plans/**)",
       "Read(//Users/michaelkennedy/.claude/**)",
-      "Bash(pytest tests/ -v)"
+      "Bash(pytest tests/ -v)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)"
     ]
   }
 }

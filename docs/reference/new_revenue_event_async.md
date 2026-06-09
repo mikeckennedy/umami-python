@@ -97,6 +97,16 @@ If the Umami API returns a non-2xx response.
 
 ## Example
 
+``` python
 import umami
 
-umami.set_url_base('https://umami.example.com') umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60') umami.set_hostname('example.com') await umami.new_revenue_event_async( revenue=19.99, currency='USD', event_name='checkout-cart', url='/checkout', )
+umami.set_url_base('https://umami.example.com')
+umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+umami.set_hostname('example.com')
+await umami.new_revenue_event_async(
+    revenue=19.99,
+    currency='USD',
+    event_name='checkout-cart',
+    url='/checkout',
+)
+```

@@ -33,6 +33,11 @@ If the Umami API returns a non-2xx response.
 
 ## Example
 
+``` python
 import umami
 
-umami.set_url_base('https://umami.example.com') umami.login(username, password) for site in umami.websites(): print(site.name, site.domain)
+umami.set_url_base('https://umami.example.com')
+umami.login(username, password)
+for site in umami.websites():
+    print(site.name, site.domain)
+```

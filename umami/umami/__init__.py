@@ -21,6 +21,7 @@ Most network operations provide both a synchronous function and an _async twin
 with an identical signature (for example new_event and new_event_async).
 
 Example:
+    ```python
     import umami
 
     umami.set_url_base('https://umami.example.com')
@@ -34,6 +35,7 @@ Example:
         url='/checkout',
         custom_data={'plan': 'pro'},
     )
+    ```
 """
 
 from . import impl  # type: ignore

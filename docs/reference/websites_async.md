@@ -33,6 +33,11 @@ If the Umami API returns a non-2xx response.
 
 ## Example
 
+``` python
 import umami
 
-umami.set_url_base('https://umami.example.com') await umami.login_async(username, password) for site in await umami.websites_async(): print(site.name, site.domain)
+umami.set_url_base('https://umami.example.com')
+await umami.login_async(username, password)
+for site in await umami.websites_async():
+    print(site.name, site.domain)
+```

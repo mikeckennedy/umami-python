@@ -100,6 +100,15 @@ If the Umami API returns a non-2xx response.
 
 ## Example
 
-import datetime import umami
+``` python
+import datetime
+import umami
 
-umami.set_url_base('https://umami.example.com') umami.login(username, password) stats = umami.website_stats( start_at=datetime.datetime.now() - datetime.timedelta(days=7), end_at=datetime.datetime.now(), ) print(stats.pageviews, stats.visitors)
+umami.set_url_base('https://umami.example.com')
+umami.login(username, password)
+stats = umami.website_stats(
+    start_at=datetime.datetime.now() - datetime.timedelta(days=7),
+    end_at=datetime.datetime.now(),
+)
+print(stats.pageviews, stats.visitors)
+```

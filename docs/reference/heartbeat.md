@@ -29,6 +29,10 @@ configured.
 
 ## Example
 
+``` python
 import umami
 
-umami.set_url_base('https://umami.example.com') if not umami.heartbeat(): print('Umami is unavailable')
+umami.set_url_base('https://umami.example.com')
+if not umami.heartbeat():
+    print('Umami is unavailable')
+```

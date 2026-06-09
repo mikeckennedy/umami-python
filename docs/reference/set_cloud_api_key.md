@@ -36,6 +36,9 @@ If key is empty or whitespace-only, or if region is provided but is not 'us' or 
 
 ## Example
 
+``` python
 import umami
 
-umami.set_cloud_api_key('your-cloud-api-key', region='us') umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+umami.set_cloud_api_key('your-cloud-api-key', region='us')
+umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+```
