@@ -19,6 +19,13 @@ dynamic: true
 # trailing slash.
 site_url: "https://mkennedy.codes/docs/umami-python/"
 
+# SEO sitemap/robots/canonical/og:url use a SEPARATE "canonical base URL". Great Docs otherwise
+# auto-detects it from the GitHub repo (-> https://mikeckennedy.github.io/umami-python/) and does
+# NOT fall back to site_url, so the sitemap would point at the wrong domain. Set it explicitly.
+seo:
+  canonical:
+    base_url: "https://mkennedy.codes/docs/umami-python/"
+
 # GitHub integration: navbar widget, "source" links on reference pages, version badge.
 repo: https://github.com/mikeckennedy/umami-python
 github_style: widget
