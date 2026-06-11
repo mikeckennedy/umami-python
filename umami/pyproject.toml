@@ -8,12 +8,27 @@ keywords = [
     "analytics",
     "website",
     "umami",
+    "web-analytics",
+    "privacy",
+    "privacy-friendly",
+    "tracking",
+    "metrics",
+    "events",
+    "page-views",
+    "telemetry",
+    "statistics",
+    "self-hosted",
+    "async",
+    "httpx",
+    "pydantic",
+    "sdk",
+    "api-client",
 ]
 authors = [
     { name = "Michael Kennedy", email = "michael@talkpython.fm" },
 ]
 classifiers = [
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
@@ -23,12 +38,13 @@ classifiers = [
     'Programming Language :: Python :: 3.13',
     'Programming Language :: Python :: 3.14',
     'Programming Language :: Python :: 3.15',
+    'Typing :: Typed',
 ]
 dependencies = [
     "httpx2",
     "pydantic",
 ]
-version = "0.6.26"
+version = "1.0.0"
 
 [project.optional-dependencies]
 dev = [

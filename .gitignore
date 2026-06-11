@@ -164,3 +164,4 @@ cython_debug/
 # ruff
 .ruff_cache/
 .claude/scheduled_tasks.lock
+docs/build-timings.json

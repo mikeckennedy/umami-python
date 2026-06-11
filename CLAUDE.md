@@ -17,7 +17,7 @@ front-end HTML trigger.
 - **Import name:** `umami` &nbsp;(i.e. `import umami`)
 - **Repo:** https://github.com/mikeckennedy/umami-python
 - **License:** MIT © Michael Kennedy <michael@talkpython.fm>
-- **Status:** Beta, actively maintained; used in production at Talk Python Training.
+- **Status:** Stable (1.0+), actively maintained; used in production at Talk Python Training.
 - **Python:** 3.10+ (classifiers cover 3.10–3.15).
 - **Runtime deps:** `httpx2` (an API-compatible fork of `httpx`), `pydantic`.
 - **Scope is intentionally partial:** it wraps the most common Umami endpoints, not the whole API.

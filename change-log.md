@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0]
+
+First stable release. The package is now marked `Development Status :: 5 - Production/Stable` (it has
+been used in production at Talk Python Training for some time) and follows [SemVer](https://semver.org/)
+from here forward.
+
+### Changed
+- Promoted the trove classifier from `4 - Beta` to `5 - Production/Stable`, and added the
+  `Typing :: Typed` classifier to advertise the bundled `py.typed` marker.
+- Expanded the PyPI keyword set (added web-analytics, privacy, tracking, metrics, events, page-views,
+  telemetry, statistics, self-hosted, async, httpx, pydantic, sdk, api-client) for better discoverability.
+
 ### Added
 - `pydantic.Field(description=...)` metadata on every response-model field, plus a `griffe-pydantic`
   dev dependency, enriching the response models for IDEs, JSON schema, and future API-reference
