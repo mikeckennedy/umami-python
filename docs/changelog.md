@@ -3,6 +3,41 @@
 This changelog is generated automatically from [GitHub Releases](https://github.com/mikeckennedy/umami-python/releases).
 
 
+# v1.0.0
+
+*2026-06-11* · [GitHub](https://github.com/mikeckennedy/umami-python/releases/tag/v1.0.0)
+
+
+## \[1.0.0\]
+
+First stable release. The package is now marked `Development Status :: 5 - Production/Stable` (it has been used in production at Talk Python Training for some time) and follows [SemVer](https://semver.org/) from here forward.
+
+
+### Changed
+
+- Promoted the trove classifier from `4 - Beta` to `5 - Production/Stable`, and added the `Typing :: Typed` classifier to advertise the bundled `py.typed` marker.
+- Expanded the PyPI keyword set (added web-analytics, privacy, tracking, metrics, events, page-views, telemetry, statistics, self-hosted, async, httpx, pydantic, sdk, api-client) for better discoverability.
+
+
+### Added
+
+- `pydantic.Field(description=...)` metadata on every response-model field, plus a `griffe-pydantic` dev dependency, enriching the response models for IDEs, JSON schema, and future API-reference rendering. Note: the current Great Docs version (0.13.0) does not load griffe extensions, so the rendered field docs still come from the docstring `Attributes:` sections; the Field descriptions will surface on the docs site once the generator loads the extension.
+
+
+### Changed
+
+- Synchronous send functions now return the Umami API's JSON response as a dict (and `{}` when tracking is disabled), matching their async twins. Previously [new_event()](reference/new_event.html#umami.new_event), [new_revenue_event()](reference/new_revenue_event.html#umami.new_revenue_event), and [new_page_view()](reference/new_page_view.html#umami.new_page_view) returned `None`; [new_page_view_async()](reference/new_page_view_async.html#umami.new_page_view_async) also now returns the response dict instead of `None`.
+- Missing or blank required event fields (hostname, website_id, event_name) now raise [umami.errors.ValidationError](reference/errors.ValidationError.html#umami.errors.ValidationError) instead of a bare `Exception`, so they can be caught alongside the SDK's other validation errors.
+- `Website.shareId`, `Website.resetAt`, and `Website.deletedAt` are now optional (default `None`), so a websites response that omits those keys no longer raises `pydantic.ValidationError`.
+- README now points to the new documentation site at https://mkennedy.codes/docs/umami-python/ (added status badges, a documentation pointer near the top, and a "Documentation" section linking the full API reference). Docs-only change -- no code or packaging changes.
+ass="gdls-link gdls-code">new_page_view</a> wording (visitor; the `ua` user-agent string); clarified that [disable()](reference/disable.html#umami.disable) still validates before skipping the HTTP request and that both affect only the send functions; documented all response models and exception classes; added a package module docstring; and added runnable usage examples. Docstring-only -- no code or behavior changes.
+
+
+### Fixed
+
+- `validate_event_data` no longer lets a whitespace-only `event_name` through (the check used `and`, so whitespace bypassed it; it now uses `or`).
+
+
 # v0.6.25
 
 *2026-06-07* · [GitHub](https://github.com/mikeckennedy/umami-python/releases/tag/v0.6.25)

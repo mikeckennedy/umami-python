@@ -2,241 +2,247 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/active_users.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/active_users_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/clear_cloud_api_key.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/disable.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/enable.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/errors.OperationNotAllowedError.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/errors.ValidationError.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/heartbeat.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/heartbeat_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/is_logged_in.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/login.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/login_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.LoginResponse.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.User.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.Website.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.WebsiteStats.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.WebsiteStatsCmp.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.WebsiteUser.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/models.WebsitesResponse.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/new_event.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/new_event_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/new_page_view.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/new_page_view_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/new_revenue_event.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/new_revenue_event_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/set_cloud_api_key.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/set_hostname.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/set_url_base.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/set_website_id.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/verify_token.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/verify_token_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/website_stats.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/website_stats_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/websites.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/reference/websites_async.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/changelog.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/license.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://mkennedy.codes/docs/umami-python/package-info.html</loc>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://mkennedy.codes/docs/umami-python/skills.html</loc>
-    <lastmod>2026-06-10</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

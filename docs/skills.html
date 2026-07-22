@@ -77,7 +77,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-aa1552726bdd3cb78d40c93fdbd5382a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b44a80f981ffe4e8ffda970bb00820f2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -108,9 +108,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script async="" src="https://uma.mkennedy.codes/script.js" data-website-id="fc9b6770-3b44-4073-944e-4a4f0e79f66a"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'termshow.css'}));</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox-compare.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox-compare.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox-annotate.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox-annotate.js';s.defer=true;document.head.appendChild(s);})();</script>
 <script src="theme-init.js"></script>
 
 
+  <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/skills.html">
   <meta name="description" content="A skill is a package of structured files that teaches an AI coding agent how to work with a specific tool or framework. The skill below was generated...">
   <meta name="robots" content="noindex, nofollow">
   <meta property="og:type" content="website">
@@ -131,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Umami Analytics <span class="version-badge" title="Released 2026-06-07">v0.6.25</span></span>
+    <span class="navbar-title">Umami Analytics <span class="version-badge" title="Released 2026-06-11">v1.0.0</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -152,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <span class="nav-link">
-<div id="github-widget" data-owner="mikeckennedy" data-repo="umami-python"></div>
+<div id="github-widget" data-owner="mikeckennedy" data-repo="umami-python" data-stars="85" data-forks="8"></div>
     </span>
   </li>  
 </ul>
@@ -310,12 +317,92 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`errors.ValidationError`</span></span>
 <span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`errors.OperationNotAllowedError`</span></span>
 <span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## Resources</span></span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## Install and import (the names differ)</span></span>
 <span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Full documentation</span><span class="co">](https://mkennedy.codes/docs/umami-python/)</span></span>
-<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">llms.txt</span><span class="co">](llms.txt)</span> — Indexed API reference for LLMs</span>
-<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">llms-full.txt</span><span class="co">](llms-full.txt)</span> — Comprehensive documentation for LLMs</span>
-<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Source code</span><span class="co">](https://github.com/mikeckennedy/umami-python)</span></span></code></pre></div>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>The distribution on PyPI is **`umami-analytics`**, but the import name is **`umami`**. Installing <span class="in">`umami`</span> grabs an unrelated package — always install the analytics client by its full distribution name:</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> pip install umami-analytics    <span class="co"># NOT `pip install umami`</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami                      <span class="co"># the import name is `umami`</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>There is no client class — everything is a module-level function called as <span class="in">`umami.func(...)`</span>, and configuration (URL base, website id, hostname, credentials) is stored as module-global state.</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a><span class="fu">## End-to-end wiring (self-hosted)</span></span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>Configure once at startup, then send events from anywhere. <span class="in">`set_url_base()`</span> takes the instance root **without** the trailing <span class="in">`/api`</span>, and a trailing slash is stripped for you.</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">'https://umami.example.com'</span>)   <span class="co"># required first; validates the http(s) scheme</span></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>umami.login(<span class="st">'admin'</span>, <span class="st">'super-secret'</span>)              <span class="co"># only needed for the query/stats calls below</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">'978435e2-7ba1-4337-9860-ec31ece2db60'</span>)  <span class="co"># default for later calls</span></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'example.com'</span>)                 <span class="co"># default hostname for sent events</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Sending events/page views/revenue needs NO login — only url_base + a website_id + hostname.</span></span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">'checkout-completed'</span>, url<span class="op">=</span><span class="st">'/checkout'</span>, custom_data<span class="op">=</span>{<span class="st">'plan'</span>: <span class="st">'pro'</span>})</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>umami.new_revenue_event(revenue<span class="op">=</span><span class="fl">19.99</span>, currency<span class="op">=</span><span class="st">'USD'</span>, event_name<span class="op">=</span><span class="st">'checkout-cart'</span>, url<span class="op">=</span><span class="st">'/checkout'</span>)</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>umami.new_page_view(page_title<span class="op">=</span><span class="st">'Home'</span>, url<span class="op">=</span><span class="st">'/'</span>)</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>Login IS required for the read-back calls: <span class="in">`websites()`</span>, <span class="in">`website_stats()`</span>, <span class="in">`active_users()`</span>, and <span class="in">`verify_token()`</span>. Sending functions never require it.</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a><span class="fu">## Self-hosted vs Umami Cloud (mutually exclusive)</span></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>Two authentication modes, and you pick exactly one:</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Self-hosted / token:** <span class="in">`set_url_base(...)`</span> then <span class="in">`login(username, password)`</span>. Calls carry <span class="in">`Authorization: Bearer &lt;token&gt;`</span>.</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Umami Cloud / API key:** <span class="in">`set_cloud_api_key(key, region=None)`</span> (region is <span class="in">`'us'`</span>, <span class="in">`'eu'`</span>, or <span class="in">`None`</span>). No <span class="in">`set_url_base()`</span> or <span class="in">`login()`</span> needed; data calls route to <span class="in">`https://api.umami.is/v1`</span> with an <span class="in">`x-umami-api-key`</span> header and events go to <span class="in">`https://cloud.umami.is/api/send`</span>.</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>They do not mix. Calling <span class="in">`login()`</span> while a Cloud API key is set raises <span class="in">`OperationNotAllowedError`</span> — call <span class="in">`clear_cloud_api_key()`</span> first to go back to token mode.</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a><span class="fu">## Sync and async parity</span></span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>Nearly every network operation has an identically-signed <span class="in">`_async`</span> twin: <span class="in">`new_event`</span> / <span class="in">`new_event_async`</span>, <span class="in">`website_stats`</span> / <span class="in">`website_stats_async`</span>, <span class="in">`login`</span> / <span class="in">`login_async`</span>, and so on. The config setters (<span class="in">`set_url_base`</span>, <span class="in">`set_website_id`</span>, <span class="in">`set_hostname`</span>, <span class="in">`enable`</span>, <span class="in">`disable`</span>) are sync-only — there is no <span class="in">`set_url_base_async`</span>.</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a><span class="fu">## disable() is the intended dev/test switch</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a><span class="in">`disable()`</span> does not just skip network — the <span class="in">`new_*`</span> functions still **validate** their inputs, then early-return an empty dict <span class="in">`{}`</span> without any HTTP call. <span class="in">`enable()`</span> (the default) turns them back on. Query and auth functions ignore this flag and always run.</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a><span class="in">```python</span></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>umami.disable()                                   <span class="co"># e.g. in tests / local dev</span></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">'x'</span>, url<span class="op">=</span><span class="st">'/'</span>)          <span class="co"># validates args, returns {}, sends nothing</span></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## distinct_id maps to the payload `id`</span></span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a><span class="in">`distinct_id`</span> (accepted by <span class="in">`new_event`</span>, <span class="in">`new_revenue_event`</span>, <span class="in">`new_page_view`</span>) is sent as the event payload's <span class="in">`id`</span> field for logged-in-user attribution. It accepts a <span class="in">`str`</span> or <span class="in">`int`</span> only; blank/whitespace values are ignored (no id sent), and a <span class="in">`bool`</span> (or any other type) raises <span class="in">`ValidationError`</span>.</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a><span class="fu">## Errors you will actually catch</span></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`umami.errors.OperationNotAllowedError`</span> — required state is missing (no <span class="in">`url_base`</span>/Cloud key, or a query call before <span class="in">`login()`</span>). It subclasses <span class="in">`ValidationError`</span>.</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`umami.errors.ValidationError`</span> — bad input (empty/non-http url, negative or non-numeric revenue, empty currency, invalid <span class="in">`distinct_id`</span>, missing hostname/website_id).</span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`httpx.HTTPStatusError`</span> — a non-2xx server response (the SDK calls <span class="in">`raise_for_status()`</span>). Note <span class="in">`verify_token()`</span> and <span class="in">`heartbeat()`</span> are the exceptions: they never raise and return <span class="in">`bool`</span>.</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="fu">## This SDK wraps only a subset of the Umami API</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>It covers config, auth, sending events/page views/revenue, listing websites, summarized <span class="in">`website_stats`</span>, and <span class="in">`active_users`</span>. For everything else — reports (funnel/attribution/journey/retention/revenue), sessions, event-data, metrics/pageview series, realtime, teams, users, links, pixels, shares — call the Umami HTTP API directly with the token you already hold. Two API gotchas the wrapper hides but direct calls do not:</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Two date conventions:** stats/sessions/events/revenue GET endpoints take `startAt`/`endAt` as **Unix milliseconds**; `POST /api/reports/*` take `startDate`/`endDate` as **ISO 8601 strings** inside <span class="in">`parameters`</span>.</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Renamed filters (2025-10-07):** the filter formerly <span class="in">`url`</span> is now <span class="in">`path`</span>, and <span class="in">`host`</span> is now <span class="in">`hostname`</span>. (In <span class="in">`website_stats(...)`</span> you still pass <span class="in">`url=`</span>/<span class="in">`host=`</span> kwargs; the SDK maps them to <span class="in">`path`</span>/<span class="in">`hostname`</span> for you.)</span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>The companion agent reference guide documents the complete REST surface.</span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a><span class="fu">## Fetching the docs as Markdown</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>Every page on the documentation site has a plain-Markdown twin: swap the <span class="in">`.html`</span> extension for <span class="in">`.md`</span> to get token-efficient source without the site chrome. For example https://mkennedy.codes/docs/umami-python/reference/new_event.html is also available at https://mkennedy.codes/docs/umami-python/reference/new_event.md. Prefer the <span class="in">`.md`</span> form when reading these docs programmatically.</span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a><span class="fu">## Resources</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Full documentation</span><span class="co">](https://mkennedy.codes/docs/umami-python/)</span></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">llms.txt</span><span class="co">](llms.txt)</span> — Indexed API reference for LLMs</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">llms-full.txt</span><span class="co">](llms-full.txt)</span> — Comprehensive documentation for LLMs</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Source code</span><span class="co">](https://github.com/mikeckennedy/umami-python)</span></span></code></pre></div>
 </pre>
 
 
@@ -680,9 +767,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="details.js"></script>
 <script src="mermaid-renderer.js"></script>
 <script src="tooltips.js"></script>
-<script>(function(){var s=document.createElement('script');s.src=(document.querySelector('link[rel="canonical"]')||{href:location.href}).href.replace(/\/[^\/]*$/,'').replace(/\/[^\/]*$/,'')+'/color-swatch.js';var h=document.currentScript;h.parentNode.insertBefore(s,h.nextSibling);})()</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'color-swatch.js';document.body.appendChild(s);})();</script>
 <script src="responsive-tables.js"></script>
-<script src="video-embed.js"></script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'video-embed.js';document.body.appendChild(s);})();</script>
 <script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'termshow.js';document.body.appendChild(s);})();</script>
 <script src="navbar-widgets.js"></script>
 

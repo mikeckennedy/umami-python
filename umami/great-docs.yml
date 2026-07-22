@@ -69,6 +69,14 @@ authors:
     email: michael@talkpython.fm
     github: mikeckennedy
 
+# Agent skill (SKILL.md). The generated skill already lists every public signature
+# and groups them by task. `extra_body` appends hand-written prose the signatures
+# can't convey — install-vs-import naming, self-hosted-vs-Cloud wiring, the disable()
+# no-op, distinct_id semantics, and which REST endpoints this SDK does NOT wrap.
+# Adapted from the umami_reference.md agent guide.
+skill:
+  extra_body: skill_extra_body.md
+
 # API reference — grouped by task, with each sync function and its `_async` twin together.
 reference:
   title: "API Reference"

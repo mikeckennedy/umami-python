@@ -42,7 +42,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-aa1552726bdd3cb78d40c93fdbd5382a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b44a80f981ffe4e8ffda970bb00820f2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,9 +73,17 @@ ul.task-list li input[type="checkbox"] {
 <script async="" src="https://uma.mkennedy.codes/script.js" data-website-id="fc9b6770-3b44-4073-944e-4a4f0e79f66a"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'termshow.css'}));</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox-compare.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox-compare.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox-annotate.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox-annotate.js';s.defer=true;document.head.appendChild(s);})();</script>
 <script src="theme-init.js"></script>
 
 
+  <link rel="alternate" type="text/markdown" href="changelog.md">
+  <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/changelog.html">
   <meta name="description" content="This changelog is generated automatically from GitHub Releases.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Changelog – Umami Analytics | Umami Analytics">
@@ -95,7 +103,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Umami Analytics <span class="version-badge" title="Released 2026-06-07">v0.6.25</span></span>
+    <span class="navbar-title">Umami Analytics <span class="version-badge" title="Released 2026-06-11">v1.0.0</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -116,7 +124,7 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <span class="nav-link">
-<div id="github-widget" data-owner="mikeckennedy" data-repo="umami-python"></div>
+<div id="github-widget" data-owner="mikeckennedy" data-repo="umami-python" data-stars="85" data-forks="8"></div>
     </span>
   </li>  
 </ul>
@@ -135,21 +143,25 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#v0.6.25" id="toc-v0.6.25" class="nav-link active" data-scroll-target="#v0.6.25">v0.6.25</a>
+  <li><a href="#v1.0.0" id="toc-v1.0.0" class="nav-link active" data-scroll-target="#v1.0.0">v1.0.0</a>
   <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">[0.6.25] - 2026-06-07</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">[1.0.0]</a></li>
+  </ul></li>
+  <li><a href="#v0.6.25" id="toc-v0.6.25" class="nav-link" data-scroll-target="#v0.6.25">v0.6.25</a>
+  <ul class="collapse">
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">[0.6.25] - 2026-06-07</a></li>
   </ul></li>
   <li><a href="#v0.5.24" id="toc-v0.5.24" class="nav-link" data-scroll-target="#v0.5.24">v0.5.24</a>
   <ul class="collapse">
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">[0.5.24] - 2026-06-04</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">[0.5.24] - 2026-06-04</a></li>
   </ul></li>
   <li><a href="#v0.4.23" id="toc-v0.4.23" class="nav-link" data-scroll-target="#v0.4.23">v0.4.23</a>
   <ul class="collapse">
-  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">[0.4.23]</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">[0.4.23]</a></li>
   </ul></li>
   <li><a href="#v0.3.22" id="toc-v0.3.22" class="nav-link" data-scroll-target="#v0.3.22">v0.3.22</a>
   <ul class="collapse">
-  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">[0.3.22] - 2026-02-02</a></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">[0.3.22] - 2026-02-02</a></li>
   </ul></li>
   <li><a href="#v0.3.21" id="toc-v0.3.21" class="nav-link" data-scroll-target="#v0.3.21">v0.3.21</a></li>
   <li><a href="#v0.2.20" id="toc-v0.2.20" class="nav-link" data-scroll-target="#v0.2.20">v0.2.20</a>
@@ -203,28 +215,65 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>This changelog is generated automatically from <a href="https://github.com/mikeckennedy/umami-python/releases">GitHub Releases</a>.</p>
+<section id="v1.0.0" class="level1 changelog-version">
+<h1 class="changelog-version">v1.0.0</h1>
+<p><em>2026-06-11</em> · <a href="https://github.com/mikeckennedy/umami-python/releases/tag/v1.0.0">GitHub</a></p>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section">[1.0.0]</h2>
+<p>First stable release. The package is now marked <code>Development Status :: 5 - Production/Stable</code> (it has been used in production at Talk Python Training for some time) and follows <a href="https://semver.org/">SemVer</a> from here forward.</p>
+<section id="changed" class="level3">
+<h3 class="anchored" data-anchor-id="changed">Changed</h3>
+<ul>
+<li>Promoted the trove classifier from <code>4 - Beta</code> to <code>5 - Production/Stable</code>, and added the <code>Typing :: Typed</code> classifier to advertise the bundled <code>py.typed</code> marker.</li>
+<li>Expanded the PyPI keyword set (added web-analytics, privacy, tracking, metrics, events, page-views, telemetry, statistics, self-hosted, async, httpx, pydantic, sdk, api-client) for better discoverability.</li>
+</ul>
+</section>
+<section id="added" class="level3">
+<h3 class="anchored" data-anchor-id="added">Added</h3>
+<ul>
+<li><code>pydantic.Field(description=...)</code> metadata on every response-model field, plus a <code>griffe-pydantic</code> dev dependency, enriching the response models for IDEs, JSON schema, and future API-reference rendering. Note: the current Great Docs version (0.13.0) does not load griffe extensions, so the rendered field docs still come from the docstring <code>Attributes:</code> sections; the Field descriptions will surface on the docs site once the generator loads the extension.</li>
+</ul>
+</section>
+<section id="changed-1" class="level3">
+<h3 class="anchored" data-anchor-id="changed-1">Changed</h3>
+<ul>
+<li>Synchronous send functions now return the Umami API’s JSON response as a dict (and <code>{}</code> when tracking is disabled), matching their async twins. Previously <a href="reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a>, <a href="reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a>, and <a href="reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> returned <code>None</code>; <a href="reference/new_page_view_async.html#umami.new_page_view_async" class="gdls-link gdls-code">new_page_view_async()</a> also now returns the response dict instead of <code>None</code>.</li>
+<li>Missing or blank required event fields (hostname, website_id, event_name) now raise <a href="reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">umami.errors.ValidationError</a> instead of a bare <code>Exception</code>, so they can be caught alongside the SDK’s other validation errors.</li>
+<li><code>Website.shareId</code>, <code>Website.resetAt</code>, and <code>Website.deletedAt</code> are now optional (default <code>None</code>), so a websites response that omits those keys no longer raises <code>pydantic.ValidationError</code>.</li>
+<li>README now points to the new documentation site at https://mkennedy.codes/docs/umami-python/ (added status badges, a documentation pointer near the top, and a “Documentation” section linking the full API reference). Docs-only change — no code or packaging changes.</li>
+<li>Docstrings across the public API were expanded and corrected for the generated documentation site (Great Docs renders them verbatim, and they feed <code>llms.txt</code>). Added <code>Raises:</code> sections to every raising function; fixed <a href="reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> / <a href="reference/website_stats_async.html#umami.website_stats_async" class="gdls-link gdls-code">website_stats_async()</a> to document their real return type (<a href="reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="gdls-link gdls-code">models.WebsiteStats</a>, not the nonexistent <code>WebsiteStatsResponse</code>); removed unprofessional/inaccurate prose from <a href="reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token</a> (the “minutes, hours, or years” hedge) and <a href="reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event</a> (the “not sure how this is different” aside); corrected <a href="reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view</a> wording (visitor; the <code>ua</code> user-agent string); clarified that <a href="reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> still validates before skipping the HTTP request and that both affect only the send functions; documented all response models and exception classes; added a package module docstring; and added runnable usage examples. Docstring-only — no code or behavior changes.</li>
+</ul>
+</section>
+<section id="fixed" class="level3">
+<h3 class="anchored" data-anchor-id="fixed">Fixed</h3>
+<ul>
+<li><code>validate_event_data</code> no longer lets a whitespace-only <code>event_name</code> through (the check used <code>and</code>, so whitespace bypassed it; it now uses <code>or</code>).</li>
+</ul>
+</section>
+</section>
+</section>
 <section id="v0.6.25" class="level1 changelog-version">
 <h1 class="changelog-version">v0.6.25</h1>
 <p><em>2026-06-07</em> · <a href="https://github.com/mikeckennedy/umami-python/releases/tag/v0.6.25">GitHub</a></p>
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">[0.6.25] - 2026-06-07</h2>
-<section id="added" class="level3">
-<h3 class="anchored" data-anchor-id="added">Added</h3>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">[0.6.25] - 2026-06-07</h2>
+<section id="added-1" class="level3">
+<h3 class="anchored" data-anchor-id="added-1">Added</h3>
 <ul>
 <li><code>distinct_id</code> support in <a href="reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event</a>, <a href="reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view</a>, and <a href="reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event</a> payloads (sync and async), sent to Umami as payload field <code>id</code></li>
 <li>Umami Cloud API-key authentication via <code>set_cloud_api_key(key, region=None)</code> and <a href="reference/clear_cloud_api_key.html#umami.clear_cloud_api_key" class="gdls-link gdls-code">clear_cloud_api_key()</a>. In Cloud mode, data/management calls route to <code>https://api.umami.is/v1[/region]</code> with an <code>x-umami-api-key</code> header, and events are sent to <code>https://cloud.umami.is/api/send</code> — no <a href="reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> or <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> required. Existing self-hosted (<a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> + token) usage is byte-for-byte unchanged. Added <code>urls.me</code> for Cloud key validation in <a href="reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token</a>/<a href="reference/verify_token_async.html#umami.verify_token_async" class="gdls-link gdls-code">verify_token_async</a>. In Cloud mode, <a href="reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a> / <a href="reference/heartbeat_async.html#umami.heartbeat_async" class="gdls-link gdls-code">heartbeat_async()</a> check liveness via the authenticated <code>/me</code> endpoint (Cloud has no <code>/api/heartbeat</code>), and <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> / <a href="reference/login_async.html#umami.login_async" class="gdls-link gdls-code">login_async()</a> raise <a href="reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a> to fail fast (the API key is the credential — there is no username/password login on Cloud).</li>
 </ul>
 </section>
-<section id="changed" class="level3">
-<h3 class="anchored" data-anchor-id="changed">Changed</h3>
+<section id="changed-2" class="level3">
+<h3 class="anchored" data-anchor-id="changed-2">Changed</h3>
 <ul>
 <li><code>validate_state</code> error messages now mention <a href="reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a> alongside <a href="reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> / <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>. Same exception type (<a href="reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a>) and trigger conditions; text only.</li>
 <li>Response models are more tolerant of variant/partial responses: <code>WebsiteStats.comparison</code> and <code>Website.user</code> are now optional, and <a href="reference/models.Website.html#umami.models.Website" class="gdls-link gdls-code">Website</a> accepts <code>createUser</code> (returned by team-website listings, where <code>userId</code> is null). Successful responses today are unaffected.</li>
 <li>Internal: expanded the unit test suite (now 128 tests) following a suite review — added behavioral coverage for <a href="reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base</a> validation, the <code>validate_state</code> guards, the <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login</a>/<a href="reference/login_async.html#umami.login_async" class="gdls-link gdls-code">login_async</a> happy path and response-model deserialization (<a href="reference/models.LoginResponse.html#umami.models.LoginResponse" class="gdls-link gdls-code">LoginResponse</a>, <a href="reference/models.WebsitesResponse.html#umami.models.WebsitesResponse" class="gdls-link gdls-code">WebsitesResponse</a>), <a href="reference/websites.html#umami.websites" class="gdls-link gdls-code">websites</a>/<a href="reference/websites_async.html#umami.websites_async" class="gdls-link gdls-code">websites_async</a>, the <a href="reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> no-op (asserting no HTTP request is made), <code>ip_address</code> payload inclusion/omission, explicit-arg-overrides-defaults precedence, <a href="reference/heartbeat_async.html#umami.heartbeat_async" class="gdls-link gdls-code">heartbeat_async</a> self-hosted, and the <a href="reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token</a>/<a href="reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat</a> failure branches. Added a sync/async parity harness and consolidated the per-file HTTP mock builders into a shared <code>tests/_mocks.py</code> (net ~210 fewer lines). No production behavior changed.</li>
 </ul>
 </section>
-<section id="fixed" class="level3">
-<h3 class="anchored" data-anchor-id="fixed">Fixed</h3>
+<section id="fixed-1" class="level3">
+<h3 class="anchored" data-anchor-id="fixed-1">Fixed</h3>
 <ul>
 <li><a href="reference/website_stats_async.html#umami.website_stats_async" class="gdls-link gdls-code">website_stats_async()</a> sent its date range as snake_case <code>start_at</code>/<code>end_at</code> query params, which the Umami API ignores — it silently returned all-time stats regardless of the requested window. Now sends camelCase <code>startAt</code>/<code>endAt</code>, matching the sync <a href="reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a>. (<a href="https://github.com/mikeckennedy/umami-python/issues/18">#18</a>)</li>
 <li><a href="reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> and <a href="reference/active_users_async.html#umami.active_users_async" class="gdls-link gdls-code">active_users_async()</a> read the active-visitor count from a non-existent <code>x</code> key, so they always returned <code>0</code>. They now read Umami’s current <code>visitors</code> key (falling back to the legacy <code>x</code> key for compatibility). (<a href="https://github.com/mikeckennedy/umami-python/issues/19">#19</a>)</li>
@@ -238,10 +287,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="v0.5.24" class="level1 changelog-version">
 <h1 class="changelog-version">v0.5.24</h1>
 <p><em>2026-06-04</em> · <a href="https://github.com/mikeckennedy/umami-python/releases/tag/v0.5.24">GitHub</a></p>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">[0.5.24] - 2026-06-04</h2>
-<section id="changed-1" class="level3">
-<h3 class="anchored" data-anchor-id="changed-1">Changed</h3>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">[0.5.24] - 2026-06-04</h2>
+<section id="changed-3" class="level3">
+<h3 class="anchored" data-anchor-id="changed-3">Changed</h3>
 <ul>
 <li>Migrated HTTP backend from <code>httpx</code> to <code>httpx2</code>, imported as <code>import httpx2 as httpx</code> so all call sites remain unchanged</li>
 <li>Files: <code>umami/umami/impl/__init__.py</code>, <code>umami/requirements.txt</code>, <code>umami/pyproject.toml</code>, <code>pyrefly.toml</code>, <code>README.md</code>, <code>umami/README.md</code></li>
@@ -252,10 +301,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="v0.4.23" class="level1 changelog-version">
 <h1 class="changelog-version">v0.4.23</h1>
 <p><em>2026-03-13</em> · <a href="https://github.com/mikeckennedy/umami-python/releases/tag/v0.4.23">GitHub</a></p>
-<section id="section-2" class="level2">
-<h2 class="anchored" data-anchor-id="section-2">[0.4.23]</h2>
-<section id="added-1" class="level3">
-<h3 class="anchored" data-anchor-id="added-1">Added</h3>
+<section id="section-3" class="level2">
+<h2 class="anchored" data-anchor-id="section-3">[0.4.23]</h2>
+<section id="added-2" class="level3">
+<h3 class="anchored" data-anchor-id="added-2">Added</h3>
 <ul>
 <li><a href="reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> and <a href="reference/new_revenue_event_async.html#umami.new_revenue_event_async" class="gdls-link gdls-code">new_revenue_event_async()</a> for tracking revenue with Umami’s new revenue feature</li>
 <li>Revenue events automatically inject <code>revenue</code> (float) and <code>currency</code> (ISO 4217 string) into event custom data</li>
@@ -269,10 +318,10 @@ ul.task-list li input[type="checkbox"] {
 <section id="v0.3.22" class="level1 changelog-version">
 <h1 class="changelog-version">v0.3.22</h1>
 <p><em>2026-02-03</em> · <a href="https://github.com/mikeckennedy/umami-python/releases/tag/v0.3.22">GitHub</a></p>
-<section id="section-3" class="level2">
-<h2 class="anchored" data-anchor-id="section-3">[0.3.22] - 2026-02-02</h2>
-<section id="fixed-1" class="level3">
-<h3 class="anchored" data-anchor-id="fixed-1">Fixed</h3>
+<section id="section-4" class="level2">
+<h2 class="anchored" data-anchor-id="section-4">[0.3.22] - 2026-02-02</h2>
+<section id="fixed-2" class="level3">
+<h3 class="anchored" data-anchor-id="fixed-2">Fixed</h3>
 <ul>
 <li><a href="reference/new_event_async.html#umami.new_event_async" class="gdls-link gdls-code">new_event_async</a> crashed with <code>binascii.Error</code> due to erroneous <code>base64.b64decode</code> / <code>json.loads</code> calls on the plain-JSON API response; now returns <code>resp.json()</code> directly, matching the other event and page-view methods</li>
 </ul>
@@ -282,15 +331,15 @@ ul.task-list li input[type="checkbox"] {
 <section id="v0.3.21" class="level1 changelog-version">
 <h1 class="changelog-version">v0.3.21</h1>
 <p><em>2025-12-12</em> · <a href="https://github.com/mikeckennedy/umami-python/releases/tag/v0.3.21">GitHub</a></p>
-<section id="added-2" class="level3">
-<h3 class="anchored" data-anchor-id="added-2">Added</h3>
+<section id="added-3" class="level3">
+<h3 class="anchored" data-anchor-id="added-3">Added</h3>
 <ul>
 <li>Change-log preservation section for tracking historical release details</li>
 <li>Pyrefly configuration file treating <code>umami/umami</code> package as type-resolution root</li>
 </ul>
 </section>
-<section id="changed-2" class="level3">
-<h3 class="anchored" data-anchor-id="changed-2">Changed</h3>
+<section id="changed-4" class="level3">
+<h3 class="anchored" data-anchor-id="changed-4">Changed</h3>
 <ul>
 <li>Centralized all version information into a single location for easier maintenance</li>
 <li>Updated Python requirement to 3.10+ (dropped support for Python 3.8 and 3.9)</li>
@@ -298,8 +347,8 @@ ul.task-list li input[type="checkbox"] {
 <li>Updated <code>ruff.toml</code> to enforce consistent import ordering</li>
 </ul>
 </section>
-<section id="fixed-2" class="level3">
-<h3 class="anchored" data-anchor-id="fixed-2">Fixed</h3>
+<section id="fixed-3" class="level3">
+<h3 class="anchored" data-anchor-id="fixed-3">Fixed</h3>
 <ul>
 <li>Suppressed and cleaned up unnecessary type-checking warnings</li>
 </ul>
@@ -793,9 +842,9 @@ ul.task-list li input[type="checkbox"] {
 <script src="details.js"></script>
 <script src="mermaid-renderer.js"></script>
 <script src="tooltips.js"></script>
-<script>(function(){var s=document.createElement('script');s.src=(document.querySelector('link[rel="canonical"]')||{href:location.href}).href.replace(/\/[^\/]*$/,'').replace(/\/[^\/]*$/,'')+'/color-swatch.js';var h=document.currentScript;h.parentNode.insertBefore(s,h.nextSibling);})()</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'color-swatch.js';document.body.appendChild(s);})();</script>
 <script src="responsive-tables.js"></script>
-<script src="video-embed.js"></script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'video-embed.js';document.body.appendChild(s);})();</script>
 <script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'termshow.js';document.body.appendChild(s);})();</script>
 <script src="navbar-widgets.js"></script>
 

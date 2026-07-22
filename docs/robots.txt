@@ -4,3 +4,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://mkennedy.codes/docs/umami-python/sitemap.xml
+
+# AI agent context files
+Llms-txt: https://mkennedy.codes/docs/umami-python/llms.txt
+Llms-txt: https://mkennedy.codes/docs/umami-python/llms-full.txt
