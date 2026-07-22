@@ -13,7 +13,7 @@ Umami Analytics Client for Python
 ## Installation
 
 ```bash
-pip install umami
+uv pip install umami-analytics
 ```
 
 ## API overview
