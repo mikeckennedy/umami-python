@@ -149,7 +149,12 @@ Umami-Python Release Notes
 
 - **Development and Testing Tracking**: Added options to disable tracking for development and testing environments. This allows users to control data collection based on their needs.
 
-When tracking is disabled: - ✅ **No HTTP requests** are made to your Umami server - ✅ **API calls still validate** parameters (helps catch configuration issues) - ✅ **All other functions work normally** (login, websites, stats, etc.) - ✅ **Functions return appropriate values** for compatibility
+When tracking is disabled:
+
+- ✅ **No HTTP requests** are made to your Umami server
+- ✅ **API calls still validate** parameters (helps catch configuration issues)
+- ✅ **All other functions work normally** (login, websites, stats, etc.)
+- ✅ **Functions return appropriate values** for compatibility
 
 
 ## 📚 Documentation

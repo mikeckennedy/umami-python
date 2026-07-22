@@ -276,7 +276,7 @@
     "href": "changelog.html#new-features",
     "title": "Changelog",
     "section": "🚀 New Features",
-    "text": "🚀 New Features\n\nDevelopment and Testing Tracking: Added options to disable tracking for development and testing environments. This allows users to control data collection based on their needs.\n\nWhen tracking is disabled: - ✅ No HTTP requests are made to your Umami server - ✅ API calls still validate parameters (helps catch configuration issues) - ✅ All other functions work normally (login, websites, stats, etc.) - ✅ Functions return appropriate values for compatibility"
+    "text": "🚀 New Features\n\nDevelopment and Testing Tracking: Added options to disable tracking for development and testing environments. This allows users to control data collection based on their needs.\n\nWhen tracking is disabled:\n\n✅ No HTTP requests are made to your Umami server\n✅ API calls still validate parameters (helps catch configuration issues)\n✅ All other functions work normally (login, websites, stats, etc.)\n✅ Functions return appropriate values for compatibility"
   },
   {
     "objectID": "changelog.html#documentation",
