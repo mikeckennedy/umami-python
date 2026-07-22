@@ -61,6 +61,7 @@ umami.enable()
 ```
 
 When tracking is disabled:
+
 - ✅ **No HTTP requests** are made to your Umami server
 - ✅ **API calls still validate** parameters (helps catch configuration issues)
 - ✅ **All other functions work normally** (login, websites, stats, etc.)
