@@ -46,8 +46,8 @@ For Umami Cloud, replace `set_url_base()` with `umami.set_cloud_api_key(key, reg
 - `distinct_id` accepts `str` or `int` and is sent as payload `id`. Blank strings are dropped. `bool` and other types raise `ValidationError`.
 - `new_revenue_event()` requires `revenue >= 0` as `int` or `float` and a non-blank `currency` (default `'USD'`); it overwrites `revenue` and `currency` keys in `custom_data`.
 - Only `new_page_view()` accepts `ua`. Passing `ua` to `new_event()` is a `TypeError`. The default is a Chrome user agent because Umami drops bot-like user agents, often while still returning 200.
-- `website_stats()` takes `datetime` objects and converts them with `timestamp()`, so naive datetimes mean local time. Its `url` and `host` filters are sent as `path` and `hostname`. `websites()` returns only the first page.
-- One HTTP request per call, five second timeout, no retry, no batching, no connection pool. `heartbeat()` and `verify_token()` never raise.
+- `website_stats()` takes `datetime` objects and converts them with `timestamp()`, so naive datetimes mean local time. Its `url` and `host` filters are sent as `path` and `hostname`. `websites()` follows every page and returns the full list.
+- One HTTP request per call (`websites()` makes one per page), five second timeout, no retry, no batching, no connection pool. `heartbeat()` and `verify_token()` never raise.
 - `umami.models` are Pydantic models (`Website`, `WebsiteStats`, `LoginResponse`). `OperationNotAllowedError` subclasses `ValidationError`.
 
 ## Decision table

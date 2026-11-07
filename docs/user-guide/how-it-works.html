@@ -341,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td>Event credential</td>
-<td>the same Bearer header, which Umami ignores</td>
+<td>the Bearer token when you have logged in, which Umami ignores; otherwise none</td>
 <td>none</td>
 </tr>
 <tr class="even">
@@ -356,7 +356,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>In self-hosted mode the send functions include the Bearer header even when you never logged in, in which case its value is the string <code>None</code>. Umami’s ingestion endpoint does not read it, so this is harmless.</p>
 </section>
 <section id="two-user-agents" class="level1">
 <h1>Two user agents</h1>
@@ -365,9 +364,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="requests-and-responses" class="level1">
 <h1>Requests and responses</h1>
-<p>Each function makes exactly one HTTP request. The sync functions call <code>httpx2.post()</code> or <code>httpx2.get()</code> directly; the async functions open an <code>httpx2.AsyncClient()</code> for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is <code>httpx2</code>’s default of five seconds and is not configurable through the package.</p>
+<p>Each function makes one HTTP request, except <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a>, which requests each page of Umami’s paged listing in turn. The sync functions call <code>httpx2.post()</code> or <code>httpx2.get()</code> directly; the async functions open an <code>httpx2.AsyncClient()</code> for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is <code>httpx2</code>’s default of five seconds and is not configurable through the package.</p>
 <p>Responses go through <code>raise_for_status()</code>, so any non-2xx status raises <code>httpx2.HTTPStatusError</code> with the response attached. The two exceptions are <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> and <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>, which catch everything and return <code>False</code>, because they exist to answer a yes or no question.</p>
-<p>Successful query responses are parsed into Pydantic models from <code>umami.models</code>. <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a> unwraps Umami’s paged <code>{"data": [...]}</code> envelope and returns the list. <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> returns <a href="../reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="gdls-link gdls-code">WebsiteStats</a>. <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> reads the <code>visitors</code> key and returns an <code>int</code>. Send functions return the response body as a plain dict.</p>
+<p>Successful query responses are parsed into Pydantic models from <code>umami.models</code>. <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a> unwraps Umami’s paged <code>{"data": [...]}</code> envelope, follows the <code>page</code> parameter until the reported <code>count</code> is reached or a page adds nothing new, and returns one flat list. <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> returns <a href="../reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="gdls-link gdls-code">WebsiteStats</a>. <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> reads the <code>visitors</code> key and returns an <code>int</code>. Send functions return the response body as a plain dict.</p>
 </section>
 <section id="sync-and-async-parity" class="level1">
 <h1>Sync and async parity</h1>

@@ -199,7 +199,7 @@ Returns:
 Raises:
     OperationNotAllowedError: If Cloud mode is active (set_cloud_api_key()
         was called), or if set_url_base() has not been called.
-    ValidationError: If username or password is empty.
+    ValidationError: If username or password is empty or whitespace-only.
     httpx.HTTPStatusError: If the server returns a non-2xx response, e.g.
         on invalid credentials.
 
@@ -237,7 +237,7 @@ Returns:
 Raises:
     OperationNotAllowedError: If Cloud mode is active (set_cloud_api_key()
         was called), or if set_url_base() has not been called.
-    ValidationError: If username or password is empty.
+    ValidationError: If username or password is empty or whitespace-only.
     httpx.HTTPStatusError: If the server returns a non-2xx response, e.g.
         on invalid credentials.
 
@@ -718,7 +718,8 @@ Requires authentication: call login() (self-hosted) or set_cloud_api_key()
 set_url_base().
 
 Returns:
-    A list of models.Website models, unwrapped from the paged API response.
+    A list of models.Website models. Umami pages this endpoint; the
+    package requests every page and returns the complete list.
 
 Raises:
     OperationNotAllowedError: If set_url_base() has not been called (and no
@@ -745,7 +746,8 @@ Requires authentication: call login() (self-hosted) or set_cloud_api_key()
 set_url_base().
 
 Returns:
-    A list of models.Website models, unwrapped from the paged API response.
+    A list of models.Website models. Umami pages this endpoint; the
+    package requests every page and returns the complete list.
 
 Raises:
     OperationNotAllowedError: If set_url_base() has not been called (and no
@@ -1566,7 +1568,7 @@ for site in umami.websites():
     print(site.id, site.name, site.domain)
 ```
 
-`websites()` returns a list of `Website` models. The `id` attribute is the value to pass to `set_website_id()`. Umami's endpoint is paged, and the package returns only the first page of results. If you have more websites than fit on one page, call the API directly as shown in [How it works](how-it-works.qmd#beyond-the-wrapped-endpoints).
+`websites()` returns a list of `Website` models. The `id` attribute is the value to pass to `set_website_id()`. Umami pages this endpoint, so the package requests page after page until it holds the total the server reports, and returns the complete list. One request is enough for most accounts.
 
 `user` is set for websites you own, and `createUser` is set instead for team websites. Both are `WebsiteUser` models with `id` and `username`, and either can be `None`.
 
@@ -1661,7 +1663,7 @@ Each message names the argument to fix:
 - `distinct_id must be a string or integer.` means you passed a `bool`, `float`, list, or other type.
 - `Revenue must be a number (int or float).`, `Revenue must be >= 0.`, and `Currency must be a non-empty string.` come from `new_revenue_event()`.
 - `API key must not be empty.` and `region must be 'us', 'eu', or None.` come from `set_cloud_api_key()`.
-- `Username cannot be empty` and `Password cannot be empty` come from `login()`.
+- `Username cannot be empty` and `Password cannot be empty` come from `login()`. Whitespace-only values count as empty.
 
 ## Login and token problems
 
@@ -1926,11 +1928,9 @@ Every request resolves its URL and headers from the current mode.
 | Events (`/api/send`) | `{url_base}/api/send` | `https://cloud.umami.is/api/send` |
 | Queries | `{url_base}/api/...` | `https://api.umami.is/v1[/region]/...` |
 | Query credential | `Authorization: Bearer <token>` from `login()` | `x-umami-api-key: <key>` |
-| Event credential | the same Bearer header, which Umami ignores | none |
+| Event credential | the Bearer token when you have logged in, which Umami ignores; otherwise none | none |
 | `verify_token()` | `POST /api/auth/verify` | `GET /me` |
 | `heartbeat()` | `GET /api/heartbeat` | `GET /me` with the key |
-
-In self-hosted mode the send functions include the Bearer header even when you never logged in, in which case its value is the string `None`. Umami's ingestion endpoint does not read it, so this is harmless.
 
 ## Two user agents
 
@@ -1940,11 +1940,11 @@ If you would rather Umami accepted any user agent, set `DISABLE_BOT_CHECK=true` 
 
 ## Requests and responses
 
-Each function makes exactly one HTTP request. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package.
+Each function makes one HTTP request, except `websites()`, which requests each page of Umami's paged listing in turn. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package.
 
 Responses go through `raise_for_status()`, so any non-2xx status raises `httpx2.HTTPStatusError` with the response attached. The two exceptions are `verify_token()` and `heartbeat()`, which catch everything and return `False`, because they exist to answer a yes or no question.
 
-Successful query responses are parsed into Pydantic models from `umami.models`. `websites()` unwraps Umami's paged `{"data": [...]}` envelope and returns the list. `website_stats()` returns `WebsiteStats`. `active_users()` reads the `visitors` key and returns an `int`. Send functions return the response body as a plain dict.
+Successful query responses are parsed into Pydantic models from `umami.models`. `websites()` unwraps Umami's paged `{"data": [...]}` envelope, follows the `page` parameter until the reported `count` is reached or a page adds nothing new, and returns one flat list. `website_stats()` returns `WebsiteStats`. `active_users()` reads the `visitors` key and returns an `int`. Send functions return the response body as a plain dict.
 
 ## Sync and async parity
 

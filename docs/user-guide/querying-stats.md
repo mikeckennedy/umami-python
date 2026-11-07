@@ -10,7 +10,7 @@ for site in umami.websites():
     print(site.id, site.name, site.domain)
 ```
 
-[websites()](../reference/websites.md#umami.websites) returns a list of [Website](../reference/models.Website.md#umami.models.Website) models. The `id` attribute is the value to pass to [set_website_id()](../reference/set_website_id.md#umami.set_website_id). Umami's endpoint is paged, and the package returns only the first page of results. If you have more websites than fit on one page, call the API directly as shown in [How it works](how-it-works.md#beyond-the-wrapped-endpoints).
+[websites()](../reference/websites.md#umami.websites) returns a list of [Website](../reference/models.Website.md#umami.models.Website) models. The `id` attribute is the value to pass to [set_website_id()](../reference/set_website_id.md#umami.set_website_id). Umami pages this endpoint, so the package requests page after page until it holds the total the server reports, and returns the complete list. One request is enough for most accounts.
 
 `user` is set for websites you own, and `createUser` is set instead for team websites. Both are [WebsiteUser](../reference/models.WebsiteUser.md#umami.models.WebsiteUser) models with `id` and `username`, and either can be `None`.
 

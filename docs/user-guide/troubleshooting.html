@@ -362,7 +362,7 @@ A Cloud key is set, so there is nothing to log in to. Remove the <a href="../ref
 <li><code>distinct_id must be a string or integer.</code> means you passed a <code>bool</code>, <code>float</code>, list, or other type.</li>
 <li><code>Revenue must be a number (int or float).</code>, <code>Revenue must be &gt;= 0.</code>, and <code>Currency must be a non-empty string.</code> come from <a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a>.</li>
 <li><code>API key must not be empty.</code> and <code>region must be 'us', 'eu', or None.</code> come from <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a>.</li>
-<li><code>Username cannot be empty</code> and <code>Password cannot be empty</code> come from <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>.</li>
+<li><code>Username cannot be empty</code> and <code>Password cannot be empty</code> come from <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>. Whitespace-only values count as empty.</li>
 </ul>
 </section>
 <section id="login-and-token-problems" class="level1">

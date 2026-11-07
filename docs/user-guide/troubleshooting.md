@@ -37,7 +37,7 @@ Each message names the argument to fix:
 - `distinct_id must be a string or integer.` means you passed a `bool`, `float`, list, or other type.
 - `Revenue must be a number (int or float).`, `Revenue must be >= 0.`, and `Currency must be a non-empty string.` come from [new_revenue_event()](../reference/new_revenue_event.md#umami.new_revenue_event).
 - `API key must not be empty.` and `region must be 'us', 'eu', or None.` come from [set_cloud_api_key()](../reference/set_cloud_api_key.md#umami.set_cloud_api_key).
-- `Username cannot be empty` and `Password cannot be empty` come from [login()](../reference/login.md#umami.login).
+- `Username cannot be empty` and `Password cannot be empty` come from [login()](../reference/login.md#umami.login). Whitespace-only values count as empty.
 
 
 # Login and token problems

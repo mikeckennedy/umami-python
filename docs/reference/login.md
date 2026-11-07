@@ -47,7 +47,7 @@ retained internally.
 If Cloud mode is active (set_cloud_api_key() was called), or if set_url_base() has not been called.
 
 `ValidationError`  
-If username or password is empty.
+If username or password is empty or whitespace-only.
 
 `httpx.HTTPStatusError`  
 If the server returns a non-2xx response, e.g. on invalid credentials.

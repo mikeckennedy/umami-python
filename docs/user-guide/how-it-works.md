@@ -23,11 +23,9 @@ Every request resolves its URL and headers from the current mode.
 | Events (`/api/send`) | `{url_base}/api/send` | `https://cloud.umami.is/api/send` |
 | Queries | `{url_base}/api/...` | `https://api.umami.is/v1[/region]/...` |
 | Query credential | `Authorization: Bearer <token>` from [login()](../reference/login.md#umami.login) | `x-umami-api-key: <key>` |
-| Event credential | the same Bearer header, which Umami ignores | none |
+| Event credential | the Bearer token when you have logged in, which Umami ignores; otherwise none | none |
 | [verify_token()](../reference/verify_token.md#umami.verify_token) | `POST /api/auth/verify` | `GET /me` |
 | [heartbeat()](../reference/heartbeat.md#umami.heartbeat) | `GET /api/heartbeat` | `GET /me` with the key |
-
-In self-hosted mode the send functions include the Bearer header even when you never logged in, in which case its value is the string `None`. Umami's ingestion endpoint does not read it, so this is harmless.
 
 
 # Two user agents
@@ -39,11 +37,11 @@ If you would rather Umami accepted any user agent, set `DISABLE_BOT_CHECK=true` 
 
 # Requests and responses
 
-Each function makes exactly one HTTP request. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package.
+Each function makes one HTTP request, except [websites()](../reference/websites.md#umami.websites), which requests each page of Umami's paged listing in turn. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package.
 
 Responses go through `raise_for_status()`, so any non-2xx status raises `httpx2.HTTPStatusError` with the response attached. The two exceptions are [verify_token()](../reference/verify_token.md#umami.verify_token) and [heartbeat()](../reference/heartbeat.md#umami.heartbeat), which catch everything and return `False`, because they exist to answer a yes or no question.
 
-Successful query responses are parsed into Pydantic models from `umami.models`. [websites()](../reference/websites.md#umami.websites) unwraps Umami's paged `{"data": [...]}` envelope and returns the list. [website_stats()](../reference/website_stats.md#umami.website_stats) returns [WebsiteStats](../reference/models.WebsiteStats.md#umami.models.WebsiteStats). [active_users()](../reference/active_users.md#umami.active_users) reads the `visitors` key and returns an `int`. Send functions return the response body as a plain dict.
+Successful query responses are parsed into Pydantic models from `umami.models`. [websites()](../reference/websites.md#umami.websites) unwraps Umami's paged `{"data": [...]}` envelope, follows the `page` parameter until the reported `count` is reached or a page adds nothing new, and returns one flat list. [website_stats()](../reference/website_stats.md#umami.website_stats) returns [WebsiteStats](../reference/models.WebsiteStats.md#umami.models.WebsiteStats). [active_users()](../reference/active_users.md#umami.active_users) reads the `visitors` key and returns an `int`. Send functions return the response body as a plain dict.
 
 
 # Sync and async parity

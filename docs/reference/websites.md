@@ -18,7 +18,9 @@ Requires authentication: call login() (self-hosted) or set_cloud_api_key() (Umam
 
 
 `list[models.Website]`  
-A list of models.Website models, unwrapped from the paged API response.
+A list of models.Website models. Umami pages this endpoint; the
+
+package requests every page and returns the complete list.
 
 
 ## Raises
