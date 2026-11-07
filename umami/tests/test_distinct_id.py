@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -24,8 +25,9 @@ class TestDistinctIdSync:
         assert payload['id'] == '12345'
 
     def test_new_event_rejects_invalid_distinct_id_type(self):
+        bad: Any = ['bad-type']
         with pytest.raises(ValidationError, match='string or integer'):
-            umami.new_event(event_name='signup', distinct_id=['bad-type'])  # type: ignore[arg-type]
+            umami.new_event(event_name='signup', distinct_id=bad)
 
     def test_new_page_view_includes_distinct_id(self):
         with patch('umami.impl.httpx.post', make_sync_mock()) as mock_post:

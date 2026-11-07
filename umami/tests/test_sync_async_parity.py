@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -57,7 +58,7 @@ class TestSendReturnParity:
 
 class TestQueryRequestParity:
     async def test_website_stats_parity(self):
-        kwargs = dict(start_at=START, end_at=END, url='/p', host='h.com')
+        kwargs: dict[str, Any] = dict(start_at=START, end_at=END, url='/p', host='h.com')
         with patch('umami.impl.auth_token', 'fake-token'):
             with patch('umami.impl.httpx.get', make_sync_mock(STATS_JSON)) as mock_get:
                 umami.website_stats(**kwargs)

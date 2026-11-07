@@ -31,6 +31,7 @@ class TestWebsites:
                 result = umami.websites()
         assert len(result) == 1
         assert result[0].domain == 'example.com'
+        assert result[0].user is not None
         assert result[0].user.username == 'mkennedy'
         url = mock_get.call_args.args[0]
         headers = mock_get.call_args.kwargs['headers']
