@@ -36,3 +36,15 @@ If set_url_base() has not been called (and no Cloud API key is set), or if no cr
 
 `httpx.HTTPStatusError`  
 If the Umami API returns a non-2xx response.
+
+
+## Example
+
+``` python
+import umami
+
+umami.set_url_base('https://umami.example.com')
+await umami.login_async('admin', 'super-secret')
+umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+count = await umami.active_users_async()
+```

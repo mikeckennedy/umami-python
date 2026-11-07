@@ -1,0 +1,76 @@
+# Querying stats
+
+Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise `httpx2.HTTPStatusError` on a non-2xx response. Each has an `_async` twin.
+
+
+# Your websites
+
+``` python
+for site in umami.websites():
+    print(site.id, site.name, site.domain)
+```
+
+[websites()](../reference/websites.md#umami.websites) returns a list of [Website](../reference/models.Website.md#umami.models.Website) models. The `id` attribute is the value to pass to [set_website_id()](../reference/set_website_id.md#umami.set_website_id). Umami's endpoint is paged, and the package returns only the first page of results. If you have more websites than fit on one page, call the API directly as shown in [How it works](how-it-works.md#beyond-the-wrapped-endpoints).
+
+`user` is set for websites you own, and `createUser` is set instead for team websites. Both are [WebsiteUser](../reference/models.WebsiteUser.md#umami.models.WebsiteUser) models with `id` and `username`, and either can be `None`.
+
+
+# Stats for a date range
+
+``` python
+from datetime import datetime, timedelta
+
+end = datetime.now()
+start = end - timedelta(days=7)
+
+stats = umami.website_stats(start_at=start, end_at=end)
+print(stats.pageviews, stats.visitors, stats.visits, stats.bounces, stats.totaltime)
+```
+
+[website_stats()](../reference/website_stats.md#umami.website_stats) returns a [WebsiteStats](../reference/models.WebsiteStats.md#umami.models.WebsiteStats) model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as `stats.comparison` with the same five fields; otherwise it is `None`.
+
+
+## Dates
+
+`start_at` and `end_at` are `datetime` objects. The package converts them to epoch milliseconds with `timestamp()`, which means a naive datetime is interpreted in the local timezone of the process. Pass timezone-aware datetimes if the server and your process run in different zones.
+
+
+## Filters
+
+Every optional keyword narrows the stats to matching traffic:
+
+``` python
+stats = umami.website_stats(start_at=start, end_at=end, url='/pricing', country='US', device='Mobile')
+```
+
+The filters are `url`, `referrer`, `title`, `query`, `event`, `host`, `os`, `browser`, `device`, `country`, `region`, and `city`. Two of them are renamed on the wire: `url` is sent as `path` and `host` is sent as `hostname`, which is what current Umami expects. Filters you leave as `None` are not sent.
+
+
+# Active visitors right now
+
+``` python
+count = umami.active_users()
+```
+
+[active_users()](../reference/active_users.md#umami.active_users) returns an `int`: the number of visitors active on the website in the last few minutes, as Umami defines it. Pass `website_id` to query a site other than the default.
+
+
+# Overriding the default website
+
+Every query function accepts `website_id`. Pass it when you want numbers for a site other than the one set with [set_website_id()](../reference/set_website_id.md#umami.set_website_id):
+
+``` python
+stats = umami.website_stats(start_at=start, end_at=end, website_id=other_site.id)
+```
+
+
+# Umami Cloud limits
+
+Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls [active_users()](../reference/active_users.md#umami.active_users) for many websites needs its own pacing.
+
+
+# Beyond the three queries
+
+The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are available from the Umami HTTP API with the credential you already configured. [How it works](how-it-works.md#beyond-the-wrapped-endpoints) shows how to make those calls.
+
+Errors on query calls are covered in [Troubleshooting](troubleshooting.md#login-and-token-problems).

@@ -31,3 +31,14 @@ Number of single-page sessions in the comparison period.
 
 `totaltime: int`  
 Total engagement time in seconds for the comparison period.
+
+
+## Example
+
+``` python
+import umami
+
+stats = umami.website_stats(start_at=start, end_at=end)
+if stats.comparison:
+    print(stats.visitors - stats.comparison.visitors)  # change vs prior period
+```

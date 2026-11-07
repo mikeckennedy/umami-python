@@ -69,13 +69,19 @@ authors:
     email: michael@talkpython.fm
     github: mikeckennedy
 
-# Agent skill (SKILL.md). The generated skill already lists every public signature
-# and groups them by task. `extra_body` appends hand-written prose the signatures
-# can't convey — install-vs-import naming, self-hosted-vs-Cloud wiring, the disable()
-# no-op, distinct_id semantics, and which REST endpoints this SDK does NOT wrap.
-# Adapted from the umami_reference.md agent guide.
+# Agent skill (SKILL.md). Hand-written: the auto-generated skill only lists API names,
+# so skills/umami-analytics/SKILL.md teaches the rules of the package instead (setup
+# order, self-hosted vs Cloud, what disable() does and does not silence, distinct_id,
+# the bot filter, what each error means). Great Docs copies it verbatim to skill.md,
+# .well-known/agent-skills/umami-analytics/SKILL.md (+ index.json), and
+# .well-known/skills/default/SKILL.md. Links inside it must be absolute for that reason.
+# The frontmatter `name` must match the directory name.
 skill:
-  extra_body: skill_extra_body.md
+  file: skills/umami-analytics/SKILL.md
+
+# User guide pages live in user_guide/ (auto-discovered; numeric prefixes set the order,
+# a root index.qmd is the "User Guide" landing page). They are also appended in full to
+# llms-full.txt, which is the file agents should read.
 
 # API reference — grouped by task, with each sync function and its `_async` twin together.
 reference:

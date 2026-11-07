@@ -30,3 +30,15 @@ If True (default), contact the server to confirm the credential is valid -- self
 True if the credential is valid (or, when check_server is False, simply
 
 present), False otherwise.
+
+
+## Example
+
+``` python
+import umami
+
+umami.set_url_base('https://umami.example.com')
+await umami.login_async('admin', 'super-secret')
+if not await umami.verify_token_async():
+    await umami.login_async('admin', 'super-secret')  # token expired
+```

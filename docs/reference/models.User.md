@@ -31,3 +31,13 @@ ISO 8601 timestamp of when the account was created.
 
 `isAdmin: bool`  
 True if the account has administrator privileges.
+
+
+## Example
+
+``` python
+import umami
+
+login = umami.login('admin', 'super-secret')
+print(login.user.username, login.user.isAdmin)
+```

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -70,14 +73,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-b44a80f981ffe4e8ffda970bb00820f2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9411a706d08770b9e0c434f3159337ed.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -144,23 +148,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <meta name="twitter:description" content="Umami Analytics Client for Python">
 </head>
 
-<body class="nav-fixed gd-homepage quarto-light">
+<body class="nav-fixed gd-homepage quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Umami Analytics <span class="version-badge" title="Released 2026-06-11">v1.0.0</span></span>
     </a>
   </div>
-            <div id="quarto-search" class=""></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./user-guide/index.html"> 
+<span class="menu-text">User Guide</span></a>
+  </li>  
   <li class="nav-item">
     <a class="nav-link" href="./reference/index.html"> 
 <span class="menu-text">API Reference</span></a>
@@ -173,13 +180,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <span class="nav-link">
-<div id="github-widget" data-owner="mikeckennedy" data-repo="umami-python" data-stars="85" data-forks="8"></div>
+<div id="github-widget" data-owner="mikeckennedy" data-repo="umami-python" data-stars="88" data-forks="8"></div>
     </span>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
+            <div id="quarto-search" class=""></div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -190,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content page-columns page-full" id="quarto-document-content" tabindex="-1"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
@@ -211,7 +219,7 @@ section.level2:first-of-type > h2:first-child,
 </section>
 <section id="ai-agents" class="level3">
 <h3 class="anchored" data-anchor-id="ai-agents">AI / Agents</h3>
-<p><a href="skills.html">Skills<svg class="gd-sparkle" xmlns="http://www.w3.org/2000/svg" width="0.85em" height="0.85em" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.1em; margin-left: 0.25em;"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path></svg></a><br> <a href="llms.txt">llms.txt</a><br> <a href="llms-full.txt">llms-full.txt</a><br></p>
+<p><a href="skills.html">Skills<svg class="gd-sparkle-curated" xmlns="http://www.w3.org/2000/svg" width="0.85em" height="0.85em" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.1em; margin-left: 0.25em;"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path></svg></a><br> <a href="llms.txt">llms.txt</a><br> <a href="llms-full.txt">llms-full.txt</a><br></p>
 </section>
 <section id="developers" class="level3">
 <h3 class="anchored" data-anchor-id="developers">Developers</h3>
@@ -260,8 +268,8 @@ section.level2:first-of-type > h2:first-child,
 <li>💓 <strong>Heartbeat check</strong> to verify Umami server connectivity.</li>
 <li>🔀 Both <strong>sync</strong> and <strong>async</strong> programming models.</li>
 <li>⚒️ <strong>Structured data with Pydantic</strong> models for API responses.</li>
-<li>👩‍💻 <strong>Login / authenticate</strong> for either a self-hosted or SaaS hosted instance of Umami.</li>
-<li>☁️ <strong>Authenticate against Umami Cloud</strong> with an API key via <a href="reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a> — no <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> needed.</li>
+<li>👩‍💻 <strong>Login</strong> with a username and password against a self-hosted instance of Umami.</li>
+<li>☁️ <strong>Authenticate against Umami Cloud</strong> with an API key via <a href="reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a> — no <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> needed. See <a href="https://mkennedy.codes/docs/umami-python/user-guide/authentication.html">Authentication</a>.</li>
 <li>🥇Set a <strong>default website</strong> for a <strong>simplified API</strong> going forward.</li>
 <li>🔧 <strong>Enable/disable tracking</strong> for development and testing environments.</li>
 </ul>
@@ -287,12 +295,12 @@ section.level2:first-of-type > h2:first-child,
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>umami.enable()</span></code></pre></div>
 <p>When tracking is disabled:</p>
 <ul>
-<li>✅ <strong>No HTTP requests</strong> are made to your Umami server</li>
+<li>✅ <strong>No HTTP requests</strong> are made to your Umami server by <a href="reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a>, <a href="reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a>, or <a href="reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a></li>
 <li>✅ <strong>API calls still validate</strong> parameters (helps catch configuration issues)</li>
-<li>✅ <strong>All other functions work normally</strong> (login, websites, stats, etc.)</li>
-<li>✅ <strong>Functions return appropriate values</strong> for compatibility</li>
+<li>✅ <strong>All other functions work normally</strong> and still contact the server (login, websites, stats, heartbeat, etc.)</li>
+<li>✅ <strong>The send functions return <code>{}</code></strong> instead of the server response</li>
 </ul>
-<p>See the usage example below for the Python API around these features.</p>
+<p>The <a href="https://mkennedy.codes/docs/umami-python/user-guide/testing.html">Testing and CI</a> guide has a pytest fixture for this and shows how to mock the HTTP layer for the query functions.</p>
 </section>
 <section id="async-or-sync-api-you-choose" class="level2">
 <h2 class="anchored" data-anchor-id="async-or-sync-api-you-choose">Async or sync API? You choose</h2>
@@ -300,120 +308,132 @@ section.level2:first-of-type > h2:first-child,
 </section>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>Just <code>uv pip install umami-analytics</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add umami-analytics</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install umami-analytics</span></code></pre></div>
+<p>The import name is <code>umami</code>. Do not <code>pip install umami</code>; that is an unrelated package. Python 3.10+ is required.</p>
 </section>
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">📚 Documentation</h2>
-<p>Full documentation lives at <strong><a href="https://mkennedy.codes/docs/umami-python/">mkennedy.codes/docs/umami-python</a></strong>. It covers installation, configuration, the complete <a href="https://mkennedy.codes/docs/umami-python/reference/">API reference</a> — every public function with its sync and async twin — plus Umami Cloud setup and runnable examples.</p>
-<p>The quick tour below gets you started; the docs site is the complete, searchable reference. There’s also an <a href="https://mkennedy.codes/docs/umami-python/llms.txt"><code>llms.txt</code></a> if you’d like to point an AI assistant at the library.</p>
+<p>Full documentation lives at <strong><a href="https://mkennedy.codes/docs/umami-python/">mkennedy.codes/docs/umami-python</a></strong>. The user guide walks through the library in order, and the <a href="https://mkennedy.codes/docs/umami-python/reference/">API reference</a> covers every public function with its sync and async twin.</p>
+<ul>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/getting-started.html">Getting started</a>: install, configure, send your first event, and find it in the dashboard.</li>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/sending-events.html">Sending events</a>: custom events, page views, revenue, and <code>distinct_id</code>.</li>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/authentication.html">Authentication</a>: self-hosted login versus an Umami Cloud API key.</li>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/querying-stats.html">Querying stats</a>: websites, stats for a date range, active users.</li>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/troubleshooting.html">Troubleshooting</a>: what each error means, and what to do when an event is sent but never appears.</li>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/testing.html">Testing and CI</a>: keep test runs out of your real analytics.</li>
+<li><a href="https://mkennedy.codes/docs/umami-python/user-guide/configuration.html">Configuration</a>, <a href="https://mkennedy.codes/docs/umami-python/user-guide/how-it-works.html">How it works</a>, and the <a href="https://mkennedy.codes/docs/umami-python/user-guide/faq.html">FAQ</a>.</li>
+</ul>
+<p>The quick tour below gets you started. For AI assistants there is an <a href="https://mkennedy.codes/docs/umami-python/llms.txt"><code>llms.txt</code></a> index, an <a href="https://mkennedy.codes/docs/umami-python/llms-full.txt"><code>llms-full.txt</code></a> with every docstring and guide page, and an <a href="https://mkennedy.codes/docs/umami-python/skills.html">agent skill</a>.</p>
 </section>
 <section id="usage" class="level2">
 <h2 class="anchored" data-anchor-id="usage">Usage</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">"https://umami.hostedbyyouorthem.com"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Auth is NOT required to send events, but is for other features.</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>login <span class="op">=</span> umami.login(username, password)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip the need to pass the target website in subsequent calls.</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">'cc726914-8e68-4d1a-4be0-af4ca8933456'</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'somedomain.com'</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: Disable tracking for development/testing</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># umami.disable()  # Uncomment to disable tracking</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># List your websites</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>websites <span class="op">=</span> umami.websites()</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new event in the events section of the dashboards.</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>event_resp <span class="op">=</span> umami.new_event(</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>, <span class="co"># Only send if overriding default above</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    event_name<span class="op">=</span><span class="st">'Umami-Test'</span>,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Umami-Test'</span>, <span class="co"># Defaults to event_name if omitted.</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    hostname<span class="op">=</span><span class="st">'somedomain.com'</span>, <span class="co"># Only send if overriding default above.</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/users/actions'</span>,</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'client'</span>: <span class="st">'umami-tester-v1'</span>},</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    distinct_id<span class="op">=</span><span class="st">'user-123'</span>,  <span class="co"># OPTIONAL: stable per-user id, sent as payload id</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    referrer<span class="op">=</span><span class="st">'https://some_url'</span>)</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new page view in the pages section of the dashboards.</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>page_view_resp <span class="op">=</span> umami.new_page_view(</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>, <span class="co"># Only send if overriding default above</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    page_title<span class="op">=</span><span class="st">'Umami-Test'</span>, <span class="co"># Required: the page title to record.</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    hostname<span class="op">=</span><span class="st">'somedomain.com'</span>, <span class="co"># Only send if overriding default above.</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/users/actions'</span>,</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    distinct_id<span class="op">=</span><span class="st">'user-123'</span>,  <span class="co"># OPTIONAL: stable per-user id, sent as payload id</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    referrer<span class="op">=</span><span class="st">'https://some_url'</span>)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Track revenue for a transaction</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>revenue_resp <span class="op">=</span> umami.new_revenue_event(</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>    revenue<span class="op">=</span><span class="fl">19.99</span>,  <span class="co"># Monetary amount (required)</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    currency<span class="op">=</span><span class="st">'USD'</span>,  <span class="co"># ISO 4217 currency code, defaults to 'USD'</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    event_name<span class="op">=</span><span class="st">'checkout-cart'</span>,  <span class="co"># Defaults to 'revenue' if omitted</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/checkout'</span>,</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    distinct_id<span class="op">=</span><span class="st">'user-123'</span>,  <span class="co"># OPTIONAL: stable per-user id, sent as payload id</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'product'</span>: <span class="st">'widget'</span>, <span class="st">'quantity'</span>: <span class="dv">2</span>})</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Get website statistics for a date range</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> datetime.now()</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> end_date <span class="op">-</span> timedelta(days<span class="op">=</span><span class="dv">7</span>)  <span class="co"># Last 7 days</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> umami.website_stats(</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>    start_at<span class="op">=</span>start_date,</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    end_at<span class="op">=</span>end_date,</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>  <span class="co"># Only send if overriding default above</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Page views: </span><span class="sc">{</span>stats<span class="sc">.</span>pageviews<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Unique visitors: </span><span class="sc">{</span>stats<span class="sc">.</span>visitors<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Bounces: </span><span class="sc">{</span>stats<span class="sc">.</span>bounces<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Get current active users count</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>active_count <span class="op">=</span> umami.active_users(</span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>  <span class="co"># Only send if overriding default above</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Currently active users: </span><span class="sc">{</span>active_count<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if Umami server is accessible</span></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>server_ok <span class="op">=</span> umami.heartbeat()</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Umami server is </span><span class="sc">{</span><span class="st">'accessible'</span> <span class="cf">if</span> server_ok <span class="cf">else</span> <span class="st">'not accessible'</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Call after logging in to make sure the auth token is still valid.</span></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>umami.verify_token()</span></code></pre></div>
-<p>This code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the <a href="https://github.com/mikeckennedy/umami-python/tree/main/umami/example_client">example client</a> in the repo.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">"https://umami.hostedbyyouorthem.com"</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Auth is NOT required to send events, but is for other features.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>login <span class="op">=</span> umami.login(username, password)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Skip the need to pass the target website in subsequent calls.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">'cc726914-8e68-4d1a-4be0-af4ca8933456'</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'somedomain.com'</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Optional: Disable tracking for development/testing</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># umami.disable()  # Uncomment to disable tracking</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># List your websites</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>websites <span class="op">=</span> umami.websites()</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new event in the events section of the dashboards.</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>event_resp <span class="op">=</span> umami.new_event(</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>, <span class="co"># Only send if overriding default above</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    event_name<span class="op">=</span><span class="st">'Umami-Test'</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">'Umami-Test'</span>, <span class="co"># Defaults to event_name if omitted.</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    hostname<span class="op">=</span><span class="st">'somedomain.com'</span>, <span class="co"># Only send if overriding default above.</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/users/actions'</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'client'</span>: <span class="st">'umami-tester-v1'</span>},</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    distinct_id<span class="op">=</span><span class="st">'user-123'</span>,  <span class="co"># OPTIONAL: stable per-user id, sent as payload id</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    referrer<span class="op">=</span><span class="st">'https://some_url'</span>)</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new page view in the pages section of the dashboards.</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>page_view_resp <span class="op">=</span> umami.new_page_view(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>, <span class="co"># Only send if overriding default above</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    page_title<span class="op">=</span><span class="st">'Umami-Test'</span>, <span class="co"># Required: the page title to record.</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    hostname<span class="op">=</span><span class="st">'somedomain.com'</span>, <span class="co"># Only send if overriding default above.</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/users/actions'</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    distinct_id<span class="op">=</span><span class="st">'user-123'</span>,  <span class="co"># OPTIONAL: stable per-user id, sent as payload id</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    referrer<span class="op">=</span><span class="st">'https://some_url'</span>)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Track revenue for a transaction</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>revenue_resp <span class="op">=</span> umami.new_revenue_event(</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    revenue<span class="op">=</span><span class="fl">19.99</span>,  <span class="co"># Monetary amount (required)</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    currency<span class="op">=</span><span class="st">'USD'</span>,  <span class="co"># ISO 4217 currency code, defaults to 'USD'</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    event_name<span class="op">=</span><span class="st">'checkout-cart'</span>,  <span class="co"># Defaults to 'revenue' if omitted</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/checkout'</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    distinct_id<span class="op">=</span><span class="st">'user-123'</span>,  <span class="co"># OPTIONAL: stable per-user id, sent as payload id</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'product'</span>: <span class="st">'widget'</span>, <span class="st">'quantity'</span>: <span class="dv">2</span>})</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Get website statistics for a date range</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>end_date <span class="op">=</span> datetime.now()</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>start_date <span class="op">=</span> end_date <span class="op">-</span> timedelta(days<span class="op">=</span><span class="dv">7</span>)  <span class="co"># Last 7 days</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> umami.website_stats(</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    start_at<span class="op">=</span>start_date,</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    end_at<span class="op">=</span>end_date,</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>  <span class="co"># Only send if overriding default above</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Page views: </span><span class="sc">{</span>stats<span class="sc">.</span>pageviews<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Unique visitors: </span><span class="sc">{</span>stats<span class="sc">.</span>visitors<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Bounces: </span><span class="sc">{</span>stats<span class="sc">.</span>bounces<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co"># Get current active users count</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>active_count <span class="op">=</span> umami.active_users(</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    website_id<span class="op">=</span><span class="st">'a7cd-5d1a-2b33'</span>  <span class="co"># Only send if overriding default above</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Currently active users: </span><span class="sc">{</span>active_count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if Umami server is accessible</span></span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>server_ok <span class="op">=</span> umami.heartbeat()</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Umami server is </span><span class="sc">{</span><span class="st">'accessible'</span> <span class="cf">if</span> server_ok <span class="cf">else</span> <span class="st">'not accessible'</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="co"># Call after logging in to make sure the auth token is still valid.</span></span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>umami.verify_token()</span></code></pre></div>
+<p>This code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the <a href="https://github.com/mikeckennedy/umami-python/tree/main/umami/example_client">example client</a> in the repo. <a href="https://mkennedy.codes/docs/umami-python/user-guide/sending-events.html">Sending events</a> and <a href="https://mkennedy.codes/docs/umami-python/user-guide/querying-stats.html">Querying stats</a> explain each call, and <a href="https://mkennedy.codes/docs/umami-python/user-guide/troubleshooting.html">Troubleshooting</a> covers what to do when a call raises or an event does not show up.</p>
 </section>
 <section id="umami-cloud" class="level2">
 <h2 class="anchored" data-anchor-id="umami-cloud">Umami Cloud</h2>
 <p>Using <a href="https://cloud.umami.is">Umami Cloud</a> instead of a self-hosted instance? Authenticate with an <strong>API key</strong> rather than <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>. Create one in Umami Cloud under <strong>Settings → API keys</strong>.</p>
 <p>In Cloud mode you do <strong>not</strong> call <a href="reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> or <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> — <a href="reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a> takes care of both the host routing and the authentication header for you:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with your Cloud API key. region is optional ('us' or 'eu');</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># omit it to use the region of the account that owns the key.</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>umami.set_cloud_api_key(<span class="st">"your-cloud-api-key"</span>, region<span class="op">=</span><span class="st">"eu"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">"your-website-id"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Data/management calls go to https://api.umami.is/v1[/region]/...</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># and send the x-umami-api-key header automatically.</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>active_count <span class="op">=</span> umami.active_users()</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>end <span class="op">=</span> datetime.now()</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> umami.website_stats(start_at<span class="op">=</span>end <span class="op">-</span> timedelta(days<span class="op">=</span><span class="dv">7</span>), end_at<span class="op">=</span>end)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Visitors (last 7 days): </span><span class="sc">{</span>stats<span class="sc">.</span>visitors<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Events are sent to https://cloud.umami.is/api/send automatically.</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">"purchase"</span>, url<span class="op">=</span><span class="st">"/checkout"</span>, hostname<span class="op">=</span><span class="st">"example.com"</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Return to self-hosted / token behavior at any time:</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># umami.clear_cloud_api_key()</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Authenticate with your Cloud API key. region is optional ('us' or 'eu');</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># omit it to use the region of the account that owns the key.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>umami.set_cloud_api_key(<span class="st">"your-cloud-api-key"</span>, region<span class="op">=</span><span class="st">"eu"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">"your-website-id"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Data/management calls go to https://api.umami.is/v1[/region]/...</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># and send the x-umami-api-key header automatically.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>active_count <span class="op">=</span> umami.active_users()</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>end <span class="op">=</span> datetime.now()</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> umami.website_stats(start_at<span class="op">=</span>end <span class="op">-</span> timedelta(days<span class="op">=</span><span class="dv">7</span>), end_at<span class="op">=</span>end)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Visitors (last 7 days): </span><span class="sc">{</span>stats<span class="sc">.</span>visitors<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Events are sent to https://cloud.umami.is/api/send automatically.</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">"purchase"</span>, url<span class="op">=</span><span class="st">"/checkout"</span>, hostname<span class="op">=</span><span class="st">"example.com"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Return to self-hosted / token behavior at any time:</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># umami.clear_cloud_api_key()</span></span></code></pre></div>
 <blockquote class="blockquote">
-<p><strong>Routing is handled for you:</strong> data and management calls go to <code>https://api.umami.is/v1</code> (authenticated with the <code>x-umami-api-key</code> header), while events are sent to <code>https://cloud.umami.is/api/send</code>. Note that the Umami Cloud API is rate-limited to <strong>50 calls / 15 seconds</strong>.</p>
+<p><strong>Routing is handled for you:</strong> data and management calls go to <code>https://api.umami.is/v1</code> (authenticated with the <code>x-umami-api-key</code> header), while events are sent to <code>https://cloud.umami.is/api/send</code>. Umami documents a Cloud rate limit of <strong>50 calls / 15 seconds</strong> per API key; the library does not throttle or retry.</p>
 </blockquote>
-<p>The <strong>self-hosted (<a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>) usage shown above is unchanged</strong> — Cloud mode is simply a labeled alternative, and existing code keeps working exactly as before.</p>
+<p>The <strong>self-hosted (<a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>) usage shown above is unchanged</strong> — Cloud mode is simply a labeled alternative, and existing code keeps working exactly as before. The two modes are exclusive: <a href="reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> raises <a href="reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a> while a Cloud key is set, and <a href="reference/clear_cloud_api_key.html#umami.clear_cloud_api_key" class="gdls-link gdls-code">clear_cloud_api_key()</a> switches back. Details in <a href="https://mkennedy.codes/docs/umami-python/user-guide/authentication.html">Authentication</a>.</p>
 </section>
 <section id="want-to-contribute" class="level2">
 <h2 class="anchored" data-anchor-id="want-to-contribute">Want to contribute?</h2>
@@ -441,7 +461,8 @@ section.level2:first-of-type > h2:first-child,
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -450,8 +471,69 @@ section.level2:first-of-type > h2:first-child,
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -465,6 +547,7 @@ section.level2:first-of-type > h2:first-child,
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -627,44 +710,54 @@ section.level2:first-of-type > h2:first-child,
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -762,6 +855,9 @@ section.level2:first-of-type > h2:first-child,
       }
     }
   });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
   </script>
 </div> <!-- /content -->
 <footer class="footer">

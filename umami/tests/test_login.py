@@ -33,9 +33,10 @@ class TestLogin:
         assert mock_post.call_args.kwargs['json'] == {'username': 'mkennedy', 'password': 'pw'}
         assert mock_post.call_args.kwargs['headers'] == {'User-Agent': umami.impl.user_agent}
 
-    @pytest.mark.parametrize('user,password', [('', 'pw'), ('mkennedy', '')])
-    def test_empty_credentials_raise(self, user, password):
-        with pytest.raises(umami.errors.ValidationError):
+    @pytest.mark.parametrize('user,password,field', [('', 'pw', 'Username'), ('mkennedy', '', 'Password')])
+    def test_empty_credentials_raise(self, user, password, field):
+        # The message names the field that was empty (it used to say "Email" for the username).
+        with pytest.raises(umami.errors.ValidationError, match=field):
             umami.login(user, password)
 
 

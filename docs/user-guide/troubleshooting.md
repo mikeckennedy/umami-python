@@ -1,0 +1,110 @@
+# Troubleshooting
+
+The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and nothing shows up in the dashboard. This page covers each in turn and ends with the order to check things in.
+
+
+# Read the exception first
+
+| Exception | Raised when | Where to look |
+|----|----|----|
+| [umami.errors.OperationNotAllowedError](../reference/errors.OperationNotAllowedError.md#umami.errors.OperationNotAllowedError) | Required setup is missing: no [set_url_base()](../reference/set_url_base.md#umami.set_url_base), or a query call before [login()](../reference/login.md#umami.login). No request was made. | [Setup errors](#setup-errors) |
+| [umami.errors.ValidationError](../reference/errors.ValidationError.md#umami.errors.ValidationError) | An argument is wrong: blank event name, missing hostname or website id, negative revenue. No request was made. | [Validation errors](#validation-errors) |
+| `httpx2.HTTPStatusError` | Umami answered with a non-2xx status. The request was made. | [HTTP errors](#http-errors) |
+| `httpx2.ConnectError`, `httpx2.ReadTimeout` and other `httpx2.TransportError` subclasses | The server could not be reached or did not answer in time. | [HTTP errors](#http-errors) |
+
+[OperationNotAllowedError](../reference/errors.OperationNotAllowedError.md#umami.errors.OperationNotAllowedError) subclasses [ValidationError](../reference/errors.ValidationError.md#umami.errors.ValidationError), so one `except umami.errors.ValidationError` catches both. [verify_token()](../reference/verify_token.md#umami.verify_token) and [heartbeat()](../reference/heartbeat.md#umami.heartbeat) never raise; they return `False` instead.
+
+
+# Setup errors
+
+`Set a URL base with set_url_base() or call set_cloud_api_key().`  
+Nothing has been configured yet. Call `set_url_base('https://your-instance')` for self-hosted, or `set_cloud_api_key(key)` for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first.
+
+`Call login() or set_cloud_api_key() before proceeding.`  
+You called [websites()](../reference/websites.md#umami.websites), [website_stats()](../reference/website_stats.md#umami.website_stats), or [active_users()](../reference/active_users.md#umami.active_users) without a credential. These need [login()](../reference/login.md#umami.login) on self-hosted or a Cloud key. Sending events does not.
+
+`login() is not used in Cloud mode; your API key from set_cloud_api_key() is the credential.`  
+A Cloud key is set, so there is nothing to log in to. Remove the [login()](../reference/login.md#umami.login) call, or call [clear_cloud_api_key()](../reference/clear_cloud_api_key.md#umami.clear_cloud_api_key) first if you meant to talk to a self-hosted instance.
+
+
+# Validation errors
+
+Each message names the argument to fix:
+
+- `URL must not be empty.` and `The url must start with the HTTP scheme (http:// or https://).` come from [set_url_base()](../reference/set_url_base.md#umami.set_url_base). Pass the full instance URL including the scheme.
+- `The hostname must be set, either as a parameter here or via set_hostname().` and `The website_id must be set, either as a parameter here or via set_website_id().` come from the send functions. Set the defaults once at startup or pass the argument on the call.
+- `The event_name is required.` means the name was empty or whitespace.
+- `distinct_id must be a string or integer.` means you passed a `bool`, `float`, list, or other type.
+- `Revenue must be a number (int or float).`, `Revenue must be >= 0.`, and `Currency must be a non-empty string.` come from [new_revenue_event()](../reference/new_revenue_event.md#umami.new_revenue_event).
+- `API key must not be empty.` and `region must be 'us', 'eu', or None.` come from [set_cloud_api_key()](../reference/set_cloud_api_key.md#umami.set_cloud_api_key).
+- `Username cannot be empty` and `Password cannot be empty` come from [login()](../reference/login.md#umami.login).
+
+
+# Login and token problems
+
+[login()](../reference/login.md#umami.login) raises `httpx2.HTTPStatusError` with a 401 when the username or password is wrong. Check the credentials against the Umami login page.
+
+A query call that worked earlier and now raises a 401 means the token expired. Umami tokens are temporary. Call [login()](../reference/login.md#umami.login) again, or check first with [verify_token()](../reference/verify_token.md#umami.verify_token), which returns `False` for an expired token without raising.
+
+[verify_token()](../reference/verify_token.md#umami.verify_token) returning `False` right after a successful [login()](../reference/login.md#umami.login) usually means the server is unreachable, not that the token is bad. Check [heartbeat()](../reference/heartbeat.md#umami.heartbeat).
+
+On Cloud, a 401 or 403 means the API key is wrong, revoked, or used on a route the Cloud API does not allow for keys. Create a new key in the Cloud dashboard and try again.
+
+
+# HTTP errors
+
+Inspect the status code and body before guessing:
+
+``` python
+import httpx2
+
+try:
+    umami.websites()
+except httpx2.HTTPStatusError as e:
+    print(e.response.status_code, e.response.text)
+```
+
+- **404** on every call: `url_base` is wrong. The most common mistake is including `/api`, which produces `/api/api/websites`. Pass the instance root only. A 404 can also mean the host serves something other than Umami.
+- **401**: see [Login and token problems](#login-and-token-problems).
+- **405**: your Umami version does not accept the HTTP method the package used. Upgrade the package; versions before 0.6.25 used `POST` for the heartbeat.
+- **429** on Cloud: you exceeded the documented limit of 50 calls per 15 seconds. Pace your calls; the package does not retry.
+- **5xx**: the Umami server has a problem. Check its logs.
+- `ConnectError`: the host name does not resolve, the port is closed, or you used `http://` where the server only speaks `https://`.
+- `ReadTimeout`: Umami did not answer within the default five second `httpx2` timeout. The package does not expose a timeout setting; check the server's load.
+
+
+# Event sent but nothing appears
+
+The call returned a dict and raised nothing, but the dashboard shows no event. Work through these in order.
+
+1.  **The return value is `{}`.** Tracking is disabled. Something called [umami.disable()](../reference/disable.md#umami.disable), usually a test or development setting. Call [umami.enable()](../reference/enable.md#umami.enable) or check the condition that disables it. A real response contains keys such as `cache`.
+2.  **Umami's bot filter dropped the request.** Umami rejects requests whose `User-Agent` looks like a bot, and it may still answer 200. The package sends a desktop Chrome user agent by default, so this only happens when you pass your own `ua` to [new_page_view()](../reference/new_page_view.md#umami.new_page_view). Use a browser user agent, or set `DISABLE_BOT_CHECK=true` in the Umami server's environment. That variable is read by the Umami server, not by this package.
+3.  **Wrong website id.** The event was recorded against another website. Compare the id you set with the one in the dashboard URL, and remember that an explicit `website_id` argument wins over [set_website_id()](../reference/set_website_id.md#umami.set_website_id).
+4.  **Wrong mode.** A Cloud key is set, so the event went to Umami Cloud rather than your self-hosted instance, or the other way round. [clear_cloud_api_key()](../reference/clear_cloud_api_key.md#umami.clear_cloud_api_key) switches back to self-hosted.
+5.  **Dashboard range or timezone.** Events appear under the date range selected in the dashboard, in the dashboard's timezone. Widen the range and refresh.
+6.  **It is in the Events list, not the Pages list.** Custom events appear in the Events section at the bottom of the website page. Page views appear in Pages. Revenue appears in the Revenue report once Umami has processed the `revenue` and `currency` properties.
+
+
+# heartbeat() returns False
+
+[heartbeat()](../reference/heartbeat.md#umami.heartbeat) returns `False` for any failure, including configuration problems, so it does not tell you which one you have:
+
+- [set_url_base()](../reference/set_url_base.md#umami.set_url_base) or [set_cloud_api_key()](../reference/set_cloud_api_key.md#umami.set_cloud_api_key) has not been called.
+- The server is down or unreachable from this machine.
+- `url_base` points at the wrong host or includes `/api`.
+- On Cloud, the API key is invalid. Cloud has no heartbeat endpoint, so the package calls the authenticated `/me` endpoint instead.
+
+Call [umami.websites()](../reference/websites.md#umami.websites) or another raising function to see the real exception.
+
+
+# Queries return wrong numbers
+
+- [active_users()](../reference/active_users.md#umami.active_users) always returns `0`, or [website_stats()](../reference/website_stats.md#umami.website_stats) ignores the `url` and `host` filters: you are on a package version older than 0.6.25. Upgrade.
+- [website_stats()](../reference/website_stats.md#umami.website_stats) numbers do not match the dashboard for the same days: the dashboard uses its own timezone and your `datetime` values are naive and interpreted in the local timezone of the process. Pass timezone-aware datetimes.
+
+
+# Fix order
+
+Fix configuration first, because [ValidationError](../reference/errors.ValidationError.md#umami.errors.ValidationError) and [OperationNotAllowedError](../reference/errors.OperationNotAllowedError.md#umami.errors.OperationNotAllowedError) are raised before any request and nothing else can work until they stop. Then confirm connectivity with [heartbeat()](../reference/heartbeat.md#umami.heartbeat), then the credential with [verify_token()](../reference/verify_token.md#umami.verify_token), and only then look at the event itself.
+
+If you find a problem the package should handle better, open an issue at <https://github.com/mikeckennedy/umami-python/issues>.

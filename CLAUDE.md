@@ -34,8 +34,9 @@ lives one level down in `umami/`, and the importable package is nested again at 
 ```
 umami-python/                     ← REPO ROOT (docs + lint/type config)
 ├── CLAUDE.md  AGENTS.md  GEMINI.md   ← this file + two symlinks to it
-├── README.md                     top-level docs
+├── README.md                     top-level docs (umami/README.md is a byte-identical mirror; edit both)
 ├── change-log.md                 Keep a Changelog format (UPDATE THIS for user-facing changes)
+├── docs/                         BUILT docs site, committed and served by nginx (regenerate, don't hand-edit)
 ├── LICENSE                       MIT
 ├── ruff.toml                     ★ ruff config lives HERE (repo root)
 ├── pyrefly.toml                  ★ pyrefly config lives HERE (repo root)
@@ -47,7 +48,13 @@ umami-python/                     ← REPO ROOT (docs + lint/type config)
 └── umami/                        ← PACKAGE DIR (build + test config)
     ├── pyproject.toml            ★ package metadata, deps, version, pytest config (hatchling)
     ├── requirements.txt          mirrors runtime deps (httpx2, pydantic)
+    ├── requirements-dev.txt      mirrors the [dev] extra (pytest, ruff, great-docs>=0.17.0, ...)
     ├── tox.ini                   LEGACY / stale (py27–py37) — not the source of truth
+    ├── great-docs.yml            ★ Great Docs config (docs site, reference sections, skill.file)
+    ├── user_guide/*.qmd          hand-written user guide pages (numeric prefix = sidebar order)
+    ├── skills/umami-analytics/SKILL.md  hand-written agent skill, copied verbatim into the site
+    ├── scripts/build_docs.py     great-docs build -> verify agent files -> mirror into repo-root docs/
+    ├── great-docs/               ephemeral build dir (gitignored)
     ├── README.md  LICENSE
     ├── umami/                    ← IMPORTABLE PACKAGE ("import umami")
     │   ├── __init__.py           public API re-exports + __all__
@@ -87,7 +94,7 @@ root, while tests run from `umami/`.
 
 | Group | Functions |
 |---|---|
-| Config (sync only) | `set_url_base`, `set_website_id`, `set_hostname`, `enable`, `disable` |
+| Config (sync only) | `set_url_base`, `set_website_id`, `set_hostname`, `set_cloud_api_key`, `clear_cloud_api_key`, `enable`, `disable` |
 | Auth | `login`/`login_async`, `is_logged_in`, `verify_token`/`verify_token_async` |
 | Send events | `new_event`/`_async`, `new_revenue_event`/`_async`, `new_page_view`/`_async` |
 | Query stats | `websites`/`_async`, `website_stats`/`_async`, `active_users`/`_async` |
@@ -152,6 +159,12 @@ cd umami && pytest            # or: pytest -v   |   pytest tests/test_revenue.py
 uvx pyrefly check             # from the repo root
 ```
 
+### Build the docs site (from the package dir; needs great-docs >= 0.17 in the venv and Quarto)
+```bash
+python umami/scripts/build_docs.py   # builds, verifies llms*.txt / skill.md / user guide, mirrors to docs/
+```
+Rebuild after changing docstrings, `user_guide/`, `skills/`, or `great-docs.yml`, and commit `docs/`.
+
 ### Run the example client
 ```bash
 cd umami/example_client
@@ -180,6 +193,7 @@ Before considering a code change complete, run and pass:
 1. **`ruff format .` and `ruff check .`** (from repo root) — formatting and lint must be clean.
 2. **`pytest`** (from `umami/`) — all tests green. **Add or extend tests** for any new behavior.
 3. **`change-log.md`** — add an entry for any user-facing change (see §6).
+4. **Docs** — if you changed a public docstring, a guide page, or the skill, rebuild with `python umami/scripts/build_docs.py` so `docs/` and `llms-full.txt` match. Keep the README and `umami/README.md` identical.
 
 `pyrefly check` is available and encouraged for type-sensitive changes, but is not a required gate.
 

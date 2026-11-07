@@ -32,8 +32,8 @@ The [Umami API is extensive](https://umami.is/docs/api) and much of that is inte
 * 💓 **Heartbeat check** to verify Umami server connectivity.
 * 🔀 Both **sync** and **async** programming models.
 * ⚒️ **Structured data with Pydantic** models for API responses.
-* 👩‍💻 **Login / authenticate** for either a self-hosted or SaaS hosted instance of Umami.
-* ☁️ **Authenticate against Umami Cloud** with an API key via `set_cloud_api_key()` — no `login()` needed.
+* 👩‍💻 **Login** with a username and password against a self-hosted instance of Umami.
+* ☁️ **Authenticate against Umami Cloud** with an API key via `set_cloud_api_key()` — no `login()` needed. See [Authentication](https://mkennedy.codes/docs/umami-python/user-guide/authentication.html).
 * 🥇Set a **default website** for a **simplified API** going forward.
 * 🔧 **Enable/disable tracking** for development and testing environments.
 
@@ -62,12 +62,12 @@ umami.enable()
 
 When tracking is disabled:
 
-- ✅ **No HTTP requests** are made to your Umami server
+- ✅ **No HTTP requests** are made to your Umami server by `new_event()`, `new_page_view()`, or `new_revenue_event()`
 - ✅ **API calls still validate** parameters (helps catch configuration issues)
-- ✅ **All other functions work normally** (login, websites, stats, etc.)
-- ✅ **Functions return appropriate values** for compatibility
+- ✅ **All other functions work normally** and still contact the server (login, websites, stats, heartbeat, etc.)
+- ✅ **The send functions return `{}`** instead of the server response
 
-See the usage example below for the Python API around these features.
+The [Testing and CI](https://mkennedy.codes/docs/umami-python/user-guide/testing.html) guide has a pytest fixture for this and shows how to mock the HTTP layer for the query functions.
 
 ## Async or sync API? You choose
 
@@ -75,13 +75,27 @@ See the usage example below for the Python API around these features.
 
 ## Installation
 
-Just `uv pip install umami-analytics`
+```bash
+uv add umami-analytics
+# or
+pip install umami-analytics
+```
+
+The import name is `umami`. Do not `pip install umami`; that is an unrelated package. Python 3.10+ is required.
 
 ## 📚 Documentation
 
-Full documentation lives at **[mkennedy.codes/docs/umami-python](https://mkennedy.codes/docs/umami-python/)**. It covers installation, configuration, the complete [API reference](https://mkennedy.codes/docs/umami-python/reference/) — every public function with its sync and async twin — plus Umami Cloud setup and runnable examples.
+Full documentation lives at **[mkennedy.codes/docs/umami-python](https://mkennedy.codes/docs/umami-python/)**. The user guide walks through the library in order, and the [API reference](https://mkennedy.codes/docs/umami-python/reference/) covers every public function with its sync and async twin.
 
-The quick tour below gets you started; the docs site is the complete, searchable reference. There's also an [`llms.txt`](https://mkennedy.codes/docs/umami-python/llms.txt) if you'd like to point an AI assistant at the library.
+- [Getting started](https://mkennedy.codes/docs/umami-python/user-guide/getting-started.html): install, configure, send your first event, and find it in the dashboard.
+- [Sending events](https://mkennedy.codes/docs/umami-python/user-guide/sending-events.html): custom events, page views, revenue, and `distinct_id`.
+- [Authentication](https://mkennedy.codes/docs/umami-python/user-guide/authentication.html): self-hosted login versus an Umami Cloud API key.
+- [Querying stats](https://mkennedy.codes/docs/umami-python/user-guide/querying-stats.html): websites, stats for a date range, active users.
+- [Troubleshooting](https://mkennedy.codes/docs/umami-python/user-guide/troubleshooting.html): what each error means, and what to do when an event is sent but never appears.
+- [Testing and CI](https://mkennedy.codes/docs/umami-python/user-guide/testing.html): keep test runs out of your real analytics.
+- [Configuration](https://mkennedy.codes/docs/umami-python/user-guide/configuration.html), [How it works](https://mkennedy.codes/docs/umami-python/user-guide/how-it-works.html), and the [FAQ](https://mkennedy.codes/docs/umami-python/user-guide/faq.html).
+
+The quick tour below gets you started. For AI assistants there is an [`llms.txt`](https://mkennedy.codes/docs/umami-python/llms.txt) index, an [`llms-full.txt`](https://mkennedy.codes/docs/umami-python/llms-full.txt) with every docstring and guide page, and an [agent skill](https://mkennedy.codes/docs/umami-python/skills.html).
 
 ## Usage
 
@@ -162,7 +176,7 @@ print(f"Umami server is {'accessible' if server_ok else 'not accessible'}")
 umami.verify_token()
 ```
 
-This code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the [example client](https://github.com/mikeckennedy/umami-python/tree/main/umami/example_client) in the repo.
+This code listing is very-very high fidelity pseudo code. If you want an actually executable example, see the [example client](https://github.com/mikeckennedy/umami-python/tree/main/umami/example_client) in the repo. [Sending events](https://mkennedy.codes/docs/umami-python/user-guide/sending-events.html) and [Querying stats](https://mkennedy.codes/docs/umami-python/user-guide/querying-stats.html) explain each call, and [Troubleshooting](https://mkennedy.codes/docs/umami-python/user-guide/troubleshooting.html) covers what to do when a call raises or an event does not show up.
 
 ## Umami Cloud
 
@@ -194,9 +208,9 @@ umami.new_event(event_name="purchase", url="/checkout", hostname="example.com")
 # umami.clear_cloud_api_key()
 ```
 
-> **Routing is handled for you:** data and management calls go to `https://api.umami.is/v1` (authenticated with the `x-umami-api-key` header), while events are sent to `https://cloud.umami.is/api/send`. Note that the Umami Cloud API is rate-limited to **50 calls / 15 seconds**.
+> **Routing is handled for you:** data and management calls go to `https://api.umami.is/v1` (authenticated with the `x-umami-api-key` header), while events are sent to `https://cloud.umami.is/api/send`. Umami documents a Cloud rate limit of **50 calls / 15 seconds** per API key; the library does not throttle or retry.
 
-The **self-hosted (`login()`) usage shown above is unchanged** — Cloud mode is simply a labeled alternative, and existing code keeps working exactly as before.
+The **self-hosted (`login()`) usage shown above is unchanged** — Cloud mode is simply a labeled alternative, and existing code keeps working exactly as before. The two modes are exclusive: `login()` raises `OperationNotAllowedError` while a Cloud key is set, and `clear_cloud_api_key()` switches back. Details in [Authentication](https://mkennedy.codes/docs/umami-python/user-guide/authentication.html).
 
 ## Want to contribute?
 

@@ -1,8 +1,8 @@
 {
   "skills": [
     {
-      "name": "umami",
-      "description": "Umami Analytics Client for Python. Use when writing Python code that uses the umami package.",
+      "name": "umami-analytics",
+      "description": "Python client for the Umami web analytics API (self-hosted or Umami Cloud). Sends custom events, page views, and revenue from backend code, and reads back websites, summary stats, and active users, with sync and async twins for every call. Use when adding Umami tracking to a Python app, when code imports `umami` or installs `umami-analytics`, when choosing between self-hosted login and a Cloud API key, when `umami.errors.OperationNotAllowedError`, `umami.errors.ValidationError`, or an `httpx2.HTTPStatusError` from an Umami call appears, when events are sent but never show in the dashboard, or when tests must not send real analytics.",
       "files": [
         "SKILL.md"
       ]

@@ -51,7 +51,7 @@ Optional language of the event/client. Defaults to 'en-US'.
 `screen: str = ``"1920x1080"`  
 Optional screen resolution of the client. Defaults to '1920x1080'.
 
-`ua: str = event_user_agent`    
+`ua: str = event_user_agent`  
 Optional user-agent string of the client. Defaults to a browser user-agent because Umami blocks non-browser user agents by default.
 
 `ip_address: Optional[str] = None`  

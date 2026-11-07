@@ -86,7 +86,7 @@ if tracking is disabled.
 
 
 `ValidationError`  
-If revenue is not a number, revenue is negative, currency is empty, distinct_id is an invalid type, or hostname or website_id is not set (here or via set_hostname()/set_website_id()).
+If revenue is not a number, revenue is negative, currency or event_name is blank, distinct_id is an invalid type, or hostname or website_id is not set (here or via set_hostname()/set_website_id()).
 
 `OperationNotAllowedError`  
 If neither set_url_base() nor set_cloud_api_key() has been called.

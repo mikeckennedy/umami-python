@@ -99,6 +99,13 @@ def set_url_base(url: str) -> None:
     Raises:
         ValidationError: If url is empty or whitespace-only, or if it does not
             start with 'http://' or 'https://'.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://analytics.example.com')
+        ```
     """
     if not url or not url.strip():
         raise ValidationError('URL must not be empty.')
@@ -127,6 +134,14 @@ def set_website_id(website_id: str) -> None:
     Args:
         website_id: The website ID from Umami for your registered site
             (e.g. '978435e2-7ba1-4337-9860-ec31ece2db60').
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+        umami.new_event(event_name='signup', url='/account/new')  # uses that id
+        ```
     """
     global default_website_id
     default_website_id = website_id
@@ -143,6 +158,14 @@ def set_hostname(hostname: str) -> None:
     Args:
         hostname: The hostname to use when one is not specified
             (e.g. 'talkpython.fm').
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_hostname('example.com')
+        umami.new_page_view(page_title='Home', url='/')  # hostname='example.com'
+        ```
     """
     global default_hostname
     default_hostname = hostname
@@ -191,6 +214,19 @@ def clear_cloud_api_key() -> None:
 
     Clears the API key and region set by set_cloud_api_key(). After calling
     this, self-hosted operations again require set_url_base() and login().
+    A token from an earlier login() is kept, so if you logged in before
+    switching to Cloud mode you do not need to log in again.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_cloud_api_key('your-cloud-api-key')
+        # ... later, go back to a self-hosted instance:
+        umami.clear_cloud_api_key()
+        umami.set_url_base('https://umami.example.com')
+        umami.login('admin', 'super-secret')
+        ```
     """
     global api_key, cloud_region
     api_key = None
@@ -247,6 +283,16 @@ def is_logged_in() -> bool:
         API key (set by set_cloud_api_key()) is present, False otherwise. This
         only reflects that a credential exists in this process, not that it is
         still valid on the server — use verify_token() to confirm validity.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        umami.is_logged_in()  # False
+        umami.login('admin', 'super-secret')
+        umami.is_logged_in()  # True
+        ```
     """
     return auth_token is not None or api_key is not None
 
@@ -407,7 +453,7 @@ async def websites_async() -> list[models.Website]:
     url = _data_url(urls.websites)
     headers = _data_headers()
 
-    async with httpx.AsyncClient() as client:  # type: ignore
+    async with httpx.AsyncClient() as client:
         resp = await client.get(url, headers=headers, follow_redirects=True)
         resp.raise_for_status()
 
@@ -466,6 +512,14 @@ def enable() -> None:
     (such as login(), websites(), website_stats(), active_users(),
     verify_token(), and heartbeat()) always run regardless of this setting.
     Call disable() to turn tracking off.
+
+    Example:
+        ```python
+        import umami
+
+        umami.disable()  # e.g. while running tests
+        umami.enable()   # back to sending events
+        ```
     """
     global tracking_enabled
     tracking_enabled = True
@@ -484,6 +538,17 @@ def disable() -> None:
     (such as login(), websites(), website_stats(), active_users(),
     verify_token(), and heartbeat()) always run regardless of this setting.
     Call enable() to turn tracking back on (the default).
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+        umami.set_hostname('example.com')
+        umami.disable()
+        umami.new_event(event_name='signup')  # validated, returns {}, no HTTP request
+        ```
     """
     global tracking_enabled
     tracking_enabled = False
@@ -541,9 +606,9 @@ async def new_event_async(
     Raises:
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        ValidationError: If hostname or website_id is not set (here or via
-            set_hostname()/set_website_id()), or if distinct_id is a bool or
-            any type other than str or int.
+        ValidationError: If event_name is blank, if hostname or website_id is
+            not set (here or via set_hostname()/set_website_id()), or if
+            distinct_id is a bool or any type other than str or int.
         httpx.HTTPStatusError: If Umami returns a non-2xx response (only when
             tracking is enabled).
 
@@ -656,9 +721,9 @@ def new_event(
     Raises:
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
-        ValidationError: If hostname or website_id is not set (here or via
-            set_hostname()/set_website_id()), or if distinct_id is a bool or
-            any type other than str or int.
+        ValidationError: If event_name is blank, if hostname or website_id is
+            not set (here or via set_hostname()/set_website_id()), or if
+            distinct_id is a bool or any type other than str or int.
         httpx.HTTPStatusError: If Umami returns a non-2xx response (only when
             tracking is enabled).
 
@@ -775,8 +840,9 @@ async def new_revenue_event_async(
 
     Raises:
         ValidationError: If revenue is not a number, revenue is negative,
-            currency is empty, distinct_id is an invalid type, or hostname or
-            website_id is not set (here or via set_hostname()/set_website_id()).
+            currency or event_name is blank, distinct_id is an invalid type, or
+            hostname or website_id is not set (here or via
+            set_hostname()/set_website_id()).
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
@@ -879,8 +945,9 @@ def new_revenue_event(
 
     Raises:
         ValidationError: If revenue is not a number, revenue is negative,
-            currency is empty, distinct_id is an invalid type, or hostname or
-            website_id is not set (here or via set_hostname()/set_website_id()).
+            currency or event_name is blank, distinct_id is an invalid type, or
+            hostname or website_id is not set (here or via
+            set_hostname()/set_website_id()).
         OperationNotAllowedError: If neither set_url_base() nor
             set_cloud_api_key() has been called.
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
@@ -1171,6 +1238,16 @@ async def verify_token_async(check_server: bool = True) -> bool:
     Returns:
         True if the credential is valid (or, when check_server is False, simply
         present), False otherwise.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        await umami.login_async('admin', 'super-secret')
+        if not await umami.verify_token_async():
+            await umami.login_async('admin', 'super-secret')  # token expired
+        ```
     """
     # noinspection PyBroadException
     try:
@@ -1225,6 +1302,16 @@ def verify_token(check_server: bool = True) -> bool:
     Returns:
         True if the credential is valid (or, when check_server is False, simply
         present), False otherwise.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        umami.login('admin', 'super-secret')
+        if not umami.verify_token():
+            umami.login('admin', 'super-secret')  # token expired
+        ```
     """
     # noinspection PyBroadException
     try:
@@ -1366,7 +1453,7 @@ def validate_login(email: str, password: str) -> None:
     Internal helper function, not need to use this.
     """
     if not email:
-        raise ValidationError('Email cannot be empty')
+        raise ValidationError('Username cannot be empty')
     if not password:
         raise ValidationError('Password cannot be empty')
 
@@ -1390,6 +1477,16 @@ async def active_users_async(website_id: Optional[str] = None) -> int:
             Cloud API key is set), or if no credential is present (neither a
             login token nor a Cloud API key).
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        await umami.login_async('admin', 'super-secret')
+        umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+        count = await umami.active_users_async()
+        ```
     """
     validate_state(url=True, user=True)
 
@@ -1425,6 +1522,16 @@ def active_users(website_id: Optional[str] = None) -> int:
             Cloud API key is set), or if no credential is present (neither a
             login token nor a Cloud API key).
         httpx.HTTPStatusError: If the Umami API returns a non-2xx response.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        umami.login('admin', 'super-secret')
+        umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+        count = umami.active_users()
+        ```
     """
     validate_state(url=True, user=True)
 

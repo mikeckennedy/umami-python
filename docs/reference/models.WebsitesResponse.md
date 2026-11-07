@@ -36,3 +36,13 @@ The number of records per page.
 
 `orderBy: typing.Optional[str]`  
 The field results are ordered by, if specified.
+
+
+## Example
+
+``` python
+import umami
+
+page = umami.models.WebsitesResponse(data=[], count=0, page=1, pageSize=10)
+print(page.websites)  # []
+```

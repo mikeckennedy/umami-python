@@ -10,6 +10,16 @@ class ValidationError(Exception):
 
     Because OperationNotAllowedError subclasses this type, catching
     ValidationError also catches missing-state errors.
+
+    Example:
+        ```python
+        import umami
+
+        try:
+            umami.new_revenue_event(revenue=-1)
+        except umami.errors.ValidationError as e:
+            print(e)  # Revenue must be >= 0.
+        ```
     """
 
     pass
@@ -27,6 +37,18 @@ class OperationNotAllowedError(ValidationError):
 
     Resolve it by calling the appropriate setup function first: set_url_base()
     and login() for self-hosted mode, or set_cloud_api_key() for Umami Cloud.
+
+    Example:
+        ```python
+        import umami
+
+        umami.set_url_base('https://umami.example.com')
+        try:
+            umami.websites()  # no login() yet
+        except umami.errors.OperationNotAllowedError:
+            umami.login('admin', 'super-secret')
+            sites = umami.websites()
+        ```
     """
 
     pass

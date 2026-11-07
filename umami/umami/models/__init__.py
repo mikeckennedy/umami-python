@@ -17,6 +17,14 @@ class User(pydantic.BaseModel):
         role: The account role (e.g. 'admin', 'user').
         createdAt: ISO 8601 timestamp of when the account was created.
         isAdmin: True if the account has administrator privileges.
+
+    Example:
+        ```python
+        import umami
+
+        login = umami.login('admin', 'super-secret')
+        print(login.user.username, login.user.isAdmin)
+        ```
     """
 
     id: str = pydantic.Field(description="The user's unique identifier.")
@@ -39,6 +47,14 @@ class LoginResponse(pydantic.BaseModel):
         token: The bearer token used to authenticate subsequent data and
             management calls.
         user: The authenticated User account details.
+
+    Example:
+        ```python
+        import umami
+
+        login = umami.login('admin', 'super-secret')
+        print(login.user.username)  # the token is kept internally
+        ```
     """
 
     token: str = pydantic.Field(
@@ -58,6 +74,15 @@ class WebsiteUser(pydantic.BaseModel):
     Attributes:
         username: The referenced user's login username.
         id: The referenced user's unique identifier.
+
+    Example:
+        ```python
+        import umami
+
+        for site in umami.websites():
+            owner = site.user or site.createUser
+            print(site.domain, owner.username if owner else None)
+        ```
     """
 
     username: str = pydantic.Field(description="The referenced user's login username.")
@@ -91,6 +116,14 @@ class Website(pydantic.BaseModel):
         teamId: The owning team's id, if the website belongs to a team.
         user: The owning user, populated for personal website listings.
         createUser: The creating user, populated for team-website listings.
+
+    Example:
+        ```python
+        import umami
+
+        for site in umami.websites():
+            print(site.id, site.name, site.domain)
+        ```
     """
 
     id: str = pydantic.Field(description="The website's unique identifier (use this as the website_id elsewhere).")
@@ -132,6 +165,15 @@ class WebsiteStatsCmp(pydantic.BaseModel):
         visits: Number of sessions in the comparison period.
         bounces: Number of single-page sessions in the comparison period.
         totaltime: Total engagement time in seconds for the comparison period.
+
+    Example:
+        ```python
+        import umami
+
+        stats = umami.website_stats(start_at=start, end_at=end)
+        if stats.comparison:
+            print(stats.visitors - stats.comparison.visitors)  # change vs prior period
+        ```
     """
 
     pageviews: int = pydantic.Field(description='Number of page views in the comparison period.')
@@ -156,6 +198,17 @@ class WebsiteStats(pydantic.BaseModel):
         totaltime: Total engagement time in seconds.
         comparison: Prior-period totals as a WebsiteStatsCmp, or None when the
             API does not return a comparison block.
+
+    Example:
+        ```python
+        import umami
+
+        from datetime import datetime, timedelta
+
+        end = datetime.now()
+        stats = umami.website_stats(start_at=end - timedelta(days=7), end_at=end)
+        print(stats.pageviews, stats.visitors, stats.visits, stats.bounces)
+        ```
     """
 
     pageviews: int = pydantic.Field(description='Total number of page views.')
@@ -189,6 +242,14 @@ class WebsitesResponse(pydantic.BaseModel):
         page: The current page number.
         pageSize: The number of records per page.
         orderBy: The field results are ordered by, if specified.
+
+    Example:
+        ```python
+        import umami
+
+        page = umami.models.WebsitesResponse(data=[], count=0, page=1, pageSize=10)
+        print(page.websites)  # []
+        ```
     """
 
     websites: list[Website] = pydantic.Field(

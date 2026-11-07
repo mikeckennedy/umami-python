@@ -1,0 +1,9 @@
+# Development tools. Mirrors the [dev] extra in pyproject.toml; keep the two in sync.
+# Equivalent: uv pip install -e "./umami[dev]"
+-r requirements.txt
+pytest
+pytest-asyncio
+ruff
+# Docs site generator and the griffe extension it loads. Both need Python >= 3.11.
+great-docs>=0.17.0; python_version >= '3.11'
+griffe-pydantic; python_version >= '3.11'

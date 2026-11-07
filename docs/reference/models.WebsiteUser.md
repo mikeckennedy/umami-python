@@ -22,3 +22,14 @@ The referenced user's login username.
 
 `id: str`  
 The referenced user's unique identifier.
+
+
+## Example
+
+``` python
+import umami
+
+for site in umami.websites():
+    owner = site.user or site.createUser
+    print(site.domain, owner.username if owner else None)
+```

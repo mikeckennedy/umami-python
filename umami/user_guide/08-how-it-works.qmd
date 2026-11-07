@@ -1,0 +1,81 @@
+---
+title: "How it works"
+---
+
+This page describes what the package does on the wire, so you can reason about it when something is off and reach past it when you need an endpoint it does not wrap.
+
+## One module, global state
+
+`import umami` gives you a module of functions, not a class. The public functions in `umami` are re-exports from `umami.impl`, which holds the configuration as module globals: the URL base, the login token, the default website id and hostname, the Cloud key and region, and the enabled flag. The `set_*` functions, `login()`, `enable()`, and `disable()` write those globals; everything else reads them.
+
+That design has two consequences:
+
+- Configuration is per process. Two web workers each need their own `set_url_base()` and `login()` at startup.
+- The setters are not synchronized. Call them once at startup, before threads or an event loop start sending events. The send and query functions only read the globals, so concurrent calls after startup are fine.
+
+## Two modes, one code path
+
+Every request resolves its URL and headers from the current mode.
+
+| | Self-hosted | Umami Cloud |
+|---|---|---|
+| Selected by | `set_url_base()` and no Cloud key | `set_cloud_api_key()` |
+| Events (`/api/send`) | `{url_base}/api/send` | `https://cloud.umami.is/api/send` |
+| Queries | `{url_base}/api/...` | `https://api.umami.is/v1[/region]/...` |
+| Query credential | `Authorization: Bearer <token>` from `login()` | `x-umami-api-key: <key>` |
+| Event credential | the same Bearer header, which Umami ignores | none |
+| `verify_token()` | `POST /api/auth/verify` | `GET /me` |
+| `heartbeat()` | `GET /api/heartbeat` | `GET /me` with the key |
+
+In self-hosted mode the send functions include the Bearer header even when you never logged in, in which case its value is the string `None`. Umami's ingestion endpoint does not read it, so this is harmless.
+
+## Two user agents
+
+Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on `/api/send` calls, and `new_page_view()` lets you replace it with the visitor's real user agent through the `ua` argument. Query calls send an honest user agent of the form `Umami-Client v1.0.0 / Python 3.14.10 / Darwin`, available as `umami.user_agent`.
+
+If you would rather Umami accepted any user agent, set `DISABLE_BOT_CHECK=true` in the Umami server's environment.
+
+## Requests and responses
+
+Each function makes exactly one HTTP request. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package.
+
+Responses go through `raise_for_status()`, so any non-2xx status raises `httpx2.HTTPStatusError` with the response attached. The two exceptions are `verify_token()` and `heartbeat()`, which catch everything and return `False`, because they exist to answer a yes or no question.
+
+Successful query responses are parsed into Pydantic models from `umami.models`. `websites()` unwraps Umami's paged `{"data": [...]}` envelope and returns the list. `website_stats()` returns `WebsiteStats`. `active_users()` reads the `visitors` key and returns an `int`. Send functions return the response body as a plain dict.
+
+## Sync and async parity
+
+Each `_async` twin builds the same payload, sends the same headers, hits the same URL, and returns the same value as its sync counterpart. The package's test suite drives both and compares the request bodies, so a difference between the two is a test failure. The configuration functions are sync only because they do no I/O.
+
+## Dates and filters
+
+`website_stats()` converts `start_at` and `end_at` to epoch milliseconds with `datetime.timestamp()`, which interprets naive datetimes in the local timezone. The filter keywords `url` and `host` are sent as `path` and `hostname`, the names Umami adopted in October 2025. The other filters are sent under their own names, and `None` values are omitted.
+
+## Beyond the wrapped endpoints
+
+The package covers configuration, authentication, sending, listing websites, summary stats, and active users. For reports, sessions, event data, metrics, time series, realtime, teams, users, or anything else in the [Umami API](https://umami.is/docs/api), make the call yourself with the credential you already have:
+
+```python
+from datetime import datetime, timedelta
+
+import httpx2 as httpx
+import umami
+
+base = 'https://umami.example.com'
+umami.set_url_base(base)
+login = umami.login('admin', 'super-secret')
+
+end = datetime.now()
+start = end - timedelta(days=7)
+resp = httpx.get(
+    f'{base}/api/websites/{website_id}/metrics',
+    params={'startAt': int(start.timestamp() * 1000), 'endAt': int(end.timestamp() * 1000), 'type': 'url'},
+    headers={'Authorization': f'Bearer {login.token}'},
+)
+resp.raise_for_status()
+top_pages = resp.json()
+```
+
+On Cloud, use `https://api.umami.is/v1` as the base, drop the `/api` prefix from each path, and send `{'x-umami-api-key': key}` instead of the Bearer header.
+
+Two conventions trip people up when calling the API directly. The `GET` stats, sessions, events, and revenue endpoints take `startAt` and `endAt` as Unix milliseconds in the query string. The `POST /api/reports/*` endpoints take `startDate` and `endDate` as ISO 8601 strings inside a `parameters` object in the body. The package hides the first convention for you; it does not touch the second.

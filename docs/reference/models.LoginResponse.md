@@ -22,3 +22,13 @@ The bearer token used to authenticate subsequent data and management calls.
 
 `user: User`  
 The authenticated User account details.
+
+
+## Example
+
+``` python
+import umami
+
+login = umami.login('admin', 'super-secret')
+print(login.user.username)  # the token is kept internally
+```

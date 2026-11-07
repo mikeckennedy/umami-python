@@ -34,3 +34,16 @@ Total engagement time in seconds.
 
 `comparison: typing.Optional[WebsiteStatsCmp]`  
 Prior-period totals as a WebsiteStatsCmp, or None when the API does not return a comparison block.
+
+
+## Example
+
+``` python
+import umami
+
+from datetime import datetime, timedelta
+
+end = datetime.now()
+stats = umami.website_stats(start_at=end - timedelta(days=7), end_at=end)
+print(stats.pageviews, stats.visitors, stats.visits, stats.bounces)
+```

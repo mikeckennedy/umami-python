@@ -26,3 +26,12 @@ The base URL of your instance, without '/api'. Must start with 'http://' or 'htt
 
 `ValidationError`  
 If url is empty or whitespace-only, or if it does not start with 'http://' or 'https://'.
+
+
+## Example
+
+``` python
+import umami
+
+umami.set_url_base('https://analytics.example.com')
+```

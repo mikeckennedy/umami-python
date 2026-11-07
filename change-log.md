@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `login()` / `login_async()` now say `Username cannot be empty` when the username is blank; the message said `Email`. Same exception type (`ValidationError`), text only.
+
+### Documentation
+- New user guide on the docs site: Getting started, Sending events, Authentication, Querying stats, Troubleshooting, Testing and CI, Configuration, How it works, and FAQ. The guide pages are also appended to `llms-full.txt`.
+- The agent skill (`skill.md`, `.well-known/agent-skills/umami-analytics/SKILL.md`, `.well-known/skills/default/SKILL.md`) is now hand-written from `umami/skills/umami-analytics/SKILL.md` and teaches the rules of the package (setup order, self-hosted vs Cloud, what `disable()` silences, `distinct_id`, the bot filter, what each error means) instead of listing API names. The skill is renamed from `umami` to `umami-analytics`, so its `.well-known` path changed. `umami/skill_extra_body.md` is folded into it and removed.
+- Every public function, model, and exception now has an `Example:` section in its docstring, rendered on the reference pages and in `llms-full.txt`. The package docstring states that there is no CLI and no environment variables are read, and names the three exception types callers see.
+- Docstring `Raises:` sections for `new_event()`, `new_revenue_event()`, and their async twins now list a blank `event_name` as a `ValidationError` cause.
+- README: install shows `uv add` and `pip install` and warns about the unrelated `umami` package; the Documentation section links each guide page; the tracking-disabled bullets say exactly what still contacts the server and that the send functions return `{}`; the Cloud section says the two modes are exclusive; the "Login" feature bullet no longer implies username/password login works on Cloud.
+- `scripts/build_docs.py` now fails the build when `llms.txt`, `llms-full.txt`, `skill.md`, the `.well-known` skill copies, the user guide, `sitemap.xml`, `robots.txt`, or `search.json` are missing from the output, or when `llms-full.txt` lacks a guide page. The post-build patch of the generated skill's install command is removed; Great Docs fixed that in 0.16.0 and the skill is hand-written now. The `great-docs` dev dependency is floored at 0.17.0, the version the build was verified on, in both the `[dev]` extra and a new `umami/requirements-dev.txt` that mirrors it.
+
 ## [1.0.0]
 
 First stable release. The package is now marked `Development Status :: 5 - Production/Stable` (it has
@@ -263,6 +274,15 @@ from here forward.
 - Doc strings to most methods
 - Better validation for some functions
 - Custom error types for validation
+
+---
+
+[Unreleased]: https://github.com/mikeckennedy/umami-python/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/mikeckennedy/umami-python/compare/v0.6.25...v1.0.0
+[0.6.25]: https://github.com/mikeckennedy/umami-python/compare/v0.5.24...v0.6.25
+[0.5.24]: https://github.com/mikeckennedy/umami-python/compare/v0.4.23...v0.5.24
+[0.4.23]: https://github.com/mikeckennedy/umami-python/compare/v0.3.22...v0.4.23
+[0.3.22]: https://github.com/mikeckennedy/umami-python/releases/tag/v0.3.22
 
 ---
 

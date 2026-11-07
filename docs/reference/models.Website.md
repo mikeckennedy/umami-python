@@ -57,3 +57,13 @@ The owning user, populated for personal website listings.
 
 `createUser: typing.Optional[WebsiteUser]`  
 The creating user, populated for team-website listings.
+
+
+## Example
+
+``` python
+import umami
+
+for site in umami.websites():
+    print(site.id, site.name, site.domain)
+```

@@ -53,7 +53,7 @@ dev = [
     "ruff",
     # Documentation site generator (Great Docs). Needs Python >= 3.11; the
     # package itself supports 3.10+, so guard it so `[dev]` still installs on 3.10.
-    "great-docs; python_version >= '3.11'",
+    "great-docs>=0.17.0; python_version >= '3.11'",
     # Griffe extension that surfaces pydantic model fields (Field descriptions,
     # constraints) in the generated API reference. Same Python floor as great-docs.
     "griffe-pydantic; python_version >= '3.11'",
@@ -79,7 +79,11 @@ exclude = [
     "setup.py",
     "settings.json",
     "/tox.ini",
-    "/umami/great-docs"
+    "/umami/great-docs",
+    "/user_guide",
+    "/skills",
+    "/scripts",
+    "/great-docs.yml"
 ]
 
 [tool.hatch.build.targets.wheel]

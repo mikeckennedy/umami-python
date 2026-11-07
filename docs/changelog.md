@@ -30,7 +30,7 @@ First stable release. The package is now marked `Development Status :: 5 - Produ
 - Missing or blank required event fields (hostname, website_id, event_name) now raise [umami.errors.ValidationError](reference/errors.ValidationError.html#umami.errors.ValidationError) instead of a bare `Exception`, so they can be caught alongside the SDK's other validation errors.
 - `Website.shareId`, `Website.resetAt`, and `Website.deletedAt` are now optional (default `None`), so a websites response that omits those keys no longer raises `pydantic.ValidationError`.
 - README now points to the new documentation site at https://mkennedy.codes/docs/umami-python/ (added status badges, a documentation pointer near the top, and a "Documentation" section linking the full API reference). Docs-only change -- no code or packaging changes.
-ass="gdls-link gdls-code">new_page_view</a> wording (visitor; the `ua` user-agent string); clarified that [disable()](reference/disable.html#umami.disable) still validates before skipping the HTTP request and that both affect only the send functions; documented all response models and exception classes; added a package module docstring; and added runnable usage examples. Docstring-only -- no code or behavior changes.
+- Docstrings across the public API were expanded and corrected for the generated documentation site (Great Docs renders them verbatim, and they feed `llms.txt`). Added `Raises:` sections to every raising function; fixed [website_stats()](reference/website_stats.html#umami.website_stats) / [website_stats_async()](reference/website_stats_async.html#umami.website_stats_async) to document their real return type ([models.WebsiteStats](reference/models.WebsiteStats.html#umami.models.WebsiteStats), not the nonexistent `WebsiteStatsResponse`); removed unprofessional/inaccurate prose from [verify_token](reference/verify_token.html#umami.verify_token) (the "minutes, hours, or years" hedge) and [new_event](reference/new_event.html#umami.new_event) (the "not sure how this is different" aside); corrected [new_page_view](reference/new_page_view.html#umami.new_page_view) wording (visitor; the `ua` user-agent string); clarified that [disable()](reference/disable.html#umami.disable) still validates before skipping the HTTP request and that both affect only the send functions; documented all response models and exception classes; added a package module docstring; and added runnable usage examples. Docstring-only -- no code or behavior changes.
 
 
 ### Fixed
@@ -127,7 +127,7 @@ ass="gdls-link gdls-code">new_page_view</a> wording (visitor; the `ua` user-agen
 
 - Centralized all version information into a single location for easier maintenance
 - Updated Python requirement to 3.10+ (dropped support for Python 3.8 and 3.9)
-- Refactored [WebsiteStats](reference/models.WebsiteStats.html#umami.models.WebsiteStats) to use plain integers instead of custom `Metric` type - Thanks [<span class="citation" cites="rubitcat">@rubitcat</span>](https://github.com/rubitcat) ([\#15](https://github.com/mikeckennedy/umami-python/issues/15))
+- Refactored [WebsiteStats](reference/models.WebsiteStats.html#umami.models.WebsiteStats) to use plain integers instead of custom `Metric` type - Thanks [<span class="citation" data-cites="rubitcat">@rubitcat</span>](https://github.com/rubitcat) ([\#15](https://github.com/mikeckennedy/umami-python/issues/15))
 - Updated `ruff.toml` to enforce consistent import ordering
 
 
@@ -181,7 +181,7 @@ Umami-Python Release Notes
 ## 🚀 New Features
 
 - **Heartbeat Functions**: Added asynchronous ([heartbeat_async](reference/heartbeat_async.html#umami.heartbeat_async)) and synchronous ([heartbeat](reference/heartbeat.html#umami.heartbeat)) versions of the existing heartbeat function for improved import flexibility.
-- Added website stats and active users functions ([website_stats](reference/website_stats.html#umami.website_stats), [active_users](reference/active_users.html#umami.active_users)) Thanks [<span class="citation" cites="orangethewell">@orangethewell</span>](https://github.com/orangethewell)
+- Added website stats and active users functions ([website_stats](reference/website_stats.html#umami.website_stats), [active_users](reference/active_users.html#umami.active_users)) Thanks [<span class="citation" data-cites="orangethewell">@orangethewell</span>](https://github.com/orangethewell)
 
 
 ## 🐛 Bug Fixes
@@ -245,7 +245,7 @@ Support IP address in new_event and new_page_view payloads, see issue [\#2](http
 
 It looks like Umami added the IP data field in the payload (see https://github.com/umami-software/umami/pull/2479 ). It's not clear when the feature will be released in a new build ( https://github.com/umami-software/umami/releases ). But in preparation, I added the id_address parameter to both new_event and new_page_view as well as their async twins.
 
-This is out in version 0.1.13 and on PyPI at https://pypi.org/project/umami-analytics/0.1.13/ Thanks for the idea [<span class="citation" cites="ddxv">@ddxv</span>](https://github.com/ddxv)
+This is out in version 0.1.13 and on PyPI at https://pypi.org/project/umami-analytics/0.1.13/ Thanks for the idea [<span class="citation" data-cites="ddxv">@ddxv</span>](https://github.com/ddxv)
 
 
 # v0.1.12

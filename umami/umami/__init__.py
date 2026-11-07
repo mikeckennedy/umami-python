@@ -20,6 +20,12 @@ Two modes are supported:
 Most network operations provide both a synchronous function and an _async twin
 with an identical signature (for example new_event and new_event_async).
 
+There is no command-line interface and the package reads no environment
+variables; everything is configured at runtime through the functions above.
+Input problems raise umami.errors.ValidationError, missing setup raises
+umami.errors.OperationNotAllowedError, and non-2xx responses raise
+httpx2.HTTPStatusError.
+
 Example:
     ```python
     import umami
@@ -38,21 +44,21 @@ Example:
     ```
 """
 
-from . import impl  # type: ignore
-from . import errors  # type: ignore noqa: F401, E402,
-from . import models  # type: ignore noqa: F401, E402
-from .impl import active_users, active_users_async  # type: ignore noqa: F401, E402
-from .impl import heartbeat_async, heartbeat  # type: ignore noqa: F401, E402
-from .impl import login_async, login, is_logged_in  # type: ignore noqa: F401, E402
-from .impl import new_event_async, new_event  # type: ignore noqa: F401, E402
-from .impl import new_revenue_event, new_revenue_event_async  # type: ignore noqa: F401, E402
-from .impl import new_page_view, new_page_view_async  # type: ignore noqa: F401, E402
-from .impl import set_url_base, set_website_id, set_hostname  # type: ignore noqa: F401, E402
-from .impl import set_cloud_api_key, clear_cloud_api_key  # type: ignore noqa: F401, E402
-from .impl import verify_token_async, verify_token  # type: ignore noqa: F401, E402
-from .impl import website_stats, website_stats_async  # type: ignore noqa: F401, E402
-from .impl import websites_async, websites  # type: ignore noqa: F401, E402
-from .impl import enable, disable  # type: ignore noqa: F401, E402
+from . import impl
+from . import errors
+from . import models
+from .impl import active_users, active_users_async
+from .impl import heartbeat_async, heartbeat
+from .impl import login_async, login, is_logged_in
+from .impl import new_event_async, new_event
+from .impl import new_revenue_event, new_revenue_event_async
+from .impl import new_page_view, new_page_view_async
+from .impl import set_url_base, set_website_id, set_hostname
+from .impl import set_cloud_api_key, clear_cloud_api_key
+from .impl import verify_token_async, verify_token
+from .impl import website_stats, website_stats_async
+from .impl import websites_async, websites
+from .impl import enable, disable
 
 __author__ = 'Michael Kennedy <michael@talkpython.fm>'
 __version__ = impl.__version__

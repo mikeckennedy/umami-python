@@ -19,3 +19,13 @@ An Umami instance can have many registered websites. Call this once to choose wh
 
 `website_id: str`  
 The website ID from Umami for your registered site (e.g. '978435e2-7ba1-4337-9860-ec31ece2db60').
+
+
+## Example
+
+``` python
+import umami
+
+umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
+umami.new_event(event_name='signup', url='/account/new')  # uses that id
+```
