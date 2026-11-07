@@ -1,6 +1,8 @@
 # Testing and CI
 
-Analytics calls in application code are a problem for test suites. Every test run would record fake purchases and page views against your real website, and a test environment without network access would fail on the first event. The package gives you two tools for this: a module-level switch that turns sending off, and a single HTTP boundary that is easy to mock.
+Picture Monday morning. The revenue report shows two hundred course purchases over the weekend, every one of them for `test-course`, every one for 1.00 USD, all from a hostname of `localhost`. Nobody bought anything. The CI pipeline ran the checkout tests forty times, and each run dutifully reported its fake purchases to your real Umami website.
+
+Analytics calls in application code are a problem for test suites in exactly this way, and in the opposite way too: a test environment without network access fails on the first event. The package gives you two tools. A module-level switch turns sending off, and a single HTTP boundary is easy to mock.
 
 
 # Turn sending off with disable()
@@ -20,7 +22,7 @@ umami.new_event(event_name='signup')  # returns {} and sends nothing
 
 Two details matter:
 
-- Validation still runs. A blank event name or a missing website id still raises [ValidationError](../reference/errors.ValidationError.md#umami.errors.ValidationError), so tests catch configuration mistakes without touching the network.
+- Validation still runs. A blank event name or a missing website id still raises [ValidationError](../reference/errors.ValidationError.md#umami.errors.ValidationError), so tests catch configuration mistakes without touching the network. Disabled does not mean asleep.
 - Only the send functions are affected. [login()](../reference/login.md#umami.login), [websites()](../reference/websites.md#umami.websites), [website_stats()](../reference/website_stats.md#umami.website_stats), [active_users()](../reference/active_users.md#umami.active_users), [verify_token()](../reference/verify_token.md#umami.verify_token), and [heartbeat()](../reference/heartbeat.md#umami.heartbeat) always make their request. Mock those if a test reaches them.
 
 The simplest production pattern is to decide at startup:
@@ -42,7 +44,7 @@ The variable names are yours. The package reads no environment variables itself.
 
 # A pytest fixture
 
-Because the configuration is module-global, one test can leak state into the next. An autouse fixture that resets everything keeps tests independent:
+Because the configuration is module-global, one test can leak state into the next. A test that calls [enable()](../reference/enable.md#umami.enable) to assert on a payload leaves tracking on for every test that runs after it. An autouse fixture that resets everything keeps tests independent:
 
 ``` python
 # conftest.py
@@ -60,12 +62,12 @@ def _umami_offline():
     yield
 ```
 
-With this in place, application code can call [umami.new_event()](../reference/new_event.md#umami.new_event) freely and nothing leaves the test process.
+With this in place, application code can call [umami.new_event()](../reference/new_event.md#umami.new_event) freely and nothing leaves the test process. The Monday morning report stays honest.
 
 
 # Mock the HTTP boundary
 
-When a test needs to assert what would have been sent, or needs a query function to return data, patch `httpx2` where the package uses it. The package does `import httpx2 as httpx` inside `umami.impl` and calls `httpx.post()` and `httpx.get()` for the sync functions and `httpx.AsyncClient()` for the async ones. This is how the package's own test suite works.
+When a test needs to assert what would have been sent, or needs a query function to return data, patch `httpx2` where the package uses it. The package does `import httpx2 as httpx` inside `umami.impl` and calls `httpx.post()` and `httpx.get()` for the sync functions and `httpx.AsyncClient()` for the async ones. There is one boundary, and this is how the package's own test suite works.
 
 ``` python
 from unittest.mock import MagicMock, patch
@@ -115,4 +117,4 @@ To test a query function, return the shape Umami returns. [websites()](../refere
 
 # Continuous integration
 
-Nothing in the package needs network access when tracking is disabled, so the fixture above is enough for CI. If your pipeline builds a container that runs the real application, make sure the environment variable that selects [disable()](../reference/disable.md#umami.disable) is set in the test stage and unset in production. A forgotten [disable()](../reference/disable.md#umami.disable) in production is silent: every call returns `{}` and no events arrive, which looks the same as a broken server. The [Troubleshooting](troubleshooting.md#event-sent-but-nothing-appears) page lists this as the first thing to check.
+Nothing in the package needs network access when tracking is disabled, so the fixture above is enough for CI. The remaining risk is the mirror image of the weekend story. If the variable that selects [disable()](../reference/disable.md#umami.disable) is set in the test stage and somehow also set in production, every call returns `{}` and no events arrive, which looks exactly like a broken server. A forgotten [disable()](../reference/disable.md#umami.disable) in production is silent. That is why the [Troubleshooting](troubleshooting.md#event-sent-but-nothing-appears) page lists it as the first thing to check.

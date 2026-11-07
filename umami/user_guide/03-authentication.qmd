@@ -2,7 +2,9 @@
 title: "Authentication"
 ---
 
-There are two ways to authenticate, and you use exactly one of them at a time. Self-hosted instances take a username and password and return a token. Umami Cloud takes an API key. The package routes requests and sets headers differently in each mode, so the choice matters even though the rest of your code stays the same.
+Here is the part that surprises people: you can send events to Umami all day without logging in. The ingestion endpoint is public, because a browser tracker on a public web page cannot keep a secret. Credentials only enter the picture when you want to read data back out.
+
+When you do, there are two doors and you walk through exactly one of them. A self-hosted instance takes a username and password and hands you a token. Umami Cloud takes an API key. The package routes requests and sets headers differently behind each door, so the choice matters even though the rest of your code stays identical.
 
 ## What needs a credential
 
@@ -13,7 +15,7 @@ There are two ways to authenticate, and you use exactly one of them at a time. S
 | `websites()`, `website_stats()`, `active_users()` | `login()` or a Cloud key | These read data and require a token or key. |
 | `verify_token()` | `login()` or a Cloud key | Returns `False` rather than raising when nothing is set. |
 
-Calling a query function before logging in raises `umami.errors.OperationNotAllowedError` with the message `Call login() or set_cloud_api_key() before proceeding.`
+Call a query function before you have a credential and you get `umami.errors.OperationNotAllowedError` with the message `Call login() or set_cloud_api_key() before proceeding.` No request is made; the package checks before it dials.
 
 ## Self-hosted: set_url_base and login
 
@@ -25,15 +27,15 @@ login = umami.login('admin', 'super-secret')
 print(login.user.username, login.user.isAdmin)
 ```
 
-`login()` posts to `/api/auth/login`, stores the returned token in the module, and returns a `LoginResponse` with the token and a `User` model. You do not need to keep the return value; every later query call sends the stored token as `Authorization: Bearer <token>`.
+`login()` posts to `/api/auth/login`, stores the returned token in the module, and returns a `LoginResponse` with the token and a `User` model. You can drop the return value on the floor. Every later query call sends the stored token as `Authorization: Bearer <token>` without you touching it.
 
-Both arguments must be non-empty or `ValidationError` is raised. Wrong credentials come back from the server as a 401 and raise `httpx2.HTTPStatusError`.
+Both arguments must be non-empty, and whitespace does not count, or `ValidationError` is raised before any request. Wrong credentials come back from the server as a 401 and raise `httpx2.HTTPStatusError`.
 
 Calling `login()` again replaces the stored token. There is no logout function; the token lives until the process exits or you log in again.
 
 ### Tokens expire
 
-Umami login tokens are temporary. A long-running process should expect a query call to start failing with a 401 at some point. `verify_token()` checks the stored token against the server and never raises:
+Umami login tokens are temporary, and they expire on Umami's schedule, not yours. A long-running process should assume that one day a query call will start failing with a 401, probably during a demo. `verify_token()` asks the server whether the stored token is still good and never raises:
 
 ```python
 if not umami.verify_token():
@@ -54,23 +56,23 @@ umami.set_hostname('example.com')
 
 Create the key in the Umami Cloud dashboard under the API keys settings. `region` accepts `'us'`, `'eu'`, or `None`; when omitted, Cloud uses the region of the account that owns the key. Any other value raises `ValidationError`, as does a blank key.
 
-In Cloud mode the package changes three things:
+Setting a key flips three switches at once:
 
 - Query and verification calls go to `https://api.umami.is/v1`, with `/eu` or `/us` inserted after `v1` when you pin a region, and carry an `x-umami-api-key` header.
-- Events go to `https://cloud.umami.is/api/send` with no credential, because the Cloud ingestion endpoint is public. The region does not affect this host.
-- `login()` and `login_async()` raise `OperationNotAllowedError`. The key is the credential, and Cloud has no username and password login.
+- Events go to `https://cloud.umami.is/api/send` with no credential, because the Cloud ingestion endpoint is public too. The region does not affect this host.
+- `login()` and `login_async()` raise `OperationNotAllowedError`. The key is the credential, and Cloud has no username and password login to call.
 
-You do not call `set_url_base()` in Cloud mode. If you do, the value is stored but ignored while the key is set.
+You do not call `set_url_base()` in Cloud mode. If you do, the value is stored and politely ignored while the key is set.
 
 ## Switching modes
 
-`clear_cloud_api_key()` removes the key and the region. Everything goes back to self-hosted behaviour: events use `url_base`, and query calls need a login token. A token from a `login()` made before you switched to Cloud mode is still there, so you do not have to log in again.
+`clear_cloud_api_key()` removes the key and the region, and everything reverts to self-hosted behaviour: events use `url_base`, and query calls need a login token. A token from a `login()` made before you switched to Cloud is still sitting there, so you do not have to log in again.
 
 `is_logged_in()` returns `True` when either a login token or a Cloud key is set. It does not contact the server; use `verify_token()` for that.
 
 ## Keep credentials out of code
 
-Read the password or key from an environment variable or a secrets store at startup, then hand it to `login()` or `set_cloud_api_key()`. The package does not read any environment variables itself.
+Read the password or key from an environment variable or a secrets store at startup, then hand it to `login()` or `set_cloud_api_key()`. The package does not read any environment variables itself, so there is no magic name to discover and no surprise when a variable is set on the wrong machine.
 
 ```python
 import os

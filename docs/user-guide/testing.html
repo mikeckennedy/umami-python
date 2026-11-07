@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="testing.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/testing.html">
-  <meta name="description" content="Analytics calls in application code are a problem for test suites. Every test run would record fake purchases and page views against your real website,...">
+  <meta name="description" content="Picture Monday morning. The revenue report shows two hundred course purchases over the weekend, every one of them for test-course, every one for 1.00...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Testing and CI – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Analytics calls in application code are a problem for test suites. Every test run would record fake purchases and page views against your real website,...">
+  <meta property="og:description" content="Picture Monday morning. The revenue report shows two hundred course purchases over the weekend, every one of them for test-course, every one for 1.00...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/testing.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Testing and CI – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Analytics calls in application code are a problem for test suites. Every test run would record fake purchases and page views against your real website,...">
+  <meta name="twitter:description" content="Picture Monday morning. The revenue report shows two hundred course purchases over the weekend, every one of them for test-course, every one for 1.00...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -294,7 +294,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Analytics calls in application code are a problem for test suites. Every test run would record fake purchases and page views against your real website, and a test environment without network access would fail on the first event. The package gives you two tools for this: a module-level switch that turns sending off, and a single HTTP boundary that is easy to mock.</p>
+<p>Picture Monday morning. The revenue report shows two hundred course purchases over the weekend, every one of them for <code>test-course</code>, every one for 1.00 USD, all from a hostname of <code>localhost</code>. Nobody bought anything. The CI pipeline ran the checkout tests forty times, and each run dutifully reported its fake purchases to your real Umami website.</p>
+<p>Analytics calls in application code are a problem for test suites in exactly this way, and in the opposite way too: a test environment without network access fails on the first event. The package gives you two tools. A module-level switch turns sending off, and a single HTTP boundary is easy to mock.</p>
 <section id="turn-sending-off-with-disable" class="level1">
 <h1>Turn sending off with disable()</h1>
 <p><a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">umami.disable()</a> makes <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a>, <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a>, and <a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> (and their async twins) validate their arguments and then return <code>{}</code> without making a request. <a href="../reference/enable.html#umami.enable" class="gdls-link gdls-code">umami.enable()</a> turns sending back on, and enabled is the default.</p>
@@ -308,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">'signup'</span>)  <span class="co"># returns {} and sends nothing</span></span></code></pre></div>
 <p>Two details matter:</p>
 <ul>
-<li>Validation still runs. A blank event name or a missing website id still raises <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a>, so tests catch configuration mistakes without touching the network.</li>
+<li>Validation still runs. A blank event name or a missing website id still raises <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a>, so tests catch configuration mistakes without touching the network. Disabled does not mean asleep.</li>
 <li>Only the send functions are affected. <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>, <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a>, <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a>, <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a>, <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>, and <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a> always make their request. Mock those if a test reaches them.</li>
 </ul>
 <p>The simplest production pattern is to decide at startup:</p>
@@ -325,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="a-pytest-fixture" class="level1">
 <h1>A pytest fixture</h1>
-<p>Because the configuration is module-global, one test can leak state into the next. An autouse fixture that resets everything keeps tests independent:</p>
+<p>Because the configuration is module-global, one test can leak state into the next. A test that calls <a href="../reference/enable.html#umami.enable" class="gdls-link gdls-code">enable()</a> to assert on a payload leaves tracking on for every test that runs after it. An autouse fixture that resets everything keeps tests independent:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># conftest.py</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pytest</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
@@ -339,11 +340,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    umami.clear_cloud_api_key()</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    umami.disable()</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">yield</span></span></code></pre></div>
-<p>With this in place, application code can call <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">umami.new_event()</a> freely and nothing leaves the test process.</p>
+<p>With this in place, application code can call <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">umami.new_event()</a> freely and nothing leaves the test process. The Monday morning report stays honest.</p>
 </section>
 <section id="mock-the-http-boundary" class="level1">
 <h1>Mock the HTTP boundary</h1>
-<p>When a test needs to assert what would have been sent, or needs a query function to return data, patch <code>httpx2</code> where the package uses it. The package does <code>import httpx2 as httpx</code> inside <code>umami.impl</code> and calls <code>httpx.post()</code> and <code>httpx.get()</code> for the sync functions and <code>httpx.AsyncClient()</code> for the async ones. This is how the package’s own test suite works.</p>
+<p>When a test needs to assert what would have been sent, or needs a query function to return data, patch <code>httpx2</code> where the package uses it. The package does <code>import httpx2 as httpx</code> inside <code>umami.impl</code> and calls <code>httpx.post()</code> and <code>httpx.get()</code> for the sync functions and <code>httpx.AsyncClient()</code> for the async ones. There is one boundary, and this is how the package’s own test suite works.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> unittest.mock <span class="im">import</span> MagicMock, patch</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
@@ -383,7 +384,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="continuous-integration" class="level1">
 <h1>Continuous integration</h1>
-<p>Nothing in the package needs network access when tracking is disabled, so the fixture above is enough for CI. If your pipeline builds a container that runs the real application, make sure the environment variable that selects <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> is set in the test stage and unset in production. A forgotten <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> in production is silent: every call returns <code>{}</code> and no events arrive, which looks the same as a broken server. The <a href="../user-guide/troubleshooting.html#event-sent-but-nothing-appears">Troubleshooting</a> page lists this as the first thing to check.</p>
+<p>Nothing in the package needs network access when tracking is disabled, so the fixture above is enough for CI. The remaining risk is the mirror image of the weekend story. If the variable that selects <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> is set in the test stage and somehow also set in production, every call returns <code>{}</code> and no events arrive, which looks exactly like a broken server. A forgotten <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> in production is silent. That is why the <a href="../user-guide/troubleshooting.html#event-sent-but-nothing-appears">Troubleshooting</a> page lists it as the first thing to check.</p>
 
 
 </section>

@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="troubleshooting.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/troubleshooting.html">
-  <meta name="description" content="The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and...">
+  <meta name="description" content="Every problem with this package lands in one of three bins. The package raised before sending anything. The package raised because Umami answered with...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Troubleshooting – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and...">
+  <meta property="og:description" content="Every problem with this package lands in one of three bins. The package raised before sending anything. The package raised because Umami answered with...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/troubleshooting.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Troubleshooting – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and...">
+  <meta name="twitter:description" content="Every problem with this package lands in one of three bins. The package raised before sending anything. The package raised because Umami answered with...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -299,9 +299,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and nothing shows up in the dashboard. This page covers each in turn and ends with the order to check things in.</p>
+<p>Every problem with this package lands in one of three bins. The package raised before sending anything. The package raised because Umami answered with an error. Or, the one that costs the most sleep, the call returned normally and nothing showed up in the dashboard. This page takes the bins in that order and ends with the order to check things in when you do not yet know which bin you are in.</p>
 <section id="read-the-exception-first" class="level1">
 <h1>Read the exception first</h1>
+<p>The exception type tells you whether a request was ever made, which cuts the search in half before you read the message.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -337,10 +338,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="setup-errors" class="level1">
 <h1>Setup errors</h1>
+<p>Each of these arrives with its own instructions in the message:</p>
 <dl>
 <dt><code>Set a URL base with set_url_base() or call set_cloud_api_key().</code></dt>
 <dd>
-Nothing has been configured yet. Call <code>set_url_base('https://your-instance')</code> for self-hosted, or <code>set_cloud_api_key(key)</code> for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first.
+Nothing has been configured yet. Call <code>set_url_base('https://your-instance')</code> for self-hosted, or <code>set_cloud_api_key(key)</code> for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first. A worker process that forked before startup code ran is the classic version of this.
 </dd>
 <dt><code>Call login() or set_cloud_api_key() before proceeding.</code></dt>
 <dd>
@@ -354,7 +356,7 @@ A Cloud key is set, so there is nothing to log in to. Remove the <a href="../ref
 </section>
 <section id="validation-errors" class="level1">
 <h1>Validation errors</h1>
-<p>Each message names the argument to fix:</p>
+<p>Each message names the argument to fix, so the message is the documentation:</p>
 <ul>
 <li><code>URL must not be empty.</code> and <code>The url must start with the HTTP scheme (http:// or https://).</code> come from <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a>. Pass the full instance URL including the scheme.</li>
 <li><code>The hostname must be set, either as a parameter here or via set_hostname().</code> and <code>The website_id must be set, either as a parameter here or via set_website_id().</code> come from the send functions. Set the defaults once at startup or pass the argument on the call.</li>
@@ -367,14 +369,14 @@ A Cloud key is set, so there is nothing to log in to. Remove the <a href="../ref
 </section>
 <section id="login-and-token-problems" class="level1">
 <h1>Login and token problems</h1>
-<p><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> raises <code>httpx2.HTTPStatusError</code> with a 401 when the username or password is wrong. Check the credentials against the Umami login page.</p>
-<p>A query call that worked earlier and now raises a 401 means the token expired. Umami tokens are temporary. Call <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> again, or check first with <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>, which returns <code>False</code> for an expired token without raising.</p>
-<p><a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> returning <code>False</code> right after a successful <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> usually means the server is unreachable, not that the token is bad. Check <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>.</p>
+<p><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> raises <code>httpx2.HTTPStatusError</code> with a 401 when the username or password is wrong. Try the same credentials on the Umami login page in a browser; if they fail there too, the package is not the problem.</p>
+<p>A query call that worked an hour ago and now raises a 401 means the token expired. Umami tokens are temporary. Call <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> again, or check first with <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>, which returns <code>False</code> for an expired token without raising.</p>
+<p><a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> returning <code>False</code> right after a successful <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> usually means the server became unreachable, not that the token is bad. Check <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>.</p>
 <p>On Cloud, a 401 or 403 means the API key is wrong, revoked, or used on a route the Cloud API does not allow for keys. Create a new key in the Cloud dashboard and try again.</p>
 </section>
 <section id="http-errors" class="level1">
 <h1>HTTP errors</h1>
-<p>Inspect the status code and body before guessing:</p>
+<p>Inspect the status code and body before guessing. The body usually says more than the status does:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> httpx2</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
@@ -393,19 +395,19 @@ A Cloud key is set, so there is nothing to log in to. Remove the <a href="../ref
 </section>
 <section id="event-sent-but-nothing-appears" class="level1">
 <h1>Event sent but nothing appears</h1>
-<p>The call returned a dict and raised nothing, but the dashboard shows no event. Work through these in order.</p>
+<p>This is the frustrating one. The call returned a dict, raised nothing, and the dashboard shows no event. Work through these in order:</p>
 <ol type="1">
-<li><strong>The return value is <code>{}</code>.</strong> Tracking is disabled. Something called <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">umami.disable()</a>, usually a test or development setting. Call <a href="../reference/enable.html#umami.enable" class="gdls-link gdls-code">umami.enable()</a> or check the condition that disables it. A real response contains keys such as <code>cache</code>.</li>
-<li><strong>Umami’s bot filter dropped the request.</strong> Umami rejects requests whose <code>User-Agent</code> looks like a bot, and it may still answer 200. The package sends a desktop Chrome user agent by default, so this only happens when you pass your own <code>ua</code> to <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a>. Use a browser user agent, or set <code>DISABLE_BOT_CHECK=true</code> in the Umami server’s environment. That variable is read by the Umami server, not by this package.</li>
+<li><strong>The return value is <code>{}</code>.</strong> Tracking is disabled. Something called <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">umami.disable()</a>, usually a test or development setting that followed you to production. Call <a href="../reference/enable.html#umami.enable" class="gdls-link gdls-code">umami.enable()</a> or check the condition that disables it. A real response contains keys such as <code>cache</code>.</li>
+<li><strong>Umami’s bot filter dropped the request.</strong> Umami rejects requests whose <code>User-Agent</code> looks like a bot, and it may still answer 200, so the package has no way to warn you. The default user agent is a desktop Chrome string precisely to get past this filter, so it only bites when you pass your own <code>ua</code> to <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a>. Use a browser user agent, or set <code>DISABLE_BOT_CHECK=true</code> in the Umami server’s environment. That variable is read by the Umami server, not by this package.</li>
 <li><strong>Wrong website id.</strong> The event was recorded against another website. Compare the id you set with the one in the dashboard URL, and remember that an explicit <code>website_id</code> argument wins over <a href="../reference/set_website_id.html#umami.set_website_id" class="gdls-link gdls-code">set_website_id()</a>.</li>
 <li><strong>Wrong mode.</strong> A Cloud key is set, so the event went to Umami Cloud rather than your self-hosted instance, or the other way round. <a href="../reference/clear_cloud_api_key.html#umami.clear_cloud_api_key" class="gdls-link gdls-code">clear_cloud_api_key()</a> switches back to self-hosted.</li>
-<li><strong>Dashboard range or timezone.</strong> Events appear under the date range selected in the dashboard, in the dashboard’s timezone. Widen the range and refresh.</li>
+<li><strong>Dashboard range or timezone.</strong> Events appear under the date range selected in the dashboard, in the dashboard’s timezone. An event sent at 23:50 your time can be tomorrow’s event in the dashboard. Widen the range and refresh.</li>
 <li><strong>It is in the Events list, not the Pages list.</strong> Custom events appear in the Events section at the bottom of the website page. Page views appear in Pages. Revenue appears in the Revenue report once Umami has processed the <code>revenue</code> and <code>currency</code> properties.</li>
 </ol>
 </section>
 <section id="heartbeat-returns-false" class="level1">
 <h1>heartbeat() returns False</h1>
-<p><a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a> returns <code>False</code> for any failure, including configuration problems, so it does not tell you which one you have:</p>
+<p><a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a> returns <code>False</code> for any failure, including configuration problems, so it tells you that something is wrong and nothing about what:</p>
 <ul>
 <li><a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> or <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a> has not been called.</li>
 <li>The server is down or unreachable from this machine.</li>
@@ -423,7 +425,7 @@ A Cloud key is set, so there is nothing to log in to. Remove the <a href="../ref
 </section>
 <section id="fix-order" class="level1">
 <h1>Fix order</h1>
-<p>Fix configuration first, because <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a> and <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a> are raised before any request and nothing else can work until they stop. Then confirm connectivity with <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>, then the credential with <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>, and only then look at the event itself.</p>
+<p>When nothing is obviously wrong, check in this order and resist skipping ahead, because each step rules out everything behind it. Configuration first, since <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a> and <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a> are raised before any request and nothing else can work until they stop. Then connectivity with <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>. Then the credential with <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>. Only then look at the event itself.</p>
 <p>If you find a problem the package should handle better, open an issue at <a href="https://github.com/mikeckennedy/umami-python/issues" class="uri">https://github.com/mikeckennedy/umami-python/issues</a>.</p>
 
 

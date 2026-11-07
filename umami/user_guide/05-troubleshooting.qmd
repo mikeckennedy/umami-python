@@ -2,9 +2,11 @@
 title: "Troubleshooting"
 ---
 
-The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and nothing shows up in the dashboard. This page covers each in turn and ends with the order to check things in.
+Every problem with this package lands in one of three bins. The package raised before sending anything. The package raised because Umami answered with an error. Or, the one that costs the most sleep, the call returned normally and nothing showed up in the dashboard. This page takes the bins in that order and ends with the order to check things in when you do not yet know which bin you are in.
 
 ## Read the exception first
+
+The exception type tells you whether a request was ever made, which cuts the search in half before you read the message.
 
 | Exception | Raised when | Where to look |
 |---|---|---|
@@ -17,8 +19,10 @@ The package fails in one of three ways: it raises before sending anything, it ra
 
 ## Setup errors
 
+Each of these arrives with its own instructions in the message:
+
 `Set a URL base with set_url_base() or call set_cloud_api_key().`
-: Nothing has been configured yet. Call `set_url_base('https://your-instance')` for self-hosted, or `set_cloud_api_key(key)` for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first.
+: Nothing has been configured yet. Call `set_url_base('https://your-instance')` for self-hosted, or `set_cloud_api_key(key)` for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first. A worker process that forked before startup code ran is the classic version of this.
 
 `Call login() or set_cloud_api_key() before proceeding.`
 : You called `websites()`, `website_stats()`, or `active_users()` without a credential. These need `login()` on self-hosted or a Cloud key. Sending events does not.
@@ -28,7 +32,7 @@ The package fails in one of three ways: it raises before sending anything, it ra
 
 ## Validation errors
 
-Each message names the argument to fix:
+Each message names the argument to fix, so the message is the documentation:
 
 - `URL must not be empty.` and `The url must start with the HTTP scheme (http:// or https://).` come from `set_url_base()`. Pass the full instance URL including the scheme.
 - `The hostname must be set, either as a parameter here or via set_hostname().` and `The website_id must be set, either as a parameter here or via set_website_id().` come from the send functions. Set the defaults once at startup or pass the argument on the call.
@@ -40,17 +44,17 @@ Each message names the argument to fix:
 
 ## Login and token problems
 
-`login()` raises `httpx2.HTTPStatusError` with a 401 when the username or password is wrong. Check the credentials against the Umami login page.
+`login()` raises `httpx2.HTTPStatusError` with a 401 when the username or password is wrong. Try the same credentials on the Umami login page in a browser; if they fail there too, the package is not the problem.
 
-A query call that worked earlier and now raises a 401 means the token expired. Umami tokens are temporary. Call `login()` again, or check first with `verify_token()`, which returns `False` for an expired token without raising.
+A query call that worked an hour ago and now raises a 401 means the token expired. Umami tokens are temporary. Call `login()` again, or check first with `verify_token()`, which returns `False` for an expired token without raising.
 
-`verify_token()` returning `False` right after a successful `login()` usually means the server is unreachable, not that the token is bad. Check `heartbeat()`.
+`verify_token()` returning `False` right after a successful `login()` usually means the server became unreachable, not that the token is bad. Check `heartbeat()`.
 
 On Cloud, a 401 or 403 means the API key is wrong, revoked, or used on a route the Cloud API does not allow for keys. Create a new key in the Cloud dashboard and try again.
 
 ## HTTP errors
 
-Inspect the status code and body before guessing:
+Inspect the status code and body before guessing. The body usually says more than the status does:
 
 ```python
 import httpx2
@@ -71,18 +75,18 @@ except httpx2.HTTPStatusError as e:
 
 ## Event sent but nothing appears
 
-The call returned a dict and raised nothing, but the dashboard shows no event. Work through these in order.
+This is the frustrating one. The call returned a dict, raised nothing, and the dashboard shows no event. Work through these in order:
 
-1. **The return value is `{}`.** Tracking is disabled. Something called `umami.disable()`, usually a test or development setting. Call `umami.enable()` or check the condition that disables it. A real response contains keys such as `cache`.
-2. **Umami's bot filter dropped the request.** Umami rejects requests whose `User-Agent` looks like a bot, and it may still answer 200. The package sends a desktop Chrome user agent by default, so this only happens when you pass your own `ua` to `new_page_view()`. Use a browser user agent, or set `DISABLE_BOT_CHECK=true` in the Umami server's environment. That variable is read by the Umami server, not by this package.
+1. **The return value is `{}`.** Tracking is disabled. Something called `umami.disable()`, usually a test or development setting that followed you to production. Call `umami.enable()` or check the condition that disables it. A real response contains keys such as `cache`.
+2. **Umami's bot filter dropped the request.** Umami rejects requests whose `User-Agent` looks like a bot, and it may still answer 200, so the package has no way to warn you. The default user agent is a desktop Chrome string precisely to get past this filter, so it only bites when you pass your own `ua` to `new_page_view()`. Use a browser user agent, or set `DISABLE_BOT_CHECK=true` in the Umami server's environment. That variable is read by the Umami server, not by this package.
 3. **Wrong website id.** The event was recorded against another website. Compare the id you set with the one in the dashboard URL, and remember that an explicit `website_id` argument wins over `set_website_id()`.
 4. **Wrong mode.** A Cloud key is set, so the event went to Umami Cloud rather than your self-hosted instance, or the other way round. `clear_cloud_api_key()` switches back to self-hosted.
-5. **Dashboard range or timezone.** Events appear under the date range selected in the dashboard, in the dashboard's timezone. Widen the range and refresh.
+5. **Dashboard range or timezone.** Events appear under the date range selected in the dashboard, in the dashboard's timezone. An event sent at 23:50 your time can be tomorrow's event in the dashboard. Widen the range and refresh.
 6. **It is in the Events list, not the Pages list.** Custom events appear in the Events section at the bottom of the website page. Page views appear in Pages. Revenue appears in the Revenue report once Umami has processed the `revenue` and `currency` properties.
 
 ## heartbeat() returns False
 
-`heartbeat()` returns `False` for any failure, including configuration problems, so it does not tell you which one you have:
+`heartbeat()` returns `False` for any failure, including configuration problems, so it tells you that something is wrong and nothing about what:
 
 - `set_url_base()` or `set_cloud_api_key()` has not been called.
 - The server is down or unreachable from this machine.
@@ -98,6 +102,6 @@ Call `umami.websites()` or another raising function to see the real exception.
 
 ## Fix order
 
-Fix configuration first, because `ValidationError` and `OperationNotAllowedError` are raised before any request and nothing else can work until they stop. Then confirm connectivity with `heartbeat()`, then the credential with `verify_token()`, and only then look at the event itself.
+When nothing is obviously wrong, check in this order and resist skipping ahead, because each step rules out everything behind it. Configuration first, since `ValidationError` and `OperationNotAllowedError` are raised before any request and nothing else can work until they stop. Then connectivity with `heartbeat()`. Then the credential with `verify_token()`. Only then look at the event itself.
 
 If you find a problem the package should handle better, open an issue at <https://github.com/mikeckennedy/umami-python/issues>.

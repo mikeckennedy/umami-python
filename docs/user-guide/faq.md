@@ -1,16 +1,16 @@
 # FAQ
 
-Short answers to the questions that come up most. Each one links to the guide page with the full explanation.
+Short answers to the questions that come up most, each with a link to the page that tells the full story.
 
 
 # Do I need to log in to send events?
 
-No. [new_event()](../reference/new_event.md#umami.new_event), [new_page_view()](../reference/new_page_view.md#umami.new_page_view), and [new_revenue_event()](../reference/new_revenue_event.md#umami.new_revenue_event) only need [set_url_base()](../reference/set_url_base.md#umami.set_url_base) (or a Cloud key), a website id, and a hostname. Login is required for [websites()](../reference/websites.md#umami.websites), [website_stats()](../reference/website_stats.md#umami.website_stats), [active_users()](../reference/active_users.md#umami.active_users), and [verify_token()](../reference/verify_token.md#umami.verify_token). See [Authentication](authentication.md).
+No, and this is the one that surprises everyone. [new_event()](../reference/new_event.md#umami.new_event), [new_page_view()](../reference/new_page_view.md#umami.new_page_view), and [new_revenue_event()](../reference/new_revenue_event.md#umami.new_revenue_event) only need [set_url_base()](../reference/set_url_base.md#umami.set_url_base) (or a Cloud key), a website id, and a hostname. Login is required for [websites()](../reference/websites.md#umami.websites), [website_stats()](../reference/website_stats.md#umami.website_stats), [active_users()](../reference/active_users.md#umami.active_users), and [verify_token()](../reference/verify_token.md#umami.verify_token). See [Authentication](authentication.md).
 
 
 # Why is the package called umami-analytics but imported as umami?
 
-`umami-analytics` is the name on PyPI. `umami` is the import name. A different, unrelated project owns the `umami` name on PyPI, so `pip install umami` installs the wrong thing.
+`umami-analytics` is the name on PyPI. `umami` is the import name. A different, unrelated project got to the `umami` name on PyPI first, so `pip install umami` installs the wrong thing.
 
 
 # Can the same code work for self-hosted and Umami Cloud?

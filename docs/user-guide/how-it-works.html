@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="how-it-works.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/how-it-works.html">
-  <meta name="description" content="This page describes what the package does on the wire, so you can reason about it when something is off and reach past it when you need an endpoint it...">
+  <meta name="description" content="Most of the time you do not need to know what a library does on the wire. The other times, you need to know exactly. This page is for the second case:...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="How it works – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="This page describes what the package does on the wire, so you can reason about it when something is off and reach past it when you need an endpoint it...">
+  <meta property="og:description" content="Most of the time you do not need to know what a library does on the wire. The other times, you need to know exactly. This page is for the second case:...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/how-it-works.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="How it works – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="This page describes what the package does on the wire, so you can reason about it when something is off and reach past it when you need an endpoint it...">
+  <meta name="twitter:description" content="Most of the time you do not need to know what a library does on the wire. The other times, you need to know exactly. This page is for the second case:...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -297,11 +297,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This page describes what the package does on the wire, so you can reason about it when something is off and reach past it when you need an endpoint it does not wrap.</p>
+<p>Most of the time you do not need to know what a library does on the wire. The other times, you need to know exactly. This page is for the second case: when a request is going somewhere you did not expect, when a header looks wrong in a proxy log, or when you need an endpoint the package does not wrap and want to borrow its credential.</p>
 <section id="one-module-global-state" class="level1">
 <h1>One module, global state</h1>
 <p><code>import umami</code> gives you a module of functions, not a class. The public functions in <code>umami</code> are re-exports from <code>umami.impl</code>, which holds the configuration as module globals: the URL base, the login token, the default website id and hostname, the Cloud key and region, and the enabled flag. The <code>set_*</code> functions, <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a>, <a href="../reference/enable.html#umami.enable" class="gdls-link gdls-code">enable()</a>, and <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> write those globals; everything else reads them.</p>
-<p>That design has two consequences:</p>
+<p>That design is why the API reads like a conversation (<a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base</a>, <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login</a>, <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event</a>) rather than a construction (<code>client = Client(...)</code>), and it has two consequences:</p>
 <ul>
 <li>Configuration is per process. Two web workers each need their own <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> and <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> at startup.</li>
 <li>The setters are not synchronized. Call them once at startup, before threads or an event loop start sending events. The send and query functions only read the globals, so concurrent calls after startup are fine.</li>
@@ -309,7 +309,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="two-modes-one-code-path" class="level1">
 <h1>Two modes, one code path</h1>
-<p>Every request resolves its URL and headers from the current mode.</p>
+<p>Every request resolves its URL and headers from the current mode at the moment it is made. This table is the whole routing logic:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -359,18 +359,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="two-user-agents" class="level1">
 <h1>Two user agents</h1>
-<p>Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on <code>/api/send</code> calls, and <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> lets you replace it with the visitor’s real user agent through the <code>ua</code> argument. Query calls send an honest user agent of the form <code>Umami-Client v1.1.0 / Python 3.14.10 / Darwin</code>, available as <code>umami.user_agent</code>.</p>
+<p>Umami was built to receive data from browsers, so it drops ingestion requests whose user agent looks like a bot, and a Python HTTP library’s default user agent looks like a bot. The package therefore puts on a costume for <code>/api/send</code> calls: a desktop Chrome user agent, which <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> lets you swap for the visitor’s real one through the <code>ua</code> argument. On query calls there is no filter to get past, so the costume comes off and the package sends an honest user agent of the form <code>Umami-Client v1.1.0 / Python 3.14.10 / Darwin</code>, available as <code>umami.user_agent</code>.</p>
 <p>If you would rather Umami accepted any user agent, set <code>DISABLE_BOT_CHECK=true</code> in the Umami server’s environment.</p>
 </section>
 <section id="requests-and-responses" class="level1">
 <h1>Requests and responses</h1>
-<p>Each function makes one HTTP request, except <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a>, which requests each page of Umami’s paged listing in turn. The sync functions call <code>httpx2.post()</code> or <code>httpx2.get()</code> directly; the async functions open an <code>httpx2.AsyncClient()</code> for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is <code>httpx2</code>’s default of five seconds and is not configurable through the package.</p>
-<p>Responses go through <code>raise_for_status()</code>, so any non-2xx status raises <code>httpx2.HTTPStatusError</code> with the response attached. The two exceptions are <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> and <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>, which catch everything and return <code>False</code>, because they exist to answer a yes or no question.</p>
+<p>Each function makes one HTTP request, except <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a>, which requests each page of Umami’s paged listing in turn. The sync functions call <code>httpx2.post()</code> or <code>httpx2.get()</code> directly; the async functions open an <code>httpx2.AsyncClient()</code> for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is <code>httpx2</code>’s default of five seconds and is not configurable through the package. The package does the simplest correct thing on each call and leaves pooling, retries, and queueing to the caller, where they are visible.</p>
+<p>Responses go through <code>raise_for_status()</code>, so any non-2xx status raises <code>httpx2.HTTPStatusError</code> with the response attached. The two exceptions are <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> and <a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a>, which catch everything and return <code>False</code>, because they exist to answer a yes or no question and a stack trace is neither.</p>
 <p>Successful query responses are parsed into Pydantic models from <code>umami.models</code>. <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a> unwraps Umami’s paged <code>{"data": [...]}</code> envelope, follows the <code>page</code> parameter until the reported <code>count</code> is reached or a page adds nothing new, and returns one flat list. <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> returns <a href="../reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="gdls-link gdls-code">WebsiteStats</a>. <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> reads the <code>visitors</code> key and returns an <code>int</code>. Send functions return the response body as a plain dict.</p>
 </section>
 <section id="sync-and-async-parity" class="level1">
 <h1>Sync and async parity</h1>
-<p>Each <code>_async</code> twin builds the same payload, sends the same headers, hits the same URL, and returns the same value as its sync counterpart. The package’s test suite drives both and compares the request bodies, so a difference between the two is a test failure. The configuration functions are sync only because they do no I/O.</p>
+<p>Each <code>_async</code> twin builds the same payload, sends the same headers, hits the same URL, and returns the same value as its sync counterpart. That is not a promise, it is a test: the package’s suite drives both twins and compares the request bodies, so a difference between the two is a failing build. The configuration functions are sync only because they do no I/O.</p>
 </section>
 <section id="dates-and-filters" class="level1">
 <h1>Dates and filters</h1>
@@ -378,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="beyond-the-wrapped-endpoints" class="level1">
 <h1>Beyond the wrapped endpoints</h1>
-<p>The package covers configuration, authentication, sending, listing websites, summary stats, and active users. For reports, sessions, event data, metrics, time series, realtime, teams, users, or anything else in the <a href="https://umami.is/docs/api">Umami API</a>, make the call yourself with the credential you already have:</p>
+<p>The package covers configuration, authentication, sending, listing websites, summary stats, and active users. For reports, sessions, event data, metrics, time series, realtime, teams, users, or anything else in the <a href="https://umami.is/docs/api">Umami API</a>, make the call yourself. The tedious part, getting a credential, is already done:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> httpx2 <span class="im">as</span> httpx</span>

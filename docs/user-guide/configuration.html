@@ -90,15 +90,15 @@ ul.task-list li input[type="checkbox"] {
 
   <link rel="alternate" type="text/markdown" href="configuration.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/configuration.html">
-  <meta name="description" content="All configuration is module-global state set by plain function calls. There is no configuration file, no environment variable, and no client object....">
+  <meta name="description" content="All configuration lives on one whiteboard inside the umami module. There is no configuration file, no environment variable, and no client object to...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Configuration – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="All configuration is module-global state set by plain function calls. There is no configuration file, no environment variable, and no client object....">
+  <meta property="og:description" content="All configuration lives on one whiteboard inside the umami module. There is no configuration file, no environment variable, and no client object to...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/configuration.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Configuration – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="All configuration is module-global state set by plain function calls. There is no configuration file, no environment variable, and no client object....">
+  <meta name="twitter:description" content="All configuration lives on one whiteboard inside the umami module. There is no configuration file, no environment variable, and no client object to...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -261,7 +261,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>All configuration is module-global state set by plain function calls. There is no configuration file, no environment variable, and no client object. Set things once at startup; every later call reads them.</p>
+<p>All configuration lives on one whiteboard inside the <code>umami</code> module. There is no configuration file, no environment variable, and no client object to carry around. A handful of setter functions write on the whiteboard, usually once at startup, and every other function reads from it. This page lists what is on the whiteboard, what it says before you write anything, and who reads each line.</p>
 <section id="settings" class="level1">
 <h1>Settings</h1>
 <table class="caption-top table">
@@ -318,11 +318,11 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-<p>The setters are synchronous only. There is no <code>set_url_base_async()</code>.</p>
+<p>The setters are synchronous only. There is no <code>set_url_base_async()</code>, because writing on a whiteboard does not need an event loop.</p>
 </section>
 <section id="per-call-defaults" class="level1">
 <h1>Per-call defaults</h1>
-<p>The send functions fill in session fields Umami expects from a browser. Override any of them per call.</p>
+<p>The send functions fill in the session fields Umami expects from a browser, so an event from a Python process looks enough like a visit for Umami to file it. Override any of them per call.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -404,6 +404,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="what-happens-on-a-second-call" class="level1">
 <h1>What happens on a second call</h1>
+<p>Whiteboards get overwritten, and the rules are short:</p>
 <ul>
 <li><a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> again replaces the previous value.</li>
 <li><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> again replaces the stored token. There is no logout.</li>
@@ -420,7 +421,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="reading-the-current-state" class="level1">
 <h1>Reading the current state</h1>
-<p>The public API has no getters. <a href="../reference/is_logged_in.html#umami.is_logged_in" class="gdls-link gdls-code">is_logged_in()</a> tells you whether a token or Cloud key is present. For anything else, keep your own record of what you configured. The module <code>umami.impl</code> holds the values as plain attributes (<code>url_base</code>, <code>default_website_id</code>, <code>default_hostname</code>, <code>auth_token</code>, <code>api_key</code>, <code>cloud_region</code>, <code>tracking_enabled</code>), which is useful in a debugger and in tests, but it is an implementation detail rather than a supported interface.</p>
+<p>The public API has no getters. <a href="../reference/is_logged_in.html#umami.is_logged_in" class="gdls-link gdls-code">is_logged_in()</a> tells you whether a token or Cloud key is present. For anything else, keep your own record of what you configured. If you are in a debugger, the module <code>umami.impl</code> holds the values as plain attributes (<code>url_base</code>, <code>default_website_id</code>, <code>default_hostname</code>, <code>auth_token</code>, <code>api_key</code>, <code>cloud_region</code>, <code>tracking_enabled</code>), which is handy for a quick look and in tests, but it is an implementation detail rather than a supported interface.</p>
 </section>
 <section id="version" class="level1">
 <h1>Version</h1>

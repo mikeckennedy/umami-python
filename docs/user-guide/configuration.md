@@ -1,6 +1,6 @@
 # Configuration
 
-All configuration is module-global state set by plain function calls. There is no configuration file, no environment variable, and no client object. Set things once at startup; every later call reads them.
+All configuration lives on one whiteboard inside the `umami` module. There is no configuration file, no environment variable, and no client object to carry around. A handful of setter functions write on the whiteboard, usually once at startup, and every other function reads from it. This page lists what is on the whiteboard, what it says before you write anything, and who reads each line.
 
 
 # Settings
@@ -15,12 +15,12 @@ All configuration is module-global state set by plain function calls. There is n
 | `login(username, password)` | Stores the token for query calls. Self-hosted only. | none | [websites()](../reference/websites.md#umami.websites), [website_stats()](../reference/website_stats.md#umami.website_stats), [active_users()](../reference/active_users.md#umami.active_users), [verify_token()](../reference/verify_token.md#umami.verify_token) |
 | [enable()](../reference/enable.md#umami.enable) / [disable()](../reference/disable.md#umami.disable) | Whether the send functions make requests. | enabled |  |
 
-The setters are synchronous only. There is no `set_url_base_async()`.
+The setters are synchronous only. There is no `set_url_base_async()`, because writing on a whiteboard does not need an event loop.
 
 
 # Per-call defaults
 
-The send functions fill in session fields Umami expects from a browser. Override any of them per call.
+The send functions fill in the session fields Umami expects from a browser, so an event from a Python process looks enough like a visit for Umami to file it. Override any of them per call.
 
 | Argument | [new_event](../reference/new_event.md#umami.new_event) | [new_page_view](../reference/new_page_view.md#umami.new_page_view) | [new_revenue_event](../reference/new_revenue_event.md#umami.new_revenue_event) |
 |----|----|----|----|
@@ -39,6 +39,8 @@ The send functions fill in session fields Umami expects from a browser. Override
 
 # What happens on a second call
 
+Whiteboards get overwritten, and the rules are short:
+
 - [set_url_base()](../reference/set_url_base.md#umami.set_url_base) again replaces the previous value.
 - [login()](../reference/login.md#umami.login) again replaces the stored token. There is no logout.
 - [set_cloud_api_key()](../reference/set_cloud_api_key.md#umami.set_cloud_api_key) again replaces the key and region.
@@ -55,7 +57,7 @@ An explicit `website_id` or `hostname` argument on a call always wins over the v
 
 # Reading the current state
 
-The public API has no getters. [is_logged_in()](../reference/is_logged_in.md#umami.is_logged_in) tells you whether a token or Cloud key is present. For anything else, keep your own record of what you configured. The module `umami.impl` holds the values as plain attributes (`url_base`, `default_website_id`, `default_hostname`, `auth_token`, `api_key`, `cloud_region`, `tracking_enabled`), which is useful in a debugger and in tests, but it is an implementation detail rather than a supported interface.
+The public API has no getters. [is_logged_in()](../reference/is_logged_in.md#umami.is_logged_in) tells you whether a token or Cloud key is present. For anything else, keep your own record of what you configured. If you are in a debugger, the module `umami.impl` holds the values as plain attributes (`url_base`, `default_website_id`, `default_hostname`, `auth_token`, `api_key`, `cloud_region`, `tracking_enabled`), which is handy for a quick look and in tests, but it is an implementation detail rather than a supported interface.
 
 
 # Version

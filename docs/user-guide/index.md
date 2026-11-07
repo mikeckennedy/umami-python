@@ -1,22 +1,24 @@
 # User Guide
 
-Umami records page views and custom events from a small JavaScript tracker in your pages. That works for clicks and form submits, but some of the events you care about most never happen in the browser. A purchase that completes inside a payment webhook, a background job that finishes, or an API call from a mobile app all happen in your Python code, with no HTML element to attach a `data-umami-event` attribute to.
+It is 2:14 in the morning and someone in Lisbon just bought a course. The browser tracker watched them read the description and hit the buy button, and then it lost them. The sale finished in a payment webhook on a server, in Python, with no page and no click to hang a `data-umami-event` attribute on. The dashboard never finds out.
 
-`umami-analytics` is a Python client for the parts of the [Umami API](https://umami.is/docs/api) that a backend needs. It sends custom events, page views, and revenue to a self-hosted Umami instance or to Umami Cloud, and it reads back the basic numbers: your websites, page views and visitors over a date range, and the number of active visitors right now. Every network call has a synchronous function and an `_async` twin.
+That gap is the reason this package exists. Umami is very good at watching browsers. Your most valuable events happen somewhere else: a payment provider's callback, a nightly job that finishes, a mobile app that calls your API. `umami-analytics` lets the Python code that already knows about those moments report them to Umami, so the sale from Lisbon shows up right next to the page view that led to it.
 
-The package is deliberately a partial wrapper. It covers configuration, authentication, sending events, listing websites, summary stats, and active users. Reports, sessions, event data, and the rest of the Umami API are one HTTP call away with the token the package already holds, and the [How it works](how-it-works.md) page shows how.
+What it does: send custom events, page views, and revenue to a self-hosted Umami instance or to Umami Cloud, and read back the basic numbers: your websites, page views and visitors over a date range, and how many people are on the site right now. Every network call has a synchronous function and an `_async` twin, so it fits a Flask view and a FastAPI handler equally well.
+
+What it leaves out, on purpose: the rest of the [Umami API](https://umami.is/docs/api). Umami's API is large because its own dashboard is built on it. This package wraps the parts a backend needs and stops. Reports, sessions, event data, and everything else are one HTTP call away with the token the package already holds, and [How it works](how-it-works.md) shows that call.
 
 
 # Where to go next
 
-- [Getting started](getting-started.md): install the package, point it at your instance, send your first event, and see where it lands in the dashboard.
-- [Sending events](sending-events.md): custom events, page views, revenue, custom data, and per-user `distinct_id`.
-- [Authentication](authentication.md): self-hosted login versus an Umami Cloud API key, and when a login is actually required.
-- [Querying stats](querying-stats.md): listing websites, page views and visitors for a date range, filters, and active users.
-- [Troubleshooting](troubleshooting.md): what each error means and what to do about it, including events that return 200 but never appear.
-- [Testing and CI](testing.md): keep test runs out of your analytics with [disable()](../reference/disable.md#umami.disable), and mock the HTTP boundary.
+- [Getting started](getting-started.md): install, point the package at your instance, send one event, and watch it land in the dashboard. A short read and about ten lines of code.
+- [Sending events](sending-events.md): custom events, page views, revenue, custom data, and `distinct_id` for tying events to a known user.
+- [Authentication](authentication.md): self-hosted login versus an Umami Cloud API key, and the answer to when you need either, which surprises most people.
+- [Querying stats](querying-stats.md): list websites, pull visitors and page views for a date range, filter them, and count who is on the site this minute.
+- [Troubleshooting](troubleshooting.md): what each error means and what to do about it, including the case where the event returns 200 and vanishes.
+- [Testing and CI](testing.md): keep test runs out of your analytics with [disable()](../reference/disable.md#umami.disable), and mock the one HTTP boundary.
 - [Configuration](configuration.md): every setting, its default, and which calls need it.
-- [How it works](how-it-works.md): module-global state, request routing, headers, user agents, and what the package does not do.
+- [How it works](how-it-works.md): module-global state, request routing, headers, the two user agents, and what the package leaves out.
 - [FAQ](faq.md): short answers to the questions that come up most.
 
 The [API Reference](../reference/index.md) documents every public function and model, with the sync and async twins side by side.

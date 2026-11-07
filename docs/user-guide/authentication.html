@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="authentication.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/authentication.html">
-  <meta name="description" content="There are two ways to authenticate, and you use exactly one of them at a time. Self-hosted instances take a username and password and return a token....">
+  <meta name="description" content="Here is the part that surprises people: you can send events to Umami all day without logging in. The ingestion endpoint is public, because a browser...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Authentication – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="There are two ways to authenticate, and you use exactly one of them at a time. Self-hosted instances take a username and password and return a token....">
+  <meta property="og:description" content="Here is the part that surprises people: you can send events to Umami all day without logging in. The ingestion endpoint is public, because a browser...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/authentication.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Authentication – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="There are two ways to authenticate, and you use exactly one of them at a time. Self-hosted instances take a username and password and return a token....">
+  <meta name="twitter:description" content="Here is the part that surprises people: you can send events to Umami all day without logging in. The ingestion endpoint is public, because a browser...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -298,7 +298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>There are two ways to authenticate, and you use exactly one of them at a time. Self-hosted instances take a username and password and return a token. Umami Cloud takes an API key. The package routes requests and sets headers differently in each mode, so the choice matters even though the rest of your code stays the same.</p>
+<p>Here is the part that surprises people: you can send events to Umami all day without logging in. The ingestion endpoint is public, because a browser tracker on a public web page cannot keep a secret. Credentials only enter the picture when you want to read data back out.</p>
+<p>When you do, there are two doors and you walk through exactly one of them. A self-hosted instance takes a username and password and hands you a token. Umami Cloud takes an API key. The package routes requests and sets headers differently behind each door, so the choice matters even though the rest of your code stays identical.</p>
 <section id="what-needs-a-credential" class="level1">
 <h1>What needs a credential</h1>
 <table class="caption-top table">
@@ -332,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Calling a query function before logging in raises <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">umami.errors.OperationNotAllowedError</a> with the message <code>Call login() or set_cloud_api_key() before proceeding.</code></p>
+<p>Call a query function before you have a credential and you get <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">umami.errors.OperationNotAllowedError</a> with the message <code>Call login() or set_cloud_api_key() before proceeding.</code> No request is made; the package checks before it dials.</p>
 </section>
 <section id="self-hosted-set_url_base-and-login" class="level1">
 <h1>Self-hosted: set_url_base and login</h1>
@@ -341,12 +342,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">'https://umami.example.com'</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>login <span class="op">=</span> umami.login(<span class="st">'admin'</span>, <span class="st">'super-secret'</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(login.user.username, login.user.isAdmin)</span></code></pre></div>
-<p><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> posts to <code>/api/auth/login</code>, stores the returned token in the module, and returns a <a href="../reference/models.LoginResponse.html#umami.models.LoginResponse" class="gdls-link gdls-code">LoginResponse</a> with the token and a <a href="../reference/models.User.html#umami.models.User" class="gdls-link gdls-code">User</a> model. You do not need to keep the return value; every later query call sends the stored token as <code>Authorization: Bearer &lt;token&gt;</code>.</p>
-<p>Both arguments must be non-empty or <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a> is raised. Wrong credentials come back from the server as a 401 and raise <code>httpx2.HTTPStatusError</code>.</p>
+<p><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> posts to <code>/api/auth/login</code>, stores the returned token in the module, and returns a <a href="../reference/models.LoginResponse.html#umami.models.LoginResponse" class="gdls-link gdls-code">LoginResponse</a> with the token and a <a href="../reference/models.User.html#umami.models.User" class="gdls-link gdls-code">User</a> model. You can drop the return value on the floor. Every later query call sends the stored token as <code>Authorization: Bearer &lt;token&gt;</code> without you touching it.</p>
+<p>Both arguments must be non-empty, and whitespace does not count, or <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a> is raised before any request. Wrong credentials come back from the server as a 401 and raise <code>httpx2.HTTPStatusError</code>.</p>
 <p>Calling <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> again replaces the stored token. There is no logout function; the token lives until the process exits or you log in again.</p>
 <section id="tokens-expire" class="level2">
 <h2 class="anchored" data-anchor-id="tokens-expire">Tokens expire</h2>
-<p>Umami login tokens are temporary. A long-running process should expect a query call to start failing with a 401 at some point. <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> checks the stored token against the server and never raises:</p>
+<p>Umami login tokens are temporary, and they expire on Umami’s schedule, not yours. A long-running process should assume that one day a query call will start failing with a 401, probably during a demo. <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> asks the server whether the stored token is still good and never raises:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> umami.verify_token():</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    umami.login(<span class="st">'admin'</span>, <span class="st">'super-secret'</span>)</span></code></pre></div>
 <p><code>verify_token(check_server=False)</code> skips the network and only reports whether a credential is present, which is the same answer <a href="../reference/is_logged_in.html#umami.is_logged_in" class="gdls-link gdls-code">is_logged_in()</a> gives.</p>
@@ -360,22 +361,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">'978435e2-7ba1-4337-9860-ec31ece2db60'</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'example.com'</span>)</span></code></pre></div>
 <p>Create the key in the Umami Cloud dashboard under the API keys settings. <code>region</code> accepts <code>'us'</code>, <code>'eu'</code>, or <code>None</code>; when omitted, Cloud uses the region of the account that owns the key. Any other value raises <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a>, as does a blank key.</p>
-<p>In Cloud mode the package changes three things:</p>
+<p>Setting a key flips three switches at once:</p>
 <ul>
 <li>Query and verification calls go to <code>https://api.umami.is/v1</code>, with <code>/eu</code> or <code>/us</code> inserted after <code>v1</code> when you pin a region, and carry an <code>x-umami-api-key</code> header.</li>
-<li>Events go to <code>https://cloud.umami.is/api/send</code> with no credential, because the Cloud ingestion endpoint is public. The region does not affect this host.</li>
-<li><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> and <a href="../reference/login_async.html#umami.login_async" class="gdls-link gdls-code">login_async()</a> raise <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a>. The key is the credential, and Cloud has no username and password login.</li>
+<li>Events go to <code>https://cloud.umami.is/api/send</code> with no credential, because the Cloud ingestion endpoint is public too. The region does not affect this host.</li>
+<li><a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> and <a href="../reference/login_async.html#umami.login_async" class="gdls-link gdls-code">login_async()</a> raise <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a>. The key is the credential, and Cloud has no username and password login to call.</li>
 </ul>
-<p>You do not call <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> in Cloud mode. If you do, the value is stored but ignored while the key is set.</p>
+<p>You do not call <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> in Cloud mode. If you do, the value is stored and politely ignored while the key is set.</p>
 </section>
 <section id="switching-modes" class="level1">
 <h1>Switching modes</h1>
-<p><a href="../reference/clear_cloud_api_key.html#umami.clear_cloud_api_key" class="gdls-link gdls-code">clear_cloud_api_key()</a> removes the key and the region. Everything goes back to self-hosted behaviour: events use <code>url_base</code>, and query calls need a login token. A token from a <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> made before you switched to Cloud mode is still there, so you do not have to log in again.</p>
+<p><a href="../reference/clear_cloud_api_key.html#umami.clear_cloud_api_key" class="gdls-link gdls-code">clear_cloud_api_key()</a> removes the key and the region, and everything reverts to self-hosted behaviour: events use <code>url_base</code>, and query calls need a login token. A token from a <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> made before you switched to Cloud is still sitting there, so you do not have to log in again.</p>
 <p><a href="../reference/is_logged_in.html#umami.is_logged_in" class="gdls-link gdls-code">is_logged_in()</a> returns <code>True</code> when either a login token or a Cloud key is set. It does not contact the server; use <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a> for that.</p>
 </section>
 <section id="keep-credentials-out-of-code" class="level1">
 <h1>Keep credentials out of code</h1>
-<p>Read the password or key from an environment variable or a secrets store at startup, then hand it to <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> or <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a>. The package does not read any environment variables itself.</p>
+<p>Read the password or key from an environment variable or a secrets store at startup, then hand it to <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> or <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a>. The package does not read any environment variables itself, so there is no magic name to discover and no surprise when a variable is set on the wrong machine.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>

@@ -89,15 +89,15 @@ ul.task-list li input[type="checkbox"] {
 
   <link rel="alternate" type="text/markdown" href="faq.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/faq.html">
-  <meta name="description" content="Short answers to the questions that come up most. Each one links to the guide page with the full explanation.">
+  <meta name="description" content="Short answers to the questions that come up most, each with a link to the page that tells the full story.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="FAQ – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Short answers to the questions that come up most. Each one links to the guide page with the full explanation.">
+  <meta property="og:description" content="Short answers to the questions that come up most, each with a link to the page that tells the full story.">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/faq.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="FAQ – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Short answers to the questions that come up most. Each one links to the guide page with the full explanation.">
+  <meta name="twitter:description" content="Short answers to the questions that come up most, each with a link to the page that tells the full story.">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -266,14 +266,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Short answers to the questions that come up most. Each one links to the guide page with the full explanation.</p>
+<p>Short answers to the questions that come up most, each with a link to the page that tells the full story.</p>
 <section id="do-i-need-to-log-in-to-send-events" class="level1">
 <h1>Do I need to log in to send events?</h1>
-<p>No.&nbsp;<a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a>, <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a>, and <a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> only need <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> (or a Cloud key), a website id, and a hostname. Login is required for <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a>, <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a>, <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a>, and <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>. See <a href="../user-guide/authentication.html">Authentication</a>.</p>
+<p>No, and this is the one that surprises everyone. <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a>, <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a>, and <a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> only need <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> (or a Cloud key), a website id, and a hostname. Login is required for <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a>, <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a>, <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a>, and <a href="../reference/verify_token.html#umami.verify_token" class="gdls-link gdls-code">verify_token()</a>. See <a href="../user-guide/authentication.html">Authentication</a>.</p>
 </section>
 <section id="why-is-the-package-called-umami-analytics-but-imported-as-umami" class="level1">
 <h1>Why is the package called umami-analytics but imported as umami?</h1>
-<p><code>umami-analytics</code> is the name on PyPI. <code>umami</code> is the import name. A different, unrelated project owns the <code>umami</code> name on PyPI, so <code>pip install umami</code> installs the wrong thing.</p>
+<p><code>umami-analytics</code> is the name on PyPI. <code>umami</code> is the import name. A different, unrelated project got to the <code>umami</code> name on PyPI first, so <code>pip install umami</code> installs the wrong thing.</p>
 </section>
 <section id="can-the-same-code-work-for-self-hosted-and-umami-cloud" class="level1">
 <h1>Can the same code work for self-hosted and Umami Cloud?</h1>

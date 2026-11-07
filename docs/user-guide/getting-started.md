@@ -1,6 +1,6 @@
 # Getting started
 
-This page takes you from an empty environment to a custom event in your Umami dashboard. It assumes you have a running Umami instance (self-hosted or Umami Cloud) and a website registered in it. If you are on Umami Cloud, read the Cloud section at the end before the configuration step.
+By the end of this page you will have sent one custom event from a Python script and found it in your Umami dashboard. That is the whole arc: install, configure, send, look. It assumes you already have a running Umami instance, self-hosted or Umami Cloud, with a website registered in it. If you are on Cloud, skim the Cloud section at the end before you configure anything, because one line is different.
 
 
 # Install
@@ -13,14 +13,14 @@ uv add umami-analytics
 pip install umami-analytics
 ```
 
-Do not run `pip install umami`. That is an unrelated package with the same import name.
+A warning that earns its own paragraph: do not run `pip install umami`. That name belongs to an unrelated project that also imports as `umami`. The symptoms are an import that succeeds and functions that are not there, followed by a confused half hour.
 
 The package supports Python 3.10 and newer and depends on `httpx2` and `pydantic`.
 
 
 # Configure
 
-Everything is a module-level function. There is no client object to create. Configure the module once when your application starts, and every later call uses that state.
+There is no client object to construct and nothing to pass around. The package is a module with a memory. You tell it three things once, when your application starts, and every later call reads them.
 
 ``` python
 import umami
@@ -30,13 +30,13 @@ umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
 umami.set_hostname('example.com')
 ```
 
-Three things to know about these calls:
+Each of those lines has a story:
 
-- [set_url_base()](../reference/set_url_base.md#umami.set_url_base) is required before anything else. It validates that the URL starts with `http://` or `https://` and strips a trailing slash. Do not include `/api`; the package adds the endpoint paths itself.
-- [set_website_id()](../reference/set_website_id.md#umami.set_website_id) takes the website id from the Umami dashboard (Settings, Websites, Edit). It becomes the default for every later call, and any call can override it with its own `website_id` argument.
-- [set_hostname()](../reference/set_hostname.md#umami.set_hostname) is the hostname recorded on each event. Umami uses it to group traffic, so use the domain visitors see, not the hostname of the server sending the event.
+- [set_url_base()](../reference/set_url_base.md#umami.set_url_base) goes first, always. It checks that the URL starts with `http://` or `https://` and trims a trailing slash. Leave `/api` off; the package appends the endpoint paths itself, and including it is the most common cause of a 404 on every single call.
+- [set_website_id()](../reference/set_website_id.md#umami.set_website_id) takes the id from the Umami dashboard (Settings, Websites, Edit). It becomes the default for every later call, and any call can override it with its own `website_id` argument.
+- [set_hostname()](../reference/set_hostname.md#umami.set_hostname) is the hostname stamped on each event. Umami groups traffic by it, so use the domain your visitors type, not the name of the server doing the sending. A hostname of `worker-03.internal` will work, and it will haunt your reports.
 
-You do not need to log in to send events. Login is only required for the query functions, and the [Authentication](authentication.md) page covers it.
+Notice what is missing: a login. Sending events needs no credential at all, because Umami's ingestion endpoint is public by design, the same way the browser tracker on a public page needs none. Login only matters when you read data back, and [Authentication](authentication.md) covers that.
 
 
 # Send your first event
@@ -49,28 +49,28 @@ response = umami.new_event(
 )
 ```
 
-`event_name` is the only required argument. The `url` defaults to `/` and is the page path the event is attributed to. `custom_data` is any JSON-serializable dict; Umami stores it as event properties.
+`event_name` is the only required argument. `url` defaults to `/` and is the page the event is attributed to, so pick the page a visitor would associate with it. `custom_data` is any JSON-serializable dict and becomes the event's properties in Umami.
 
-If this call returns without raising, Umami accepted the event.
+If that call returns without raising, Umami accepted the event. Now go and look at it.
 
 
 # Read the result
 
-Open your website in the Umami dashboard. The event appears in two places:
+Open the website in your Umami dashboard. The event appears in two places:
 
 - In the **Events** section at the bottom of the website page, listed under its `event_name` with a count.
 - In the **Pages** section, as traffic on the `url` you passed.
 
-Click the event name to see the properties from `custom_data`.
+Click the event name to see the properties from `custom_data`. That is the `plan` and `price` you sent, now sitting alongside everything the browser tracker collects.
 
-The return value is the JSON body Umami sent back, parsed into a dict. On current Umami versions it contains a `cache` token plus `sessionId` and `visitId`. You can ignore it. The exact keys depend on the Umami server version, and the package does not use them.
+The return value is Umami's JSON response parsed into a dict. On current Umami versions it holds a `cache` token plus `sessionId` and `visitId`. You can ignore it; the exact keys depend on the server version and the package does not use them.
 
-If the call raised an exception, or returned normally but nothing shows up, go to [Troubleshooting](troubleshooting.md). The most common cause of a silent miss is Umami's bot filter rejecting the request, and the page explains how to tell.
+If the call raised, or returned normally and the dashboard stays stubbornly empty, go to [Troubleshooting](troubleshooting.md). The empty dashboard has a usual suspect, Umami's bot filter, and the page explains how to catch it.
 
 
 # Check the connection
 
-[heartbeat()](../reference/heartbeat.md#umami.heartbeat) tells you whether the configured instance is reachable. It never raises; it returns `False` on any problem, including a missing [set_url_base()](../reference/set_url_base.md#umami.set_url_base).
+[heartbeat()](../reference/heartbeat.md#umami.heartbeat) answers one question: can this process reach the configured instance? It never raises. It returns `False` on any problem, including a missing [set_url_base()](../reference/set_url_base.md#umami.set_url_base), so it is safe to call from a health check.
 
 ``` python
 if not umami.heartbeat():
@@ -80,7 +80,7 @@ if not umami.heartbeat():
 
 # Umami Cloud
 
-On Umami Cloud you authenticate with an API key instead of a URL and a login. Create a key in the Cloud dashboard, then replace [set_url_base()](../reference/set_url_base.md#umami.set_url_base) with [set_cloud_api_key()](../reference/set_cloud_api_key.md#umami.set_cloud_api_key):
+On Umami Cloud there is no URL to point at and no password to type. You create an API key in the Cloud dashboard, and that key replaces [set_url_base()](../reference/set_url_base.md#umami.set_url_base):
 
 ``` python
 import umami
@@ -92,11 +92,11 @@ umami.set_hostname('example.com')
 umami.new_event(event_name='purchase-course', url='/courses/python-for-absolute-beginners')
 ```
 
-Events go to `https://cloud.umami.is/api/send` and query calls go to `https://api.umami.is/v1`, with the key sent as an `x-umami-api-key` header. Do not call [login()](../reference/login.md#umami.login) in Cloud mode; it raises [OperationNotAllowedError](../reference/errors.OperationNotAllowedError.md#umami.errors.OperationNotAllowedError). See [Authentication](authentication.md) for the details of both modes and how to switch between them.
+Events go to `https://cloud.umami.is/api/send` and query calls go to `https://api.umami.is/v1`, with the key sent as an `x-umami-api-key` header. Do not call [login()](../reference/login.md#umami.login) in Cloud mode; it raises [OperationNotAllowedError](../reference/errors.OperationNotAllowedError.md#umami.errors.OperationNotAllowedError), because the key already is the credential. [Authentication](authentication.md) explains both modes and how to switch between them.
 
 
 # Next steps
 
-- [Sending events](sending-events.md) covers page views, revenue, and the per-user `distinct_id`.
-- [Testing and CI](testing.md) shows how to keep your test suite from writing to your real analytics.
+- [Sending events](sending-events.md) covers page views, revenue, and `distinct_id`.
+- [Testing and CI](testing.md) shows how to keep your test suite from writing fake purchases into your real analytics.
 - [Querying stats](querying-stats.md) reads the numbers back out.

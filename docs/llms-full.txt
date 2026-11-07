@@ -1236,22 +1236,24 @@ This is the User Guide documentation for the package.
 
 ### User Guide
 
-Umami records page views and custom events from a small JavaScript tracker in your pages. That works for clicks and form submits, but some of the events you care about most never happen in the browser. A purchase that completes inside a payment webhook, a background job that finishes, or an API call from a mobile app all happen in your Python code, with no HTML element to attach a `data-umami-event` attribute to.
+It is 2:14 in the morning and someone in Lisbon just bought a course. The browser tracker watched them read the description and hit the buy button, and then it lost them. The sale finished in a payment webhook on a server, in Python, with no page and no click to hang a `data-umami-event` attribute on. The dashboard never finds out.
 
-`umami-analytics` is a Python client for the parts of the [Umami API](https://umami.is/docs/api) that a backend needs. It sends custom events, page views, and revenue to a self-hosted Umami instance or to Umami Cloud, and it reads back the basic numbers: your websites, page views and visitors over a date range, and the number of active visitors right now. Every network call has a synchronous function and an `_async` twin.
+That gap is the reason this package exists. Umami is very good at watching browsers. Your most valuable events happen somewhere else: a payment provider's callback, a nightly job that finishes, a mobile app that calls your API. `umami-analytics` lets the Python code that already knows about those moments report them to Umami, so the sale from Lisbon shows up right next to the page view that led to it.
 
-The package is deliberately a partial wrapper. It covers configuration, authentication, sending events, listing websites, summary stats, and active users. Reports, sessions, event data, and the rest of the Umami API are one HTTP call away with the token the package already holds, and the [How it works](how-it-works.qmd) page shows how.
+What it does: send custom events, page views, and revenue to a self-hosted Umami instance or to Umami Cloud, and read back the basic numbers: your websites, page views and visitors over a date range, and how many people are on the site right now. Every network call has a synchronous function and an `_async` twin, so it fits a Flask view and a FastAPI handler equally well.
+
+What it leaves out, on purpose: the rest of the [Umami API](https://umami.is/docs/api). Umami's API is large because its own dashboard is built on it. This package wraps the parts a backend needs and stops. Reports, sessions, event data, and everything else are one HTTP call away with the token the package already holds, and [How it works](how-it-works.qmd) shows that call.
 
 ## Where to go next
 
-- [Getting started](getting-started.qmd): install the package, point it at your instance, send your first event, and see where it lands in the dashboard.
-- [Sending events](sending-events.qmd): custom events, page views, revenue, custom data, and per-user `distinct_id`.
-- [Authentication](authentication.qmd): self-hosted login versus an Umami Cloud API key, and when a login is actually required.
-- [Querying stats](querying-stats.qmd): listing websites, page views and visitors for a date range, filters, and active users.
-- [Troubleshooting](troubleshooting.qmd): what each error means and what to do about it, including events that return 200 but never appear.
-- [Testing and CI](testing.qmd): keep test runs out of your analytics with `disable()`, and mock the HTTP boundary.
+- [Getting started](getting-started.qmd): install, point the package at your instance, send one event, and watch it land in the dashboard. A short read and about ten lines of code.
+- [Sending events](sending-events.qmd): custom events, page views, revenue, custom data, and `distinct_id` for tying events to a known user.
+- [Authentication](authentication.qmd): self-hosted login versus an Umami Cloud API key, and the answer to when you need either, which surprises most people.
+- [Querying stats](querying-stats.qmd): list websites, pull visitors and page views for a date range, filter them, and count who is on the site this minute.
+- [Troubleshooting](troubleshooting.qmd): what each error means and what to do about it, including the case where the event returns 200 and vanishes.
+- [Testing and CI](testing.qmd): keep test runs out of your analytics with `disable()`, and mock the one HTTP boundary.
 - [Configuration](configuration.qmd): every setting, its default, and which calls need it.
-- [How it works](how-it-works.qmd): module-global state, request routing, headers, user agents, and what the package does not do.
+- [How it works](how-it-works.qmd): module-global state, request routing, headers, the two user agents, and what the package leaves out.
 - [FAQ](faq.qmd): short answers to the questions that come up most.
 
 The [API Reference](../reference/index.qmd) documents every public function and model, with the sync and async twins side by side.
@@ -1259,7 +1261,7 @@ The [API Reference](../reference/index.qmd) documents every public function and 
 
 ### Getting started
 
-This page takes you from an empty environment to a custom event in your Umami dashboard. It assumes you have a running Umami instance (self-hosted or Umami Cloud) and a website registered in it. If you are on Umami Cloud, read the Cloud section at the end before the configuration step.
+By the end of this page you will have sent one custom event from a Python script and found it in your Umami dashboard. That is the whole arc: install, configure, send, look. It assumes you already have a running Umami instance, self-hosted or Umami Cloud, with a website registered in it. If you are on Cloud, skim the Cloud section at the end before you configure anything, because one line is different.
 
 ## Install
 
@@ -1271,13 +1273,13 @@ uv add umami-analytics
 pip install umami-analytics
 ```
 
-Do not run `pip install umami`. That is an unrelated package with the same import name.
+A warning that earns its own paragraph: do not run `pip install umami`. That name belongs to an unrelated project that also imports as `umami`. The symptoms are an import that succeeds and functions that are not there, followed by a confused half hour.
 
 The package supports Python 3.10 and newer and depends on `httpx2` and `pydantic`.
 
 ## Configure
 
-Everything is a module-level function. There is no client object to create. Configure the module once when your application starts, and every later call uses that state.
+There is no client object to construct and nothing to pass around. The package is a module with a memory. You tell it three things once, when your application starts, and every later call reads them.
 
 ```python
 import umami
@@ -1287,13 +1289,13 @@ umami.set_website_id('978435e2-7ba1-4337-9860-ec31ece2db60')
 umami.set_hostname('example.com')
 ```
 
-Three things to know about these calls:
+Each of those lines has a story:
 
-- `set_url_base()` is required before anything else. It validates that the URL starts with `http://` or `https://` and strips a trailing slash. Do not include `/api`; the package adds the endpoint paths itself.
-- `set_website_id()` takes the website id from the Umami dashboard (Settings, Websites, Edit). It becomes the default for every later call, and any call can override it with its own `website_id` argument.
-- `set_hostname()` is the hostname recorded on each event. Umami uses it to group traffic, so use the domain visitors see, not the hostname of the server sending the event.
+- `set_url_base()` goes first, always. It checks that the URL starts with `http://` or `https://` and trims a trailing slash. Leave `/api` off; the package appends the endpoint paths itself, and including it is the most common cause of a 404 on every single call.
+- `set_website_id()` takes the id from the Umami dashboard (Settings, Websites, Edit). It becomes the default for every later call, and any call can override it with its own `website_id` argument.
+- `set_hostname()` is the hostname stamped on each event. Umami groups traffic by it, so use the domain your visitors type, not the name of the server doing the sending. A hostname of `worker-03.internal` will work, and it will haunt your reports.
 
-You do not need to log in to send events. Login is only required for the query functions, and the [Authentication](authentication.qmd) page covers it.
+Notice what is missing: a login. Sending events needs no credential at all, because Umami's ingestion endpoint is public by design, the same way the browser tracker on a public page needs none. Login only matters when you read data back, and [Authentication](authentication.qmd) covers that.
 
 ## Send your first event
 
@@ -1305,26 +1307,26 @@ response = umami.new_event(
 )
 ```
 
-`event_name` is the only required argument. The `url` defaults to `/` and is the page path the event is attributed to. `custom_data` is any JSON-serializable dict; Umami stores it as event properties.
+`event_name` is the only required argument. `url` defaults to `/` and is the page the event is attributed to, so pick the page a visitor would associate with it. `custom_data` is any JSON-serializable dict and becomes the event's properties in Umami.
 
-If this call returns without raising, Umami accepted the event.
+If that call returns without raising, Umami accepted the event. Now go and look at it.
 
 ## Read the result
 
-Open your website in the Umami dashboard. The event appears in two places:
+Open the website in your Umami dashboard. The event appears in two places:
 
 - In the **Events** section at the bottom of the website page, listed under its `event_name` with a count.
 - In the **Pages** section, as traffic on the `url` you passed.
 
-Click the event name to see the properties from `custom_data`.
+Click the event name to see the properties from `custom_data`. That is the `plan` and `price` you sent, now sitting alongside everything the browser tracker collects.
 
-The return value is the JSON body Umami sent back, parsed into a dict. On current Umami versions it contains a `cache` token plus `sessionId` and `visitId`. You can ignore it. The exact keys depend on the Umami server version, and the package does not use them.
+The return value is Umami's JSON response parsed into a dict. On current Umami versions it holds a `cache` token plus `sessionId` and `visitId`. You can ignore it; the exact keys depend on the server version and the package does not use them.
 
-If the call raised an exception, or returned normally but nothing shows up, go to [Troubleshooting](troubleshooting.qmd). The most common cause of a silent miss is Umami's bot filter rejecting the request, and the page explains how to tell.
+If the call raised, or returned normally and the dashboard stays stubbornly empty, go to [Troubleshooting](troubleshooting.qmd). The empty dashboard has a usual suspect, Umami's bot filter, and the page explains how to catch it.
 
 ## Check the connection
 
-`heartbeat()` tells you whether the configured instance is reachable. It never raises; it returns `False` on any problem, including a missing `set_url_base()`.
+`heartbeat()` answers one question: can this process reach the configured instance? It never raises. It returns `False` on any problem, including a missing `set_url_base()`, so it is safe to call from a health check.
 
 ```python
 if not umami.heartbeat():
@@ -1333,7 +1335,7 @@ if not umami.heartbeat():
 
 ## Umami Cloud
 
-On Umami Cloud you authenticate with an API key instead of a URL and a login. Create a key in the Cloud dashboard, then replace `set_url_base()` with `set_cloud_api_key()`:
+On Umami Cloud there is no URL to point at and no password to type. You create an API key in the Cloud dashboard, and that key replaces `set_url_base()`:
 
 ```python
 import umami
@@ -1345,20 +1347,20 @@ umami.set_hostname('example.com')
 umami.new_event(event_name='purchase-course', url='/courses/python-for-absolute-beginners')
 ```
 
-Events go to `https://cloud.umami.is/api/send` and query calls go to `https://api.umami.is/v1`, with the key sent as an `x-umami-api-key` header. Do not call `login()` in Cloud mode; it raises `OperationNotAllowedError`. See [Authentication](authentication.qmd) for the details of both modes and how to switch between them.
+Events go to `https://cloud.umami.is/api/send` and query calls go to `https://api.umami.is/v1`, with the key sent as an `x-umami-api-key` header. Do not call `login()` in Cloud mode; it raises `OperationNotAllowedError`, because the key already is the credential. [Authentication](authentication.qmd) explains both modes and how to switch between them.
 
 ## Next steps
 
-- [Sending events](sending-events.qmd) covers page views, revenue, and the per-user `distinct_id`.
-- [Testing and CI](testing.qmd) shows how to keep your test suite from writing to your real analytics.
+- [Sending events](sending-events.qmd) covers page views, revenue, and `distinct_id`.
+- [Testing and CI](testing.qmd) shows how to keep your test suite from writing fake purchases into your real analytics.
 - [Querying stats](querying-stats.qmd) reads the numbers back out.
 
 
 ### Sending events
 
-Three functions send data to Umami: `new_event()` for custom events, `new_page_view()` for page views, and `new_revenue_event()` for events that carry a monetary amount. Each has an `_async` twin with the same signature and the same return value. None of them require a login. They need `set_url_base()` (or `set_cloud_api_key()`), a website id, and a hostname.
+Three messengers carry data to Umami. `new_event()` reports that something happened. `new_page_view()` reports that someone looked at a page. `new_revenue_event()` reports that something happened and money changed hands. Each has an `_async` twin with the same signature and the same return value, and none of them need a login. They need `set_url_base()` (or `set_cloud_api_key()`), a website id, and a hostname, and that is all.
 
-All three share a few arguments:
+All three share the same arguments, because they fill in the same session fields a browser would:
 
 | Argument | Default | Notes |
 |---|---|---|
@@ -1371,9 +1373,11 @@ All three share a few arguments:
 | `ip_address` | not sent | Sent as `ip` when non-blank, so Umami geolocates the real visitor instead of your server. |
 | `distinct_id` | not sent | A stable per-user id. See below. |
 
-Missing `hostname` or `website_id` raises `umami.errors.ValidationError` before any request is made.
+Missing `hostname` or `website_id` raises `umami.errors.ValidationError` before any request is made. The package would rather fail in your process than hand Umami an event it cannot file.
 
 ## Custom events
+
+A custom event is the headline feature. The browser tracker records clicks; this records the things your code knows that a click never reveals: a webhook confirmed a payment, a background job finished, a trial converted.
 
 ```python
 umami.new_event(
@@ -1385,11 +1389,11 @@ umami.new_event(
 )
 ```
 
-`event_name` is required and must not be blank. `title` is the page title Umami records alongside the event and defaults to the event name. `custom_data` becomes the event's properties; it is not shown in the main dashboard view but is available by clicking into the event and through the Umami API.
+`event_name` is required and must not be blank. `title` is the page title Umami records alongside the event and defaults to the event name. `custom_data` becomes the event's properties. They are not shown in the main dashboard view, but they are there: click into the event, or read them through the Umami API.
 
 ## Page views
 
-A page view is what the browser tracker records when a page loads. Send one from the server when you render a page for a client that cannot run JavaScript, or when you serve content outside the browser.
+A page view is what the browser tracker records when a page loads. Send one from the server when you render for a client that cannot run JavaScript, such as a feed reader or a developer with curl, or when you serve content outside a browser altogether.
 
 ```python
 umami.new_page_view(page_title='Account details', url='/account/details', ip_address=request.client.host)
@@ -1397,11 +1401,11 @@ umami.new_page_view(page_title='Account details', url='/account/details', ip_add
 
 `page_title` and `url` are both required. Page views have no event name and no custom data.
 
-`new_page_view()` accepts one extra argument the others do not: `ua`, the user agent recorded for the visitor. It defaults to a desktop Chrome user agent because Umami drops requests whose user agent looks like a bot. Pass the real browser's user agent when you have it so the Browsers and Devices sections stay accurate. `new_event()` has no `ua` argument.
+`new_page_view()` accepts one argument the others do not: `ua`, the user agent recorded for the visitor. It defaults to a desktop Chrome user agent, because Umami drops requests whose user agent looks like a bot, and a library's default user agent is exactly what a bot looks like. Pass the real browser's user agent when you have it so the Browsers and Devices sections tell the truth. `new_event()` has no `ua` argument.
 
 ## Revenue
 
-`new_revenue_event()` is `new_event()` with two keys added to `custom_data`: `revenue` and `currency`. Umami's revenue report reads those keys.
+`new_revenue_event()` is `new_event()` with two keys added to `custom_data`: `revenue` and `currency`. Umami's revenue report reads those two keys, which is why they get their own function and their own validation.
 
 ```python
 umami.new_revenue_event(
@@ -1413,11 +1417,11 @@ umami.new_revenue_event(
 )
 ```
 
-Validation before the request: `revenue` must be an `int` or `float` greater than or equal to zero, and `currency` must be non-blank. If your `custom_data` already has `revenue` or `currency` keys they are overwritten by the arguments.
+Validation before the request: `revenue` must be an `int` or `float` greater than or equal to zero, and `currency` must be non-blank. If your `custom_data` already has `revenue` or `currency` keys, the arguments win and overwrite them. A negative amount is rejected, so a refund needs its own event name rather than a minus sign.
 
 ## Per-user attribution with distinct_id
 
-Pass `distinct_id` on any of the three functions to attach a stable identifier for the logged-in user. It is sent as the payload field `id`, which Umami uses to tie sessions and events to one visitor across devices.
+Without an id, Umami identifies visitors on its own from the session fields. Pass `distinct_id` on any of the three functions and Umami can tie sessions and events to one known person instead, across devices. It is sent as the payload field `id`.
 
 ```python
 umami.new_event(event_name='login', distinct_id=user.id)
@@ -1427,13 +1431,13 @@ Rules the package enforces:
 
 - `str` and `int` are accepted. Integers are sent as strings.
 - Blank or whitespace-only strings are ignored and no `id` is sent.
-- `bool` and any other type raise `ValidationError`. The bool check is explicit because `True` is an `int` in Python.
+- `bool` and any other type raise `ValidationError`. The bool check is explicit because in Python `True` is an `int`, and `distinct_id=True` is never what anyone meant.
 
-Use an internal user id or a hash, not an email address or other raw personal data.
+Use an internal user id or a hash, not an email address or other raw personal data. Umami is privacy-preserving analytics; keep it that way.
 
 ## What gets sent
 
-Every call makes one `POST` to `/api/send` with a body like this. There is no batching and no retry.
+Every call makes exactly one `POST` to `/api/send`. No batching, no retry, no queue. Here is the envelope for the revenue example above:
 
 ```json
 {
@@ -1453,15 +1457,15 @@ Every call makes one `POST` to `/api/send` with a body like this. There is no ba
 }
 ```
 
-A page view is the same shape without `name` and `data`. The `ip` field is present only when you pass `ip_address`, and `id` only when you pass `distinct_id`.
+A page view is the same shape without `name` and `data`. The `ip` field is present only when you pass `ip_address`, and `id` only when you pass `distinct_id`. If you ever need to argue with Umami about what it received, this is what you sent.
 
 ## Return values
 
-The functions return the parsed JSON response from Umami as a dict. When tracking has been turned off with `disable()` they validate their arguments and return `{}` without making a request. A non-2xx response raises `httpx2.HTTPStatusError`.
+The functions return Umami's JSON response as a dict. When tracking has been turned off with `disable()` they validate their arguments and return `{}` without making a request, which is how you tell "sent" from "skipped". A non-2xx response raises `httpx2.HTTPStatusError`.
 
 ## Async
 
-Each function has an `_async` twin that sends the same payload and returns the same value.
+Each function has an `_async` twin that sends the same payload and returns the same value. The package's own tests build both and compare the request bodies, so the twins cannot drift apart quietly.
 
 ```python
 await umami.new_event_async(event_name='checkout-completed', url='/checkout')
@@ -1471,12 +1475,14 @@ await umami.new_revenue_event_async(revenue=19.99, url='/checkout')
 
 The configuration functions are synchronous only. Call `set_url_base()` and friends once at startup, before your event loop starts handling requests.
 
-If an event does not appear in the dashboard, see [Troubleshooting](troubleshooting.qmd#event-sent-but-nothing-appears).
+If an event does not appear in the dashboard, see [Troubleshooting](troubleshooting.qmd#event-sent-but-nothing-appears). You are not the first.
 
 
 ### Authentication
 
-There are two ways to authenticate, and you use exactly one of them at a time. Self-hosted instances take a username and password and return a token. Umami Cloud takes an API key. The package routes requests and sets headers differently in each mode, so the choice matters even though the rest of your code stays the same.
+Here is the part that surprises people: you can send events to Umami all day without logging in. The ingestion endpoint is public, because a browser tracker on a public web page cannot keep a secret. Credentials only enter the picture when you want to read data back out.
+
+When you do, there are two doors and you walk through exactly one of them. A self-hosted instance takes a username and password and hands you a token. Umami Cloud takes an API key. The package routes requests and sets headers differently behind each door, so the choice matters even though the rest of your code stays identical.
 
 ## What needs a credential
 
@@ -1487,7 +1493,7 @@ There are two ways to authenticate, and you use exactly one of them at a time. S
 | `websites()`, `website_stats()`, `active_users()` | `login()` or a Cloud key | These read data and require a token or key. |
 | `verify_token()` | `login()` or a Cloud key | Returns `False` rather than raising when nothing is set. |
 
-Calling a query function before logging in raises `umami.errors.OperationNotAllowedError` with the message `Call login() or set_cloud_api_key() before proceeding.`
+Call a query function before you have a credential and you get `umami.errors.OperationNotAllowedError` with the message `Call login() or set_cloud_api_key() before proceeding.` No request is made; the package checks before it dials.
 
 ## Self-hosted: set_url_base and login
 
@@ -1499,15 +1505,15 @@ login = umami.login('admin', 'super-secret')
 print(login.user.username, login.user.isAdmin)
 ```
 
-`login()` posts to `/api/auth/login`, stores the returned token in the module, and returns a `LoginResponse` with the token and a `User` model. You do not need to keep the return value; every later query call sends the stored token as `Authorization: Bearer <token>`.
+`login()` posts to `/api/auth/login`, stores the returned token in the module, and returns a `LoginResponse` with the token and a `User` model. You can drop the return value on the floor. Every later query call sends the stored token as `Authorization: Bearer <token>` without you touching it.
 
-Both arguments must be non-empty or `ValidationError` is raised. Wrong credentials come back from the server as a 401 and raise `httpx2.HTTPStatusError`.
+Both arguments must be non-empty, and whitespace does not count, or `ValidationError` is raised before any request. Wrong credentials come back from the server as a 401 and raise `httpx2.HTTPStatusError`.
 
 Calling `login()` again replaces the stored token. There is no logout function; the token lives until the process exits or you log in again.
 
 ### Tokens expire
 
-Umami login tokens are temporary. A long-running process should expect a query call to start failing with a 401 at some point. `verify_token()` checks the stored token against the server and never raises:
+Umami login tokens are temporary, and they expire on Umami's schedule, not yours. A long-running process should assume that one day a query call will start failing with a 401, probably during a demo. `verify_token()` asks the server whether the stored token is still good and never raises:
 
 ```python
 if not umami.verify_token():
@@ -1528,23 +1534,23 @@ umami.set_hostname('example.com')
 
 Create the key in the Umami Cloud dashboard under the API keys settings. `region` accepts `'us'`, `'eu'`, or `None`; when omitted, Cloud uses the region of the account that owns the key. Any other value raises `ValidationError`, as does a blank key.
 
-In Cloud mode the package changes three things:
+Setting a key flips three switches at once:
 
 - Query and verification calls go to `https://api.umami.is/v1`, with `/eu` or `/us` inserted after `v1` when you pin a region, and carry an `x-umami-api-key` header.
-- Events go to `https://cloud.umami.is/api/send` with no credential, because the Cloud ingestion endpoint is public. The region does not affect this host.
-- `login()` and `login_async()` raise `OperationNotAllowedError`. The key is the credential, and Cloud has no username and password login.
+- Events go to `https://cloud.umami.is/api/send` with no credential, because the Cloud ingestion endpoint is public too. The region does not affect this host.
+- `login()` and `login_async()` raise `OperationNotAllowedError`. The key is the credential, and Cloud has no username and password login to call.
 
-You do not call `set_url_base()` in Cloud mode. If you do, the value is stored but ignored while the key is set.
+You do not call `set_url_base()` in Cloud mode. If you do, the value is stored and politely ignored while the key is set.
 
 ## Switching modes
 
-`clear_cloud_api_key()` removes the key and the region. Everything goes back to self-hosted behaviour: events use `url_base`, and query calls need a login token. A token from a `login()` made before you switched to Cloud mode is still there, so you do not have to log in again.
+`clear_cloud_api_key()` removes the key and the region, and everything reverts to self-hosted behaviour: events use `url_base`, and query calls need a login token. A token from a `login()` made before you switched to Cloud is still sitting there, so you do not have to log in again.
 
 `is_logged_in()` returns `True` when either a login token or a Cloud key is set. It does not contact the server; use `verify_token()` for that.
 
 ## Keep credentials out of code
 
-Read the password or key from an environment variable or a secrets store at startup, then hand it to `login()` or `set_cloud_api_key()`. The package does not read any environment variables itself.
+Read the password or key from an environment variable or a secrets store at startup, then hand it to `login()` or `set_cloud_api_key()`. The package does not read any environment variables itself, so there is no magic name to discover and no surprise when a variable is set on the wrong machine.
 
 ```python
 import os
@@ -1559,7 +1565,7 @@ If a login fails, [Troubleshooting](troubleshooting.qmd#login-and-token-problems
 
 ### Querying stats
 
-Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise `httpx2.HTTPStatusError` on a non-2xx response. Each has an `_async` twin.
+Sending events is the daily work. Reading them back is for the Monday morning question: how did the weekend go? Three functions answer it. `websites()` tells you what Umami is tracking, `website_stats()` summarises a date range, and `active_users()` counts who is on the site this minute. All three need a login token or a Cloud API key, all three raise `httpx2.HTTPStatusError` on a non-2xx response, and each has an `_async` twin.
 
 ## Your websites
 
@@ -1568,7 +1574,7 @@ for site in umami.websites():
     print(site.id, site.name, site.domain)
 ```
 
-`websites()` returns a list of `Website` models. The `id` attribute is the value to pass to `set_website_id()`. Umami pages this endpoint, so the package requests page after page until it holds the total the server reports, and returns the complete list. One request is enough for most accounts.
+`websites()` returns a list of `Website` models, and `site.id` is the value you hand to `set_website_id()`. Umami pages this endpoint, and for a long time the package quietly returned only the first page, which was fine until the first account with more websites than fit on one. Since 1.1.0 it asks for page after page until it holds the total the server reports, and returns the complete list. One request is still enough for most accounts.
 
 `user` is set for websites you own, and `createUser` is set instead for team websites. Both are `WebsiteUser` models with `id` and `username`, and either can be `None`.
 
@@ -1584,11 +1590,11 @@ stats = umami.website_stats(start_at=start, end_at=end)
 print(stats.pageviews, stats.visitors, stats.visits, stats.bounces, stats.totaltime)
 ```
 
-`website_stats()` returns a `WebsiteStats` model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as `stats.comparison` with the same five fields; otherwise it is `None`.
+`website_stats()` returns a `WebsiteStats` model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as `stats.comparison` with the same five fields, so "up on last week" is a subtraction away. Otherwise it is `None`.
 
 ### Dates
 
-`start_at` and `end_at` are `datetime` objects. The package converts them to epoch milliseconds with `timestamp()`, which means a naive datetime is interpreted in the local timezone of the process. Pass timezone-aware datetimes if the server and your process run in different zones.
+`start_at` and `end_at` are `datetime` objects. The package converts them to epoch milliseconds with `timestamp()`, and here is the trap: a naive datetime is interpreted in the local timezone of the process. Your laptop in Portland and your server in Frankfurt will ask Umami about different seven-day windows from the same code. Pass timezone-aware datetimes and the ambiguity disappears.
 
 ### Filters
 
@@ -1606,7 +1612,7 @@ The filters are `url`, `referrer`, `title`, `query`, `event`, `host`, `os`, `bro
 count = umami.active_users()
 ```
 
-`active_users()` returns an `int`: the number of visitors active on the website in the last few minutes, as Umami defines it. Pass `website_id` to query a site other than the default.
+`active_users()` returns an `int`: the number of visitors active on the website in the last few minutes, as Umami defines it. It is the number you keep refreshing during a launch. Pass `website_id` to query a site other than the default.
 
 ## Overriding the default website
 
@@ -1618,20 +1624,22 @@ stats = umami.website_stats(start_at=start, end_at=end, website_id=other_site.id
 
 ## Umami Cloud limits
 
-Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls `active_users()` for many websites needs its own pacing.
+Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls `active_users()` for forty websites every second meets a 429 in under two seconds. Pace it yourself.
 
 ## Beyond the three queries
 
-The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are available from the Umami HTTP API with the credential you already configured. [How it works](how-it-works.qmd#beyond-the-wrapped-endpoints) shows how to make those calls.
+The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are all in the Umami HTTP API, and the credential you configured here works for them too. [How it works](how-it-works.qmd#beyond-the-wrapped-endpoints) shows the call.
 
 Errors on query calls are covered in [Troubleshooting](troubleshooting.qmd#login-and-token-problems).
 
 
 ### Troubleshooting
 
-The package fails in one of three ways: it raises before sending anything, it raises because Umami answered with an error, or it returns normally and nothing shows up in the dashboard. This page covers each in turn and ends with the order to check things in.
+Every problem with this package lands in one of three bins. The package raised before sending anything. The package raised because Umami answered with an error. Or, the one that costs the most sleep, the call returned normally and nothing showed up in the dashboard. This page takes the bins in that order and ends with the order to check things in when you do not yet know which bin you are in.
 
 ## Read the exception first
+
+The exception type tells you whether a request was ever made, which cuts the search in half before you read the message.
 
 | Exception | Raised when | Where to look |
 |---|---|---|
@@ -1644,8 +1652,10 @@ The package fails in one of three ways: it raises before sending anything, it ra
 
 ## Setup errors
 
+Each of these arrives with its own instructions in the message:
+
 `Set a URL base with set_url_base() or call set_cloud_api_key().`
-: Nothing has been configured yet. Call `set_url_base('https://your-instance')` for self-hosted, or `set_cloud_api_key(key)` for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first.
+: Nothing has been configured yet. Call `set_url_base('https://your-instance')` for self-hosted, or `set_cloud_api_key(key)` for Cloud, before anything else. If you configured it in one module and the error comes from another, check that both run in the same process and that the configuration code ran first. A worker process that forked before startup code ran is the classic version of this.
 
 `Call login() or set_cloud_api_key() before proceeding.`
 : You called `websites()`, `website_stats()`, or `active_users()` without a credential. These need `login()` on self-hosted or a Cloud key. Sending events does not.
@@ -1655,7 +1665,7 @@ The package fails in one of three ways: it raises before sending anything, it ra
 
 ## Validation errors
 
-Each message names the argument to fix:
+Each message names the argument to fix, so the message is the documentation:
 
 - `URL must not be empty.` and `The url must start with the HTTP scheme (http:// or https://).` come from `set_url_base()`. Pass the full instance URL including the scheme.
 - `The hostname must be set, either as a parameter here or via set_hostname().` and `The website_id must be set, either as a parameter here or via set_website_id().` come from the send functions. Set the defaults once at startup or pass the argument on the call.
@@ -1667,17 +1677,17 @@ Each message names the argument to fix:
 
 ## Login and token problems
 
-`login()` raises `httpx2.HTTPStatusError` with a 401 when the username or password is wrong. Check the credentials against the Umami login page.
+`login()` raises `httpx2.HTTPStatusError` with a 401 when the username or password is wrong. Try the same credentials on the Umami login page in a browser; if they fail there too, the package is not the problem.
 
-A query call that worked earlier and now raises a 401 means the token expired. Umami tokens are temporary. Call `login()` again, or check first with `verify_token()`, which returns `False` for an expired token without raising.
+A query call that worked an hour ago and now raises a 401 means the token expired. Umami tokens are temporary. Call `login()` again, or check first with `verify_token()`, which returns `False` for an expired token without raising.
 
-`verify_token()` returning `False` right after a successful `login()` usually means the server is unreachable, not that the token is bad. Check `heartbeat()`.
+`verify_token()` returning `False` right after a successful `login()` usually means the server became unreachable, not that the token is bad. Check `heartbeat()`.
 
 On Cloud, a 401 or 403 means the API key is wrong, revoked, or used on a route the Cloud API does not allow for keys. Create a new key in the Cloud dashboard and try again.
 
 ## HTTP errors
 
-Inspect the status code and body before guessing:
+Inspect the status code and body before guessing. The body usually says more than the status does:
 
 ```python
 import httpx2
@@ -1698,18 +1708,18 @@ except httpx2.HTTPStatusError as e:
 
 ## Event sent but nothing appears
 
-The call returned a dict and raised nothing, but the dashboard shows no event. Work through these in order.
+This is the frustrating one. The call returned a dict, raised nothing, and the dashboard shows no event. Work through these in order:
 
-1. **The return value is `{}`.** Tracking is disabled. Something called `umami.disable()`, usually a test or development setting. Call `umami.enable()` or check the condition that disables it. A real response contains keys such as `cache`.
-2. **Umami's bot filter dropped the request.** Umami rejects requests whose `User-Agent` looks like a bot, and it may still answer 200. The package sends a desktop Chrome user agent by default, so this only happens when you pass your own `ua` to `new_page_view()`. Use a browser user agent, or set `DISABLE_BOT_CHECK=true` in the Umami server's environment. That variable is read by the Umami server, not by this package.
+1. **The return value is `{}`.** Tracking is disabled. Something called `umami.disable()`, usually a test or development setting that followed you to production. Call `umami.enable()` or check the condition that disables it. A real response contains keys such as `cache`.
+2. **Umami's bot filter dropped the request.** Umami rejects requests whose `User-Agent` looks like a bot, and it may still answer 200, so the package has no way to warn you. The default user agent is a desktop Chrome string precisely to get past this filter, so it only bites when you pass your own `ua` to `new_page_view()`. Use a browser user agent, or set `DISABLE_BOT_CHECK=true` in the Umami server's environment. That variable is read by the Umami server, not by this package.
 3. **Wrong website id.** The event was recorded against another website. Compare the id you set with the one in the dashboard URL, and remember that an explicit `website_id` argument wins over `set_website_id()`.
 4. **Wrong mode.** A Cloud key is set, so the event went to Umami Cloud rather than your self-hosted instance, or the other way round. `clear_cloud_api_key()` switches back to self-hosted.
-5. **Dashboard range or timezone.** Events appear under the date range selected in the dashboard, in the dashboard's timezone. Widen the range and refresh.
+5. **Dashboard range or timezone.** Events appear under the date range selected in the dashboard, in the dashboard's timezone. An event sent at 23:50 your time can be tomorrow's event in the dashboard. Widen the range and refresh.
 6. **It is in the Events list, not the Pages list.** Custom events appear in the Events section at the bottom of the website page. Page views appear in Pages. Revenue appears in the Revenue report once Umami has processed the `revenue` and `currency` properties.
 
 ## heartbeat() returns False
 
-`heartbeat()` returns `False` for any failure, including configuration problems, so it does not tell you which one you have:
+`heartbeat()` returns `False` for any failure, including configuration problems, so it tells you that something is wrong and nothing about what:
 
 - `set_url_base()` or `set_cloud_api_key()` has not been called.
 - The server is down or unreachable from this machine.
@@ -1725,14 +1735,16 @@ Call `umami.websites()` or another raising function to see the real exception.
 
 ## Fix order
 
-Fix configuration first, because `ValidationError` and `OperationNotAllowedError` are raised before any request and nothing else can work until they stop. Then confirm connectivity with `heartbeat()`, then the credential with `verify_token()`, and only then look at the event itself.
+When nothing is obviously wrong, check in this order and resist skipping ahead, because each step rules out everything behind it. Configuration first, since `ValidationError` and `OperationNotAllowedError` are raised before any request and nothing else can work until they stop. Then connectivity with `heartbeat()`. Then the credential with `verify_token()`. Only then look at the event itself.
 
 If you find a problem the package should handle better, open an issue at <https://github.com/mikeckennedy/umami-python/issues>.
 
 
 ### Testing and CI
 
-Analytics calls in application code are a problem for test suites. Every test run would record fake purchases and page views against your real website, and a test environment without network access would fail on the first event. The package gives you two tools for this: a module-level switch that turns sending off, and a single HTTP boundary that is easy to mock.
+Picture Monday morning. The revenue report shows two hundred course purchases over the weekend, every one of them for `test-course`, every one for 1.00 USD, all from a hostname of `localhost`. Nobody bought anything. The CI pipeline ran the checkout tests forty times, and each run dutifully reported its fake purchases to your real Umami website.
+
+Analytics calls in application code are a problem for test suites in exactly this way, and in the opposite way too: a test environment without network access fails on the first event. The package gives you two tools. A module-level switch turns sending off, and a single HTTP boundary is easy to mock.
 
 ## Turn sending off with disable()
 
@@ -1751,7 +1763,7 @@ umami.new_event(event_name='signup')  # returns {} and sends nothing
 
 Two details matter:
 
-- Validation still runs. A blank event name or a missing website id still raises `ValidationError`, so tests catch configuration mistakes without touching the network.
+- Validation still runs. A blank event name or a missing website id still raises `ValidationError`, so tests catch configuration mistakes without touching the network. Disabled does not mean asleep.
 - Only the send functions are affected. `login()`, `websites()`, `website_stats()`, `active_users()`, `verify_token()`, and `heartbeat()` always make their request. Mock those if a test reaches them.
 
 The simplest production pattern is to decide at startup:
@@ -1772,7 +1784,7 @@ The variable names are yours. The package reads no environment variables itself.
 
 ## A pytest fixture
 
-Because the configuration is module-global, one test can leak state into the next. An autouse fixture that resets everything keeps tests independent:
+Because the configuration is module-global, one test can leak state into the next. A test that calls `enable()` to assert on a payload leaves tracking on for every test that runs after it. An autouse fixture that resets everything keeps tests independent:
 
 ```python
 # conftest.py
@@ -1790,11 +1802,11 @@ def _umami_offline():
     yield
 ```
 
-With this in place, application code can call `umami.new_event()` freely and nothing leaves the test process.
+With this in place, application code can call `umami.new_event()` freely and nothing leaves the test process. The Monday morning report stays honest.
 
 ## Mock the HTTP boundary
 
-When a test needs to assert what would have been sent, or needs a query function to return data, patch `httpx2` where the package uses it. The package does `import httpx2 as httpx` inside `umami.impl` and calls `httpx.post()` and `httpx.get()` for the sync functions and `httpx.AsyncClient()` for the async ones. This is how the package's own test suite works.
+When a test needs to assert what would have been sent, or needs a query function to return data, patch `httpx2` where the package uses it. The package does `import httpx2 as httpx` inside `umami.impl` and calls `httpx.post()` and `httpx.get()` for the sync functions and `httpx.AsyncClient()` for the async ones. There is one boundary, and this is how the package's own test suite works.
 
 ```python
 from unittest.mock import MagicMock, patch
@@ -1843,12 +1855,12 @@ To test a query function, return the shape Umami returns. `websites()` expects `
 
 ## Continuous integration
 
-Nothing in the package needs network access when tracking is disabled, so the fixture above is enough for CI. If your pipeline builds a container that runs the real application, make sure the environment variable that selects `disable()` is set in the test stage and unset in production. A forgotten `disable()` in production is silent: every call returns `{}` and no events arrive, which looks the same as a broken server. The [Troubleshooting](troubleshooting.qmd#event-sent-but-nothing-appears) page lists this as the first thing to check.
+Nothing in the package needs network access when tracking is disabled, so the fixture above is enough for CI. The remaining risk is the mirror image of the weekend story. If the variable that selects `disable()` is set in the test stage and somehow also set in production, every call returns `{}` and no events arrive, which looks exactly like a broken server. A forgotten `disable()` in production is silent. That is why the [Troubleshooting](troubleshooting.qmd#event-sent-but-nothing-appears) page lists it as the first thing to check.
 
 
 ### Configuration
 
-All configuration is module-global state set by plain function calls. There is no configuration file, no environment variable, and no client object. Set things once at startup; every later call reads them.
+All configuration lives on one whiteboard inside the `umami` module. There is no configuration file, no environment variable, and no client object to carry around. A handful of setter functions write on the whiteboard, usually once at startup, and every other function reads from it. This page lists what is on the whiteboard, what it says before you write anything, and who reads each line.
 
 ## Settings
 
@@ -1862,11 +1874,11 @@ All configuration is module-global state set by plain function calls. There is n
 | `login(username, password)` | Stores the token for query calls. Self-hosted only. | none | `websites()`, `website_stats()`, `active_users()`, `verify_token()` |
 | `enable()` / `disable()` | Whether the send functions make requests. | enabled | |
 
-The setters are synchronous only. There is no `set_url_base_async()`.
+The setters are synchronous only. There is no `set_url_base_async()`, because writing on a whiteboard does not need an event loop.
 
 ## Per-call defaults
 
-The send functions fill in session fields Umami expects from a browser. Override any of them per call.
+The send functions fill in the session fields Umami expects from a browser, so an event from a Python process looks enough like a visit for Umami to file it. Override any of them per call.
 
 | Argument | `new_event` | `new_page_view` | `new_revenue_event` |
 |---|---|---|---|
@@ -1884,6 +1896,8 @@ The send functions fill in session fields Umami expects from a browser. Override
 
 ## What happens on a second call
 
+Whiteboards get overwritten, and the rules are short:
+
 - `set_url_base()` again replaces the previous value.
 - `login()` again replaces the stored token. There is no logout.
 - `set_cloud_api_key()` again replaces the key and region.
@@ -1898,7 +1912,7 @@ An explicit `website_id` or `hostname` argument on a call always wins over the v
 
 ## Reading the current state
 
-The public API has no getters. `is_logged_in()` tells you whether a token or Cloud key is present. For anything else, keep your own record of what you configured. The module `umami.impl` holds the values as plain attributes (`url_base`, `default_website_id`, `default_hostname`, `auth_token`, `api_key`, `cloud_region`, `tracking_enabled`), which is useful in a debugger and in tests, but it is an implementation detail rather than a supported interface.
+The public API has no getters. `is_logged_in()` tells you whether a token or Cloud key is present. For anything else, keep your own record of what you configured. If you are in a debugger, the module `umami.impl` holds the values as plain attributes (`url_base`, `default_website_id`, `default_hostname`, `auth_token`, `api_key`, `cloud_region`, `tracking_enabled`), which is handy for a quick look and in tests, but it is an implementation detail rather than a supported interface.
 
 ## Version
 
@@ -1907,20 +1921,20 @@ The public API has no getters. `is_logged_in()` tells you whether a token or Clo
 
 ### How it works
 
-This page describes what the package does on the wire, so you can reason about it when something is off and reach past it when you need an endpoint it does not wrap.
+Most of the time you do not need to know what a library does on the wire. The other times, you need to know exactly. This page is for the second case: when a request is going somewhere you did not expect, when a header looks wrong in a proxy log, or when you need an endpoint the package does not wrap and want to borrow its credential.
 
 ## One module, global state
 
 `import umami` gives you a module of functions, not a class. The public functions in `umami` are re-exports from `umami.impl`, which holds the configuration as module globals: the URL base, the login token, the default website id and hostname, the Cloud key and region, and the enabled flag. The `set_*` functions, `login()`, `enable()`, and `disable()` write those globals; everything else reads them.
 
-That design has two consequences:
+That design is why the API reads like a conversation (`set_url_base`, `login`, `new_event`) rather than a construction (`client = Client(...)`), and it has two consequences:
 
 - Configuration is per process. Two web workers each need their own `set_url_base()` and `login()` at startup.
 - The setters are not synchronized. Call them once at startup, before threads or an event loop start sending events. The send and query functions only read the globals, so concurrent calls after startup are fine.
 
 ## Two modes, one code path
 
-Every request resolves its URL and headers from the current mode.
+Every request resolves its URL and headers from the current mode at the moment it is made. This table is the whole routing logic:
 
 | | Self-hosted | Umami Cloud |
 |---|---|---|
@@ -1934,21 +1948,21 @@ Every request resolves its URL and headers from the current mode.
 
 ## Two user agents
 
-Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on `/api/send` calls, and `new_page_view()` lets you replace it with the visitor's real user agent through the `ua` argument. Query calls send an honest user agent of the form `Umami-Client v1.1.0 / Python 3.14.10 / Darwin`, available as `umami.user_agent`.
+Umami was built to receive data from browsers, so it drops ingestion requests whose user agent looks like a bot, and a Python HTTP library's default user agent looks like a bot. The package therefore puts on a costume for `/api/send` calls: a desktop Chrome user agent, which `new_page_view()` lets you swap for the visitor's real one through the `ua` argument. On query calls there is no filter to get past, so the costume comes off and the package sends an honest user agent of the form `Umami-Client v1.1.0 / Python 3.14.10 / Darwin`, available as `umami.user_agent`.
 
 If you would rather Umami accepted any user agent, set `DISABLE_BOT_CHECK=true` in the Umami server's environment.
 
 ## Requests and responses
 
-Each function makes one HTTP request, except `websites()`, which requests each page of Umami's paged listing in turn. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package.
+Each function makes one HTTP request, except `websites()`, which requests each page of Umami's paged listing in turn. The sync functions call `httpx2.post()` or `httpx2.get()` directly; the async functions open an `httpx2.AsyncClient()` for the call and close it afterwards. There is no connection pool, no retry, and no batching. Redirects are followed. The timeout is `httpx2`'s default of five seconds and is not configurable through the package. The package does the simplest correct thing on each call and leaves pooling, retries, and queueing to the caller, where they are visible.
 
-Responses go through `raise_for_status()`, so any non-2xx status raises `httpx2.HTTPStatusError` with the response attached. The two exceptions are `verify_token()` and `heartbeat()`, which catch everything and return `False`, because they exist to answer a yes or no question.
+Responses go through `raise_for_status()`, so any non-2xx status raises `httpx2.HTTPStatusError` with the response attached. The two exceptions are `verify_token()` and `heartbeat()`, which catch everything and return `False`, because they exist to answer a yes or no question and a stack trace is neither.
 
 Successful query responses are parsed into Pydantic models from `umami.models`. `websites()` unwraps Umami's paged `{"data": [...]}` envelope, follows the `page` parameter until the reported `count` is reached or a page adds nothing new, and returns one flat list. `website_stats()` returns `WebsiteStats`. `active_users()` reads the `visitors` key and returns an `int`. Send functions return the response body as a plain dict.
 
 ## Sync and async parity
 
-Each `_async` twin builds the same payload, sends the same headers, hits the same URL, and returns the same value as its sync counterpart. The package's test suite drives both and compares the request bodies, so a difference between the two is a test failure. The configuration functions are sync only because they do no I/O.
+Each `_async` twin builds the same payload, sends the same headers, hits the same URL, and returns the same value as its sync counterpart. That is not a promise, it is a test: the package's suite drives both twins and compares the request bodies, so a difference between the two is a failing build. The configuration functions are sync only because they do no I/O.
 
 ## Dates and filters
 
@@ -1956,7 +1970,7 @@ Each `_async` twin builds the same payload, sends the same headers, hits the sam
 
 ## Beyond the wrapped endpoints
 
-The package covers configuration, authentication, sending, listing websites, summary stats, and active users. For reports, sessions, event data, metrics, time series, realtime, teams, users, or anything else in the [Umami API](https://umami.is/docs/api), make the call yourself with the credential you already have:
+The package covers configuration, authentication, sending, listing websites, summary stats, and active users. For reports, sessions, event data, metrics, time series, realtime, teams, users, or anything else in the [Umami API](https://umami.is/docs/api), make the call yourself. The tedious part, getting a credential, is already done:
 
 ```python
 from datetime import datetime, timedelta
@@ -1986,15 +2000,15 @@ Two conventions trip people up when calling the API directly. The `GET` stats, s
 
 ### FAQ
 
-Short answers to the questions that come up most. Each one links to the guide page with the full explanation.
+Short answers to the questions that come up most, each with a link to the page that tells the full story.
 
 ## Do I need to log in to send events?
 
-No. `new_event()`, `new_page_view()`, and `new_revenue_event()` only need `set_url_base()` (or a Cloud key), a website id, and a hostname. Login is required for `websites()`, `website_stats()`, `active_users()`, and `verify_token()`. See [Authentication](authentication.qmd).
+No, and this is the one that surprises everyone. `new_event()`, `new_page_view()`, and `new_revenue_event()` only need `set_url_base()` (or a Cloud key), a website id, and a hostname. Login is required for `websites()`, `website_stats()`, `active_users()`, and `verify_token()`. See [Authentication](authentication.qmd).
 
 ## Why is the package called umami-analytics but imported as umami?
 
-`umami-analytics` is the name on PyPI. `umami` is the import name. A different, unrelated project owns the `umami` name on PyPI, so `pip install umami` installs the wrong thing.
+`umami-analytics` is the name on PyPI. `umami` is the import name. A different, unrelated project got to the `umami` name on PyPI first, so `pip install umami` installs the wrong thing.
 
 ## Can the same code work for self-hosted and Umami Cloud?
 

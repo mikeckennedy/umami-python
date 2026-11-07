@@ -2,15 +2,15 @@
 title: "FAQ"
 ---
 
-Short answers to the questions that come up most. Each one links to the guide page with the full explanation.
+Short answers to the questions that come up most, each with a link to the page that tells the full story.
 
 ## Do I need to log in to send events?
 
-No. `new_event()`, `new_page_view()`, and `new_revenue_event()` only need `set_url_base()` (or a Cloud key), a website id, and a hostname. Login is required for `websites()`, `website_stats()`, `active_users()`, and `verify_token()`. See [Authentication](authentication.qmd).
+No, and this is the one that surprises everyone. `new_event()`, `new_page_view()`, and `new_revenue_event()` only need `set_url_base()` (or a Cloud key), a website id, and a hostname. Login is required for `websites()`, `website_stats()`, `active_users()`, and `verify_token()`. See [Authentication](authentication.qmd).
 
 ## Why is the package called umami-analytics but imported as umami?
 
-`umami-analytics` is the name on PyPI. `umami` is the import name. A different, unrelated project owns the `umami` name on PyPI, so `pip install umami` installs the wrong thing.
+`umami-analytics` is the name on PyPI. `umami` is the import name. A different, unrelated project got to the `umami` name on PyPI first, so `pip install umami` installs the wrong thing.
 
 ## Can the same code work for self-hosted and Umami Cloud?
 

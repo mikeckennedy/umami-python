@@ -1,6 +1,6 @@
 # Querying stats
 
-Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise `httpx2.HTTPStatusError` on a non-2xx response. Each has an `_async` twin.
+Sending events is the daily work. Reading them back is for the Monday morning question: how did the weekend go? Three functions answer it. [websites()](../reference/websites.md#umami.websites) tells you what Umami is tracking, [website_stats()](../reference/website_stats.md#umami.website_stats) summarises a date range, and [active_users()](../reference/active_users.md#umami.active_users) counts who is on the site this minute. All three need a login token or a Cloud API key, all three raise `httpx2.HTTPStatusError` on a non-2xx response, and each has an `_async` twin.
 
 
 # Your websites
@@ -10,7 +10,7 @@ for site in umami.websites():
     print(site.id, site.name, site.domain)
 ```
 
-[websites()](../reference/websites.md#umami.websites) returns a list of [Website](../reference/models.Website.md#umami.models.Website) models. The `id` attribute is the value to pass to [set_website_id()](../reference/set_website_id.md#umami.set_website_id). Umami pages this endpoint, so the package requests page after page until it holds the total the server reports, and returns the complete list. One request is enough for most accounts.
+[websites()](../reference/websites.md#umami.websites) returns a list of [Website](../reference/models.Website.md#umami.models.Website) models, and `site.id` is the value you hand to [set_website_id()](../reference/set_website_id.md#umami.set_website_id). Umami pages this endpoint, and for a long time the package quietly returned only the first page, which was fine until the first account with more websites than fit on one. Since 1.1.0 it asks for page after page until it holds the total the server reports, and returns the complete list. One request is still enough for most accounts.
 
 `user` is set for websites you own, and `createUser` is set instead for team websites. Both are [WebsiteUser](../reference/models.WebsiteUser.md#umami.models.WebsiteUser) models with `id` and `username`, and either can be `None`.
 
@@ -27,12 +27,12 @@ stats = umami.website_stats(start_at=start, end_at=end)
 print(stats.pageviews, stats.visitors, stats.visits, stats.bounces, stats.totaltime)
 ```
 
-[website_stats()](../reference/website_stats.md#umami.website_stats) returns a [WebsiteStats](../reference/models.WebsiteStats.md#umami.models.WebsiteStats) model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as `stats.comparison` with the same five fields; otherwise it is `None`.
+[website_stats()](../reference/website_stats.md#umami.website_stats) returns a [WebsiteStats](../reference/models.WebsiteStats.md#umami.models.WebsiteStats) model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as `stats.comparison` with the same five fields, so "up on last week" is a subtraction away. Otherwise it is `None`.
 
 
 ## Dates
 
-`start_at` and `end_at` are `datetime` objects. The package converts them to epoch milliseconds with `timestamp()`, which means a naive datetime is interpreted in the local timezone of the process. Pass timezone-aware datetimes if the server and your process run in different zones.
+`start_at` and `end_at` are `datetime` objects. The package converts them to epoch milliseconds with `timestamp()`, and here is the trap: a naive datetime is interpreted in the local timezone of the process. Your laptop in Portland and your server in Frankfurt will ask Umami about different seven-day windows from the same code. Pass timezone-aware datetimes and the ambiguity disappears.
 
 
 ## Filters
@@ -52,7 +52,7 @@ The filters are `url`, `referrer`, `title`, `query`, `event`, `host`, `os`, `bro
 count = umami.active_users()
 ```
 
-[active_users()](../reference/active_users.md#umami.active_users) returns an `int`: the number of visitors active on the website in the last few minutes, as Umami defines it. Pass `website_id` to query a site other than the default.
+[active_users()](../reference/active_users.md#umami.active_users) returns an `int`: the number of visitors active on the website in the last few minutes, as Umami defines it. It is the number you keep refreshing during a launch. Pass `website_id` to query a site other than the default.
 
 
 # Overriding the default website
@@ -66,11 +66,11 @@ stats = umami.website_stats(start_at=start, end_at=end, website_id=other_site.id
 
 # Umami Cloud limits
 
-Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls [active_users()](../reference/active_users.md#umami.active_users) for many websites needs its own pacing.
+Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls [active_users()](../reference/active_users.md#umami.active_users) for forty websites every second meets a 429 in under two seconds. Pace it yourself.
 
 
 # Beyond the three queries
 
-The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are available from the Umami HTTP API with the credential you already configured. [How it works](how-it-works.md#beyond-the-wrapped-endpoints) shows how to make those calls.
+The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are all in the Umami HTTP API, and the credential you configured here works for them too. [How it works](how-it-works.md#beyond-the-wrapped-endpoints) shows the call.
 
 Errors on query calls are covered in [Troubleshooting](troubleshooting.md#login-and-token-problems).

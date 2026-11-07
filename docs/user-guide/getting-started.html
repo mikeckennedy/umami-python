@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="getting-started.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/getting-started.html">
-  <meta name="description" content="This page takes you from an empty environment to a custom event in your Umami dashboard. It assumes you have a running Umami instance (self-hosted or...">
+  <meta name="description" content="By the end of this page you will have sent one custom event from a Python script and found it in your Umami dashboard. That is the whole arc: install,...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Getting started – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="This page takes you from an empty environment to a custom event in your Umami dashboard. It assumes you have a running Umami instance (self-hosted or...">
+  <meta property="og:description" content="By the end of this page you will have sent one custom event from a Python script and found it in your Umami dashboard. That is the whole arc: install,...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/getting-started.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Getting started – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="This page takes you from an empty environment to a custom event in your Umami dashboard. It assumes you have a running Umami instance (self-hosted or...">
+  <meta name="twitter:description" content="By the end of this page you will have sent one custom event from a Python script and found it in your Umami dashboard. That is the whole arc: install,...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -297,31 +297,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This page takes you from an empty environment to a custom event in your Umami dashboard. It assumes you have a running Umami instance (self-hosted or Umami Cloud) and a website registered in it. If you are on Umami Cloud, read the Cloud section at the end before the configuration step.</p>
+<p>By the end of this page you will have sent one custom event from a Python script and found it in your Umami dashboard. That is the whole arc: install, configure, send, look. It assumes you already have a running Umami instance, self-hosted or Umami Cloud, with a website registered in it. If you are on Cloud, skim the Cloud section at the end before you configure anything, because one line is different.</p>
 <section id="install" class="level1">
 <h1>Install</h1>
 <p>The package on PyPI is <code>umami-analytics</code>. The import name is <code>umami</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add umami-analytics</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># or</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install umami-analytics</span></code></pre></div>
-<p>Do not run <code>pip install umami</code>. That is an unrelated package with the same import name.</p>
+<p>A warning that earns its own paragraph: do not run <code>pip install umami</code>. That name belongs to an unrelated project that also imports as <code>umami</code>. The symptoms are an import that succeeds and functions that are not there, followed by a confused half hour.</p>
 <p>The package supports Python 3.10 and newer and depends on <code>httpx2</code> and <code>pydantic</code>.</p>
 </section>
 <section id="configure" class="level1">
 <h1>Configure</h1>
-<p>Everything is a module-level function. There is no client object to create. Configure the module once when your application starts, and every later call uses that state.</p>
+<p>There is no client object to construct and nothing to pass around. The package is a module with a memory. You tell it three things once, when your application starts, and every later call reads them.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>umami.set_url_base(<span class="st">'https://umami.example.com'</span>)  <span class="co"># your instance root, without /api</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>umami.set_website_id(<span class="st">'978435e2-7ba1-4337-9860-ec31ece2db60'</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'example.com'</span>)</span></code></pre></div>
-<p>Three things to know about these calls:</p>
+<p>Each of those lines has a story:</p>
 <ul>
-<li><a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> is required before anything else. It validates that the URL starts with <code>http://</code> or <code>https://</code> and strips a trailing slash. Do not include <code>/api</code>; the package adds the endpoint paths itself.</li>
-<li><a href="../reference/set_website_id.html#umami.set_website_id" class="gdls-link gdls-code">set_website_id()</a> takes the website id from the Umami dashboard (Settings, Websites, Edit). It becomes the default for every later call, and any call can override it with its own <code>website_id</code> argument.</li>
-<li><a href="../reference/set_hostname.html#umami.set_hostname" class="gdls-link gdls-code">set_hostname()</a> is the hostname recorded on each event. Umami uses it to group traffic, so use the domain visitors see, not the hostname of the server sending the event.</li>
+<li><a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> goes first, always. It checks that the URL starts with <code>http://</code> or <code>https://</code> and trims a trailing slash. Leave <code>/api</code> off; the package appends the endpoint paths itself, and including it is the most common cause of a 404 on every single call.</li>
+<li><a href="../reference/set_website_id.html#umami.set_website_id" class="gdls-link gdls-code">set_website_id()</a> takes the id from the Umami dashboard (Settings, Websites, Edit). It becomes the default for every later call, and any call can override it with its own <code>website_id</code> argument.</li>
+<li><a href="../reference/set_hostname.html#umami.set_hostname" class="gdls-link gdls-code">set_hostname()</a> is the hostname stamped on each event. Umami groups traffic by it, so use the domain your visitors type, not the name of the server doing the sending. A hostname of <code>worker-03.internal</code> will work, and it will haunt your reports.</li>
 </ul>
-<p>You do not need to log in to send events. Login is only required for the query functions, and the <a href="../user-guide/authentication.html">Authentication</a> page covers it.</p>
+<p>Notice what is missing: a login. Sending events needs no credential at all, because Umami’s ingestion endpoint is public by design, the same way the browser tracker on a public page needs none. Login only matters when you read data back, and <a href="../user-guide/authentication.html">Authentication</a> covers that.</p>
 </section>
 <section id="send-your-first-event" class="level1">
 <h1>Send your first event</h1>
@@ -330,29 +330,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/courses/python-for-absolute-beginners'</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'plan'</span>: <span class="st">'individual'</span>, <span class="st">'price'</span>: <span class="dv">69</span>},</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><code>event_name</code> is the only required argument. The <code>url</code> defaults to <code>/</code> and is the page path the event is attributed to. <code>custom_data</code> is any JSON-serializable dict; Umami stores it as event properties.</p>
-<p>If this call returns without raising, Umami accepted the event.</p>
+<p><code>event_name</code> is the only required argument. <code>url</code> defaults to <code>/</code> and is the page the event is attributed to, so pick the page a visitor would associate with it. <code>custom_data</code> is any JSON-serializable dict and becomes the event’s properties in Umami.</p>
+<p>If that call returns without raising, Umami accepted the event. Now go and look at it.</p>
 </section>
 <section id="read-the-result" class="level1">
 <h1>Read the result</h1>
-<p>Open your website in the Umami dashboard. The event appears in two places:</p>
+<p>Open the website in your Umami dashboard. The event appears in two places:</p>
 <ul>
 <li>In the <strong>Events</strong> section at the bottom of the website page, listed under its <code>event_name</code> with a count.</li>
 <li>In the <strong>Pages</strong> section, as traffic on the <code>url</code> you passed.</li>
 </ul>
-<p>Click the event name to see the properties from <code>custom_data</code>.</p>
-<p>The return value is the JSON body Umami sent back, parsed into a dict. On current Umami versions it contains a <code>cache</code> token plus <code>sessionId</code> and <code>visitId</code>. You can ignore it. The exact keys depend on the Umami server version, and the package does not use them.</p>
-<p>If the call raised an exception, or returned normally but nothing shows up, go to <a href="../user-guide/troubleshooting.html">Troubleshooting</a>. The most common cause of a silent miss is Umami’s bot filter rejecting the request, and the page explains how to tell.</p>
+<p>Click the event name to see the properties from <code>custom_data</code>. That is the <code>plan</code> and <code>price</code> you sent, now sitting alongside everything the browser tracker collects.</p>
+<p>The return value is Umami’s JSON response parsed into a dict. On current Umami versions it holds a <code>cache</code> token plus <code>sessionId</code> and <code>visitId</code>. You can ignore it; the exact keys depend on the server version and the package does not use them.</p>
+<p>If the call raised, or returned normally and the dashboard stays stubbornly empty, go to <a href="../user-guide/troubleshooting.html">Troubleshooting</a>. The empty dashboard has a usual suspect, Umami’s bot filter, and the page explains how to catch it.</p>
 </section>
 <section id="check-the-connection" class="level1">
 <h1>Check the connection</h1>
-<p><a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a> tells you whether the configured instance is reachable. It never raises; it returns <code>False</code> on any problem, including a missing <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a>.</p>
+<p><a href="../reference/heartbeat.html#umami.heartbeat" class="gdls-link gdls-code">heartbeat()</a> answers one question: can this process reach the configured instance? It never raises. It returns <code>False</code> on any problem, including a missing <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a>, so it is safe to call from a health check.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> umami.heartbeat():</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Umami is not reachable'</span>)</span></code></pre></div>
 </section>
 <section id="umami-cloud" class="level1">
 <h1>Umami Cloud</h1>
-<p>On Umami Cloud you authenticate with an API key instead of a URL and a login. Create a key in the Cloud dashboard, then replace <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> with <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a>:</p>
+<p>On Umami Cloud there is no URL to point at and no password to type. You create an API key in the Cloud dashboard, and that key replaces <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> umami</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>umami.set_cloud_api_key(<span class="st">'your-cloud-api-key'</span>)  <span class="co"># region='us' or 'eu' is optional</span></span>
@@ -360,13 +360,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>umami.set_hostname(<span class="st">'example.com'</span>)</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">'purchase-course'</span>, url<span class="op">=</span><span class="st">'/courses/python-for-absolute-beginners'</span>)</span></code></pre></div>
-<p>Events go to <code>https://cloud.umami.is/api/send</code> and query calls go to <code>https://api.umami.is/v1</code>, with the key sent as an <code>x-umami-api-key</code> header. Do not call <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> in Cloud mode; it raises <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a>. See <a href="../user-guide/authentication.html">Authentication</a> for the details of both modes and how to switch between them.</p>
+<p>Events go to <code>https://cloud.umami.is/api/send</code> and query calls go to <code>https://api.umami.is/v1</code>, with the key sent as an <code>x-umami-api-key</code> header. Do not call <a href="../reference/login.html#umami.login" class="gdls-link gdls-code">login()</a> in Cloud mode; it raises <a href="../reference/errors.OperationNotAllowedError.html#umami.errors.OperationNotAllowedError" class="gdls-link gdls-code">OperationNotAllowedError</a>, because the key already is the credential. <a href="../user-guide/authentication.html">Authentication</a> explains both modes and how to switch between them.</p>
 </section>
 <section id="next-steps" class="level1">
 <h1>Next steps</h1>
 <ul>
-<li><a href="../user-guide/sending-events.html">Sending events</a> covers page views, revenue, and the per-user <code>distinct_id</code>.</li>
-<li><a href="../user-guide/testing.html">Testing and CI</a> shows how to keep your test suite from writing to your real analytics.</li>
+<li><a href="../user-guide/sending-events.html">Sending events</a> covers page views, revenue, and <code>distinct_id</code>.</li>
+<li><a href="../user-guide/testing.html">Testing and CI</a> shows how to keep your test suite from writing fake purchases into your real analytics.</li>
 <li><a href="../user-guide/querying-stats.html">Querying stats</a> reads the numbers back out.</li>
 </ul>
 

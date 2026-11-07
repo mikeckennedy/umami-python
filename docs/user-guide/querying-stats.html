@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="querying-stats.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/querying-stats.html">
-  <meta name="description" content="Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise httpx2.HTTPStatusError on a non-2xx...">
+  <meta name="description" content="Sending events is the daily work. Reading them back is for the Monday morning question: how did the weekend go? Three functions answer it. websites()...">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Querying stats – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise httpx2.HTTPStatusError on a non-2xx...">
+  <meta property="og:description" content="Sending events is the daily work. Reading them back is for the Monday morning question: how did the weekend go? Three functions answer it. websites()...">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/querying-stats.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Querying stats – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise httpx2.HTTPStatusError on a non-2xx...">
+  <meta name="twitter:description" content="Sending events is the daily work. Reading them back is for the Monday morning question: how did the weekend go? Three functions answer it. websites()...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -300,12 +300,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Three functions read data out of Umami. All of them require a login token or a Cloud API key, and all of them raise <code>httpx2.HTTPStatusError</code> on a non-2xx response. Each has an <code>_async</code> twin.</p>
+<p>Sending events is the daily work. Reading them back is for the Monday morning question: how did the weekend go? Three functions answer it. <a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a> tells you what Umami is tracking, <a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> summarises a date range, and <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> counts who is on the site this minute. All three need a login token or a Cloud API key, all three raise <code>httpx2.HTTPStatusError</code> on a non-2xx response, and each has an <code>_async</code> twin.</p>
 <section id="your-websites" class="level1">
 <h1>Your websites</h1>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> site <span class="kw">in</span> umami.websites():</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(site.<span class="bu">id</span>, site.name, site.domain)</span></code></pre></div>
-<p><a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a> returns a list of <a href="../reference/models.Website.html#umami.models.Website" class="gdls-link gdls-code">Website</a> models. The <code>id</code> attribute is the value to pass to <a href="../reference/set_website_id.html#umami.set_website_id" class="gdls-link gdls-code">set_website_id()</a>. Umami pages this endpoint, so the package requests page after page until it holds the total the server reports, and returns the complete list. One request is enough for most accounts.</p>
+<p><a href="../reference/websites.html#umami.websites" class="gdls-link gdls-code">websites()</a> returns a list of <a href="../reference/models.Website.html#umami.models.Website" class="gdls-link gdls-code">Website</a> models, and <code>site.id</code> is the value you hand to <a href="../reference/set_website_id.html#umami.set_website_id" class="gdls-link gdls-code">set_website_id()</a>. Umami pages this endpoint, and for a long time the package quietly returned only the first page, which was fine until the first account with more websites than fit on one. Since 1.1.0 it asks for page after page until it holds the total the server reports, and returns the complete list. One request is still enough for most accounts.</p>
 <p><code>user</code> is set for websites you own, and <code>createUser</code> is set instead for team websites. Both are <a href="../reference/models.WebsiteUser.html#umami.models.WebsiteUser" class="gdls-link gdls-code">WebsiteUser</a> models with <code>id</code> and <code>username</code>, and either can be <code>None</code>.</p>
 </section>
 <section id="stats-for-a-date-range" class="level1">
@@ -317,10 +317,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>stats <span class="op">=</span> umami.website_stats(start_at<span class="op">=</span>start, end_at<span class="op">=</span>end)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(stats.pageviews, stats.visitors, stats.visits, stats.bounces, stats.totaltime)</span></code></pre></div>
-<p><a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> returns a <a href="../reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="gdls-link gdls-code">WebsiteStats</a> model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as <code>stats.comparison</code> with the same five fields; otherwise it is <code>None</code>.</p>
+<p><a href="../reference/website_stats.html#umami.website_stats" class="gdls-link gdls-code">website_stats()</a> returns a <a href="../reference/models.WebsiteStats.html#umami.models.WebsiteStats" class="gdls-link gdls-code">WebsiteStats</a> model with page views, unique visitors, visits (sessions), bounces (single-page sessions), and total engagement time in seconds. When Umami includes a comparison block for the preceding period, it is available as <code>stats.comparison</code> with the same five fields, so “up on last week” is a subtraction away. Otherwise it is <code>None</code>.</p>
 <section id="dates" class="level2">
 <h2 class="anchored" data-anchor-id="dates">Dates</h2>
-<p><code>start_at</code> and <code>end_at</code> are <code>datetime</code> objects. The package converts them to epoch milliseconds with <code>timestamp()</code>, which means a naive datetime is interpreted in the local timezone of the process. Pass timezone-aware datetimes if the server and your process run in different zones.</p>
+<p><code>start_at</code> and <code>end_at</code> are <code>datetime</code> objects. The package converts them to epoch milliseconds with <code>timestamp()</code>, and here is the trap: a naive datetime is interpreted in the local timezone of the process. Your laptop in Portland and your server in Frankfurt will ask Umami about different seven-day windows from the same code. Pass timezone-aware datetimes and the ambiguity disappears.</p>
 </section>
 <section id="filters" class="level2">
 <h2 class="anchored" data-anchor-id="filters">Filters</h2>
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="active-visitors-right-now" class="level1">
 <h1>Active visitors right now</h1>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> umami.active_users()</span></code></pre></div>
-<p><a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> returns an <code>int</code>: the number of visitors active on the website in the last few minutes, as Umami defines it. Pass <code>website_id</code> to query a site other than the default.</p>
+<p><a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> returns an <code>int</code>: the number of visitors active on the website in the last few minutes, as Umami defines it. It is the number you keep refreshing during a launch. Pass <code>website_id</code> to query a site other than the default.</p>
 </section>
 <section id="overriding-the-default-website" class="level1">
 <h1>Overriding the default website</h1>
@@ -341,11 +341,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="umami-cloud-limits" class="level1">
 <h1>Umami Cloud limits</h1>
-<p>Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> for many websites needs its own pacing.</p>
+<p>Umami documents a rate limit of 50 calls per 15 seconds per API key on Cloud. The package does not throttle or retry, so a loop that polls <a href="../reference/active_users.html#umami.active_users" class="gdls-link gdls-code">active_users()</a> for forty websites every second meets a 429 in under two seconds. Pace it yourself.</p>
 </section>
 <section id="beyond-the-three-queries" class="level1">
 <h1>Beyond the three queries</h1>
-<p>The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are available from the Umami HTTP API with the credential you already configured. <a href="../user-guide/how-it-works.html#beyond-the-wrapped-endpoints">How it works</a> shows how to make those calls.</p>
+<p>The package stops at websites, summary stats, and active users. Reports, sessions, event data, time series, and realtime data are all in the Umami HTTP API, and the credential you configured here works for them too. <a href="../user-guide/how-it-works.html#beyond-the-wrapped-endpoints">How it works</a> shows the call.</p>
 <p>Errors on query calls are covered in <a href="../user-guide/troubleshooting.html#login-and-token-problems">Troubleshooting</a>.</p>
 
 

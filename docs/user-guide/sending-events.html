@@ -125,15 +125,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="sending-events.md">
   <link rel="canonical" href="https://mkennedy.codes/docs/umami-python/user-guide/sending-events.html">
-  <meta name="description" content="Three functions send data to Umami: new_event() for custom events, new_page_view() for page views, and new_revenue_event() for events that carry a...">
+  <meta name="description" content="Three messengers carry data to Umami. new_event() reports that something happened. new_page_view() reports that someone looked at a page....">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Sending events – Umami Analytics | Umami Analytics">
-  <meta property="og:description" content="Three functions send data to Umami: new_event() for custom events, new_page_view() for page views, and new_revenue_event() for events that carry a...">
+  <meta property="og:description" content="Three messengers carry data to Umami. new_event() reports that something happened. new_page_view() reports that someone looked at a page....">
   <meta property="og:url" content="https://mkennedy.codes/docs/umami-python/user-guide/sending-events.html">
   <meta property="og:site_name" content="Umami Analytics">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Sending events – Umami Analytics | Umami Analytics">
-  <meta name="twitter:description" content="Three functions send data to Umami: new_event() for custom events, new_page_view() for page views, and new_revenue_event() for events that carry a...">
+  <meta name="twitter:description" content="Three messengers carry data to Umami. new_event() reports that something happened. new_page_view() reports that someone looked at a page....">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
@@ -297,8 +297,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Three functions send data to Umami: <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a> for custom events, <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> for page views, and <a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> for events that carry a monetary amount. Each has an <code>_async</code> twin with the same signature and the same return value. None of them require a login. They need <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> (or <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a>), a website id, and a hostname.</p>
-<p>All three share a few arguments:</p>
+<p>Three messengers carry data to Umami. <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a> reports that something happened. <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> reports that someone looked at a page. <a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> reports that something happened and money changed hands. Each has an <code>_async</code> twin with the same signature and the same return value, and none of them need a login. They need <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> (or <a href="../reference/set_cloud_api_key.html#umami.set_cloud_api_key" class="gdls-link gdls-code">set_cloud_api_key()</a>), a website id, and a hostname, and that is all.</p>
+<p>All three share the same arguments, because they fill in the same session fields a browser would:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -350,9 +350,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Missing <code>hostname</code> or <code>website_id</code> raises <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">umami.errors.ValidationError</a> before any request is made.</p>
+<p>Missing <code>hostname</code> or <code>website_id</code> raises <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">umami.errors.ValidationError</a> before any request is made. The package would rather fail in your process than hand Umami an event it cannot file.</p>
 <section id="custom-events" class="level1">
 <h1>Custom events</h1>
+<p>A custom event is the headline feature. The browser tracker records clicks; this records the things your code knows that a click never reveals: a webhook confirmed a payment, a background job finished, a trial converted.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>umami.new_event(</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    event_name<span class="op">=</span><span class="st">'checkout-completed'</span>,</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/checkout'</span>,</span>
@@ -360,18 +361,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'plan'</span>: <span class="st">'pro'</span>, <span class="st">'seats'</span>: <span class="dv">3</span>},</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    referrer<span class="op">=</span><span class="st">'https://news.ycombinator.com'</span>,</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><code>event_name</code> is required and must not be blank. <code>title</code> is the page title Umami records alongside the event and defaults to the event name. <code>custom_data</code> becomes the event’s properties; it is not shown in the main dashboard view but is available by clicking into the event and through the Umami API.</p>
+<p><code>event_name</code> is required and must not be blank. <code>title</code> is the page title Umami records alongside the event and defaults to the event name. <code>custom_data</code> becomes the event’s properties. They are not shown in the main dashboard view, but they are there: click into the event, or read them through the Umami API.</p>
 </section>
 <section id="page-views" class="level1">
 <h1>Page views</h1>
-<p>A page view is what the browser tracker records when a page loads. Send one from the server when you render a page for a client that cannot run JavaScript, or when you serve content outside the browser.</p>
+<p>A page view is what the browser tracker records when a page loads. Send one from the server when you render for a client that cannot run JavaScript, such as a feed reader or a developer with curl, or when you serve content outside a browser altogether.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>umami.new_page_view(page_title<span class="op">=</span><span class="st">'Account details'</span>, url<span class="op">=</span><span class="st">'/account/details'</span>, ip_address<span class="op">=</span>request.client.host)</span></code></pre></div>
 <p><code>page_title</code> and <code>url</code> are both required. Page views have no event name and no custom data.</p>
-<p><a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> accepts one extra argument the others do not: <code>ua</code>, the user agent recorded for the visitor. It defaults to a desktop Chrome user agent because Umami drops requests whose user agent looks like a bot. Pass the real browser’s user agent when you have it so the Browsers and Devices sections stay accurate. <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a> has no <code>ua</code> argument.</p>
+<p><a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> accepts one argument the others do not: <code>ua</code>, the user agent recorded for the visitor. It defaults to a desktop Chrome user agent, because Umami drops requests whose user agent looks like a bot, and a library’s default user agent is exactly what a bot looks like. Pass the real browser’s user agent when you have it so the Browsers and Devices sections tell the truth. <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a> has no <code>ua</code> argument.</p>
 </section>
 <section id="revenue" class="level1">
 <h1>Revenue</h1>
-<p><a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> is <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a> with two keys added to <code>custom_data</code>: <code>revenue</code> and <code>currency</code>. Umami’s revenue report reads those keys.</p>
+<p><a href="../reference/new_revenue_event.html#umami.new_revenue_event" class="gdls-link gdls-code">new_revenue_event()</a> is <a href="../reference/new_event.html#umami.new_event" class="gdls-link gdls-code">new_event()</a> with two keys added to <code>custom_data</code>: <code>revenue</code> and <code>currency</code>. Umami’s revenue report reads those two keys, which is why they get their own function and their own validation.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>umami.new_revenue_event(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    revenue<span class="op">=</span><span class="fl">19.99</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    currency<span class="op">=</span><span class="st">'USD'</span>,              <span class="co"># ISO 4217, defaults to 'USD'</span></span>
@@ -379,23 +380,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span><span class="st">'/checkout'</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    custom_data<span class="op">=</span>{<span class="st">'product'</span>: <span class="st">'widget'</span>, <span class="st">'quantity'</span>: <span class="dv">2</span>},</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p>Validation before the request: <code>revenue</code> must be an <code>int</code> or <code>float</code> greater than or equal to zero, and <code>currency</code> must be non-blank. If your <code>custom_data</code> already has <code>revenue</code> or <code>currency</code> keys they are overwritten by the arguments.</p>
+<p>Validation before the request: <code>revenue</code> must be an <code>int</code> or <code>float</code> greater than or equal to zero, and <code>currency</code> must be non-blank. If your <code>custom_data</code> already has <code>revenue</code> or <code>currency</code> keys, the arguments win and overwrite them. A negative amount is rejected, so a refund needs its own event name rather than a minus sign.</p>
 </section>
 <section id="per-user-attribution-with-distinct_id" class="level1">
 <h1>Per-user attribution with distinct_id</h1>
-<p>Pass <code>distinct_id</code> on any of the three functions to attach a stable identifier for the logged-in user. It is sent as the payload field <code>id</code>, which Umami uses to tie sessions and events to one visitor across devices.</p>
+<p>Without an id, Umami identifies visitors on its own from the session fields. Pass <code>distinct_id</code> on any of the three functions and Umami can tie sessions and events to one known person instead, across devices. It is sent as the payload field <code>id</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>umami.new_event(event_name<span class="op">=</span><span class="st">'login'</span>, distinct_id<span class="op">=</span>user.<span class="bu">id</span>)</span></code></pre></div>
 <p>Rules the package enforces:</p>
 <ul>
 <li><code>str</code> and <code>int</code> are accepted. Integers are sent as strings.</li>
 <li>Blank or whitespace-only strings are ignored and no <code>id</code> is sent.</li>
-<li><code>bool</code> and any other type raise <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a>. The bool check is explicit because <code>True</code> is an <code>int</code> in Python.</li>
+<li><code>bool</code> and any other type raise <a href="../reference/errors.ValidationError.html#umami.errors.ValidationError" class="gdls-link gdls-code">ValidationError</a>. The bool check is explicit because in Python <code>True</code> is an <code>int</code>, and <code>distinct_id=True</code> is never what anyone meant.</li>
 </ul>
-<p>Use an internal user id or a hash, not an email address or other raw personal data.</p>
+<p>Use an internal user id or a hash, not an email address or other raw personal data. Umami is privacy-preserving analytics; keep it that way.</p>
 </section>
 <section id="what-gets-sent" class="level1">
 <h1>What gets sent</h1>
-<p>Every call makes one <code>POST</code> to <code>/api/send</code> with a body like this. There is no batching and no retry.</p>
+<p>Every call makes exactly one <code>POST</code> to <code>/api/send</code>. No batching, no retry, no queue. Here is the envelope for the revenue example above:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"event"</span><span class="fu">,</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"payload"</span><span class="fu">:</span> <span class="fu">{</span></span>
@@ -411,20 +412,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"user-42"</span></span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p>A page view is the same shape without <code>name</code> and <code>data</code>. The <code>ip</code> field is present only when you pass <code>ip_address</code>, and <code>id</code> only when you pass <code>distinct_id</code>.</p>
+<p>A page view is the same shape without <code>name</code> and <code>data</code>. The <code>ip</code> field is present only when you pass <code>ip_address</code>, and <code>id</code> only when you pass <code>distinct_id</code>. If you ever need to argue with Umami about what it received, this is what you sent.</p>
 </section>
 <section id="return-values" class="level1">
 <h1>Return values</h1>
-<p>The functions return the parsed JSON response from Umami as a dict. When tracking has been turned off with <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> they validate their arguments and return <code>{}</code> without making a request. A non-2xx response raises <code>httpx2.HTTPStatusError</code>.</p>
+<p>The functions return Umami’s JSON response as a dict. When tracking has been turned off with <a href="../reference/disable.html#umami.disable" class="gdls-link gdls-code">disable()</a> they validate their arguments and return <code>{}</code> without making a request, which is how you tell “sent” from “skipped”. A non-2xx response raises <code>httpx2.HTTPStatusError</code>.</p>
 </section>
 <section id="async" class="level1">
 <h1>Async</h1>
-<p>Each function has an <code>_async</code> twin that sends the same payload and returns the same value.</p>
+<p>Each function has an <code>_async</code> twin that sends the same payload and returns the same value. The package’s own tests build both and compare the request bodies, so the twins cannot drift apart quietly.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> umami.new_event_async(event_name<span class="op">=</span><span class="st">'checkout-completed'</span>, url<span class="op">=</span><span class="st">'/checkout'</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> umami.new_page_view_async(page_title<span class="op">=</span><span class="st">'Home'</span>, url<span class="op">=</span><span class="st">'/'</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">await</span> umami.new_revenue_event_async(revenue<span class="op">=</span><span class="fl">19.99</span>, url<span class="op">=</span><span class="st">'/checkout'</span>)</span></code></pre></div>
 <p>The configuration functions are synchronous only. Call <a href="../reference/set_url_base.html#umami.set_url_base" class="gdls-link gdls-code">set_url_base()</a> and friends once at startup, before your event loop starts handling requests.</p>
-<p>If an event does not appear in the dashboard, see <a href="../user-guide/troubleshooting.html#event-sent-but-nothing-appears">Troubleshooting</a>.</p>
+<p>If an event does not appear in the dashboard, see <a href="../user-guide/troubleshooting.html#event-sent-but-nothing-appears">Troubleshooting</a>. You are not the first.</p>
 
 
 </section>
