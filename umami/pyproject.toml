@@ -44,7 +44,7 @@ dependencies = [
     "httpx2",
     "pydantic",
 ]
-version = "1.0.0"
+version = "1.1.0"
 
 [project.optional-dependencies]
 dev = [
@@ -83,7 +83,8 @@ exclude = [
     "/user_guide",
     "/skills",
     "/scripts",
-    "/great-docs.yml"
+    "/great-docs.yml",
+    "/.claude"
 ]
 
 [tool.hatch.build.targets.wheel]

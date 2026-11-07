@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-06
+
 ### Fixed
 - `websites()` / `websites_async()` returned only the first page of Umami's paged `/api/websites` listing, silently truncating the list for accounts with more websites than one page. They now follow the `page` parameter until the reported `count` is reached (or a page adds nothing new, so a server that ignores `page` cannot loop) and return the complete list. Single-page accounts still make one request.
 - Self-hosted sends (`new_event()`, `new_page_view()`, `new_revenue_event()` and async twins) sent the literal header `Authorization: Bearer None` when nobody had called `login()`. The header is now omitted unless a token is present; Umami's `/api/send` ignores it either way, so recorded data is unchanged.
@@ -279,7 +281,8 @@ from here forward.
 
 ---
 
-[Unreleased]: https://github.com/mikeckennedy/umami-python/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/mikeckennedy/umami-python/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/mikeckennedy/umami-python/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/mikeckennedy/umami-python/compare/v0.6.25...v1.0.0
 [0.6.25]: https://github.com/mikeckennedy/umami-python/compare/v0.5.24...v0.6.25
 [0.5.24]: https://github.com/mikeckennedy/umami-python/compare/v0.4.23...v0.5.24
