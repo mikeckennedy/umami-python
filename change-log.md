@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- `login()` / `login_async()` now say `Username cannot be empty` when the username is blank; the message said `Email`. Same exception type (`ValidationError`), text only.
+- `websites()` / `websites_async()` returned only the first page of Umami's paged `/api/websites` listing, silently truncating the list for accounts with more websites than one page. They now follow the `page` parameter until the reported `count` is reached (or a page adds nothing new, so a server that ignores `page` cannot loop) and return the complete list. Single-page accounts still make one request.
+- Self-hosted sends (`new_event()`, `new_page_view()`, `new_revenue_event()` and async twins) sent the literal header `Authorization: Bearer None` when nobody had called `login()`. The header is now omitted unless a token is present; Umami's `/api/send` ignores it either way, so recorded data is unchanged.
+- `login()` / `login_async()` now reject whitespace-only usernames and passwords with `ValidationError`, matching `set_url_base()` and `set_cloud_api_key()`; before, they went to the server and came back as a 401. The empty-username message also now says `Username cannot be empty` instead of `Email`.
 
 ### Documentation
 - New user guide on the docs site: Getting started, Sending events, Authentication, Querying stats, Troubleshooting, Testing and CI, Configuration, How it works, and FAQ. The guide pages are also appended to `llms-full.txt`.

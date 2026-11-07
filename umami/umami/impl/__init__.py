@@ -267,10 +267,14 @@ def _data_headers() -> dict:
 
 
 def _send_headers(ua: str = event_user_agent) -> dict:
-    """Headers for ingestion calls. Self-hosted unchanged; Cloud send is unauthenticated."""
+    """
+    Headers for ingestion calls. The Cloud send endpoint is unauthenticated. Self-hosted
+    carries the Bearer token when there is one; Umami ignores it on /api/send, so none is sent
+    when nobody has logged in.
+    """
     headers = {'User-Agent': ua}
-    if not _is_cloud():
-        headers['Authorization'] = f'Bearer {auth_token}'  # identical to today (may be 'Bearer None')
+    if not _is_cloud() and auth_token:
+        headers['Authorization'] = f'Bearer {auth_token}'
     return headers
 
 
@@ -323,7 +327,7 @@ async def login_async(username: str, password: str) -> models.LoginResponse:
     Raises:
         OperationNotAllowedError: If Cloud mode is active (set_cloud_api_key()
             was called), or if set_url_base() has not been called.
-        ValidationError: If username or password is empty.
+        ValidationError: If username or password is empty or whitespace-only.
         httpx.HTTPStatusError: If the server returns a non-2xx response, e.g.
             on invalid credentials.
 
@@ -384,7 +388,7 @@ def login(username: str, password: str) -> models.LoginResponse:
     Raises:
         OperationNotAllowedError: If Cloud mode is active (set_cloud_api_key()
             was called), or if set_url_base() has not been called.
-        ValidationError: If username or password is empty.
+        ValidationError: If username or password is empty or whitespace-only.
         httpx.HTTPStatusError: If the server returns a non-2xx response, e.g.
             on invalid credentials.
 
@@ -429,7 +433,8 @@ async def websites_async() -> list[models.Website]:
     set_url_base().
 
     Returns:
-        A list of models.Website models, unwrapped from the paged API response.
+        A list of models.Website models. Umami pages this endpoint; the
+        package requests every page and returns the complete list.
 
     Raises:
         OperationNotAllowedError: If set_url_base() has not been called (and no
@@ -447,18 +452,22 @@ async def websites_async() -> list[models.Website]:
             print(site.name, site.domain)
         ```
     """
-    global auth_token
     validate_state(url=True, user=True)
 
     url = _data_url(urls.websites)
     headers = _data_headers()
 
+    sites: list[models.Website] = []
+    seen: set[str] = set()
+    page = 1
     async with httpx.AsyncClient() as client:
-        resp = await client.get(url, headers=headers, follow_redirects=True)
-        resp.raise_for_status()
-
-    model = models.WebsitesResponse(**resp.json())
-    return model.websites
+        while True:
+            resp = await client.get(url, headers=headers, params={'page': page}, follow_redirects=True)
+            resp.raise_for_status()
+            model = models.WebsitesResponse(**resp.json())
+            if not _collect_page(model, sites, seen):
+                return sites
+            page += 1
 
 
 def websites() -> list[models.Website]:
@@ -470,7 +479,8 @@ def websites() -> list[models.Website]:
     set_url_base().
 
     Returns:
-        A list of models.Website models, unwrapped from the paged API response.
+        A list of models.Website models. Umami pages this endpoint; the
+        package requests every page and returns the complete list.
 
     Raises:
         OperationNotAllowedError: If set_url_base() has not been called (and no
@@ -488,17 +498,39 @@ def websites() -> list[models.Website]:
             print(site.name, site.domain)
         ```
     """
-    global auth_token
     validate_state(url=True, user=True)
 
     url = _data_url(urls.websites)
     headers = _data_headers()
-    resp = httpx.get(url, headers=headers, follow_redirects=True)
-    resp.raise_for_status()
 
-    data = resp.json()
-    model = models.WebsitesResponse(**data)
-    return model.websites
+    sites: list[models.Website] = []
+    seen: set[str] = set()
+    page = 1
+    while True:
+        resp = httpx.get(url, headers=headers, params={'page': page}, follow_redirects=True)
+        resp.raise_for_status()
+        model = models.WebsitesResponse(**resp.json())
+        if not _collect_page(model, sites, seen):
+            return sites
+        page += 1
+
+
+def _collect_page(page: models.WebsitesResponse, sites: list[models.Website], seen: set[str]) -> bool:
+    """
+    Append the websites from one page of /api/websites to `sites`.
+
+    Internal helper shared by websites() and websites_async(). Returns True when
+    another page should be requested. Stops when the page is empty, when it adds
+    no website that has not been seen (a server that ignores the page parameter
+    would otherwise loop forever), or when `sites` holds the reported total.
+    """
+    added = 0
+    for site in page.websites:
+        if site.id not in seen:
+            seen.add(site.id)
+            sites.append(site)
+            added += 1
+    return added > 0 and len(sites) < page.count
 
 
 def enable() -> None:
@@ -1452,9 +1484,9 @@ def validate_login(email: str, password: str) -> None:
     """
     Internal helper function, not need to use this.
     """
-    if not email:
+    if not email or not email.strip():
         raise ValidationError('Username cannot be empty')
-    if not password:
+    if not password or not password.strip():
         raise ValidationError('Password cannot be empty')
 
 
