@@ -359,7 +359,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="two-user-agents" class="level1">
 <h1>Two user agents</h1>
-<p>Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on <code>/api/send</code> calls, and <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> lets you replace it with the visitor’s real user agent through the <code>ua</code> argument. Query calls send an honest user agent of the form <code>Umami-Client v1.0.0 / Python 3.14.10 / Darwin</code>, available as <code>umami.user_agent</code>.</p>
+<p>Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on <code>/api/send</code> calls, and <a href="../reference/new_page_view.html#umami.new_page_view" class="gdls-link gdls-code">new_page_view()</a> lets you replace it with the visitor’s real user agent through the <code>ua</code> argument. Query calls send an honest user agent of the form <code>Umami-Client v1.1.0 / Python 3.14.10 / Darwin</code>, available as <code>umami.user_agent</code>.</p>
 <p>If you would rather Umami accepted any user agent, set <code>DISABLE_BOT_CHECK=true</code> in the Umami server’s environment.</p>
 </section>
 <section id="requests-and-responses" class="level1">

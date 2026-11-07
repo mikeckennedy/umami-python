@@ -30,7 +30,7 @@ Every request resolves its URL and headers from the current mode.
 
 # Two user agents
 
-Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on `/api/send` calls, and [new_page_view()](../reference/new_page_view.md#umami.new_page_view) lets you replace it with the visitor's real user agent through the `ua` argument. Query calls send an honest user agent of the form `Umami-Client v1.0.0 / Python 3.14.10 / Darwin`, available as `umami.user_agent`.
+Umami drops ingestion requests whose user agent looks like a bot, because it is designed to receive data from browsers. The package therefore sends a desktop Chrome user agent on `/api/send` calls, and [new_page_view()](../reference/new_page_view.md#umami.new_page_view) lets you replace it with the visitor's real user agent through the `ua` argument. Query calls send an honest user agent of the form `Umami-Client v1.1.0 / Python 3.14.10 / Darwin`, available as `umami.user_agent`.
 
 If you would rather Umami accepted any user agent, set `DISABLE_BOT_CHECK=true` in the Umami server's environment.
 
